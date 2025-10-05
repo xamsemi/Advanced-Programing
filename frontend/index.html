@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Nachricht senden</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        input { width: 300px; padding: 0.5rem; margin-right: 0.5rem; }
+        button { padding: 0.5rem 1rem; }
+        #response { margin-top: 1rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Nachricht senden</h1>
+    <input type="text" id="messageInput" placeholder="Nachricht eingeben">
+    <button id="sendBtn">Senden</button>
+    <p id="response"></p>
+
+    <script>
+        const input = document.getElementById('messageInput');
+        const button = document.getElementById('sendBtn');
+        const responsePara = document.getElementById('response');
+
+        button.addEventListener('click', async () => {
+            const message = input.value;
+
+            try {
+                // fetch an Nginx-Proxy-URL /api/message
+                const res = await fetch('/api/message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                    body: JSON.stringify({ text: message })
+                });
+
+                const data = await res.json();
+                responsePara.textContent = `Server antwortet: ${data.reply}`;
+            } catch (err) {
+                responsePara.textContent = 'Fehler beim Senden!';
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>
