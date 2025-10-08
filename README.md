@@ -8,5 +8,7 @@ starten: .\nginx.exe
 Status prüfen: git status  
 Neue Dateien/Ordner hinzufügen: git add .  
 Änderungen committen: git commit -m "Beschreibung der Änderung"  
-Änderungen ins Remote-Repository hochladen: git push #Achtung aufpassen in welchen branch  
+Änderungen ins Remote-Repository hochladen: git push #Achtung aufpassen in welchen branch 
 
+**npm-Node**
+Pakete installieren: npm install
