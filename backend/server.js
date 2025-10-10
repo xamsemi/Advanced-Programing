@@ -1,9 +1,19 @@
+/****************************************************/
+/* Config */
+/****************************************************/
+console.log('Starting server...');
+
 const express = require('express');
 const app = express();
 const port = 3000;
 
 // JSON body parser
 app.use(express.json());
+
+//Swagger Config
+const swaggerDocument = require('./swagger-output.json');
+const swaggerUi = require('swagger-ui-express');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Endpoint, der Nachrichten empfängt
 app.post('/message', (req, res) => {
