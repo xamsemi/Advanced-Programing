@@ -79,6 +79,16 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 
 ---
 
+### 🐳 Docker-Befehle
+| Aktion | Befehl |
+|--------|--------|
+| Docker Image erstellen | `docker build ./ -t nginx-service` |
+| Container starten | `docker run -d -p 8080:80 --name nginx-con nginx-service` |
+| Laufende Container anzeigen | `docker ps` |
+| Container stoppen | `docker stop nginx-con` |
+
+---
+
 ### 🧩 npm / Node.js
 | Aktion | Befehl |
 |--------|--------|
@@ -86,7 +96,7 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 
 ---
 
-## 📂 Projektstruktur
+## 📂 Projektstruktur 
 ```
 ├── src/
 │   ├── components/
