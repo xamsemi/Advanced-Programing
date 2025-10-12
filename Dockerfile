@@ -5,4 +5,6 @@ COPY ./frontend/public/ /usr/share/nginx/html/
 # Nginx-Konfiguration kopieren
 COPY ./nginx/conf/nginx.conf /etc/nginx/nginx.conf
 
+VOLUME ["/var/log/nginx/"]
+
 EXPOSE 80
