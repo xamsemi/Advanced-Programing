@@ -13,6 +13,7 @@ lerna-debug.log*
 # Eigene Logs ignorieren
 nginx-1.29.1/logs/
 
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
