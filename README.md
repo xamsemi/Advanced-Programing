@@ -87,6 +87,8 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 | Laufende Container anzeigen | `docker ps` |
 | Container stoppen | `docker stop nginx-con` |
 
+Shell im Docker-Container
+| http message an Webserver| `curl -d '{"text":"hallo"}' -H "Content-Type: application/json"  -X POST http://host.docker.internal:3000/api/message` |
 ---
 
 ### 🧩 npm / Node.js
@@ -116,3 +118,4 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 ## 🧑‍💻 Autoren
 Projektteam: *Sabine, Max, Daniel*  
 Stand: *Oktober 2025*
+
