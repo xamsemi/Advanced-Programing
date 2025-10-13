@@ -16,7 +16,7 @@ const swaggerUi = require('swagger-ui-express');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Endpoint, der Nachrichten empfängt
-app.post('/message', (req, res) => {
+app.post('/api/message', (req, res) => {
     const { text } = req.body;  // <-- hier lesen wir den Body aus
     console.log('Nachricht erhalten:', text);
     let reply;
@@ -29,6 +29,8 @@ app.post('/message', (req, res) => {
     }
     res.json({ status: 'success', reply });
 });
+
+
 
 app.listen(port, () => {
     console.log(`Backend läuft auf http://localhost:${port}`);

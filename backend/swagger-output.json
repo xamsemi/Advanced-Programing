@@ -11,7 +11,7 @@
     "http"
   ],
   "paths": {
-    "/message": {
+    "/api/message": {
       "post": {
         "description": "",
         "parameters": [
@@ -28,6 +28,14 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "description": "",
         "responses": {
           "200": {
             "description": "OK"
