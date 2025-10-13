@@ -88,7 +88,9 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 | Container stoppen | `docker stop nginx-con` |
 
 Shell im Docker-Container
-| http message an Webserver| `curl -d '{"text":"hallo"}' -H "Content-Type: application/json"  -X POST http://host.docker.internal:3000/api/message` |
+| Aktion | Befehl |
+|--------|--------|
+| http message an Webserver | `curl -d '{"text":"hallo"}' -H "Content-Type: application/json"  -X POST http://host.docker.internal:3000/api/message` |
 ---
 
 ### 🧩 npm / Node.js
@@ -118,4 +120,5 @@ Shell im Docker-Container
 ## 🧑‍💻 Autoren
 Projektteam: *Sabine, Max, Daniel*  
 Stand: *Oktober 2025*
+
 
