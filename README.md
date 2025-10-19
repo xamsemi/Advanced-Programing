@@ -53,23 +53,13 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
    cd <projektname>
    ```
 
-2. **Abhängigkeiten installieren:**
+2. **Stack starten:**
 
    ```bash
-   npm install
+   docker-compose up -d
    ```
 
-3. **nginx starten:**
 
-   ```bash
-   .\nginx.exe
-   ```
-
-4. **nginx stoppen:**
-
-   ```bash
-   .\nginx.exe -s quit
-   ```
 
 ---
 
