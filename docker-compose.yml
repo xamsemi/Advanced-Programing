@@ -15,11 +15,13 @@ services:
     container_name: nginx-container
 
     ports:
-      - "8080:3080"
+      - "8080:80"
+      - "8443:443"
     volumes:
       - ./nginx/logs:/var/log/nginx
-      - ./frontend/public/:/usr/share/nginx/html/
+      - ./nginx/ssl/:/etc/nginx/ssl/
       - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./frontend/public/:/usr/share/nginx/html/
     depends_on:
       - mysql
 
