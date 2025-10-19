@@ -21,7 +21,7 @@ header {
 }
 
 .background {
-    background-image: url('Bus.png');/*Bild hier, da grosses Headerbild*/
+    background-image: url('../img/Bus.png');/*Bild hier, da grosses Headerbild*/
     background-size: cover;
     background-position: center;
     height: 350px;
