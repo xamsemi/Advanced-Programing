@@ -1,12 +1,21 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+/****************************************************/
+/* Config */
+/****************************************************/
+console.log('Starting server...');
 
-// JSON body parser
+// Import required modules
+const express = require('express');
+const swaggerDocument = require('./swagger-output.json');
+const swaggerUi = require('swagger-ui-express');
+
+const app = express();
+
+// Middleware
 app.use(express.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Endpoint, der Nachrichten empfängt
-app.post('/message', (req, res) => {
+app.post('/api/message', (req, res) => {
     const { text } = req.body;  // <-- hier lesen wir den Body aus
     console.log('Nachricht erhalten:', text);
     let reply;
@@ -20,6 +29,8 @@ app.post('/message', (req, res) => {
     res.json({ status: 'success', reply });
 });
 
+// Start the server
+const port = 3000;
 app.listen(port, () => {
     console.log(`Backend läuft auf http://localhost:${port}`);
 });
