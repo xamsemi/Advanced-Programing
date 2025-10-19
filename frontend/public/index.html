@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Login und message</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        input { width: 300px; padding: 0.5rem; margin-right: 0.5rem; }
+        button { padding: 0.5rem 1rem; margin-top: 0.5rem; }
+        p { margin-top: 1rem; font-weight: bold; }
+        .container { margin-top: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Nachricht senden</h1>
+    <div class="container">
+        <input type="text" id="messageInput" placeholder="Nachricht eingeben">
+        <button id="sendBtn">Senden</button>
+        <p id="response"></p>
+    </div>
+    <script>
+        // Nachricht senden
+        const input = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const responsePara = document.getElementById('response');
+     
+        sendBtn.addEventListener('click', async () => {
+            const message = input.value;
+
+            try {
+                const res = await fetch('/api/message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                    body: JSON.stringify({ text: message })
+                });
+                const data = await res.json();
+                responsePara.textContent = `Server antwortet: ${data.reply}`;
+            } catch (err) {
+                responsePara.textContent = 'Fehler beim Senden!';
+                console.error(err);
+            }
+        });
+    </script>
+
+     <h1>Login</h1>
+    <form id="loginForm">
+      <input type="text" id="username" name="username" placeholder="Benutzername" required />
+      <input type="password" id="password" name="password" placeholder="Passwort" required />
+      <button type="submit">Login</button>
+      <p id="response2"></p>
+      
+    </form>
+    <script>
+      document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        console.log("Formular wurde abgeschickt!");
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const responsePara2 = document.getElementById('response2');
+
+        
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                    
+                    body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            console.log("Antwort vom Server:", data);
+
+            if (response.ok) {
+                responsePara2.textContent = "Login erfolgreich!"+ data.message;
+                // optional: weiterleiten
+                // window.location.href = "/dashboard";
+            } else {
+                responsePara2.textContent = "Fehler beim Login: " + data.message;
+            }
+
+    } catch (error) {
+      console.error("Fehler beim Request:", error);
+      alert("Server konnte nicht erreicht werden.");
+    };
+      });
+    </script>
+    <h2>Registrierung</h2>
+    <form id="registerForm">
+  <input id="regUsername" placeholder="Benutzername" />
+  <input id="regPassword" type="password" placeholder="Passwort" />
+  <button type="submit">Registrieren</button>
+    </form>
+    <p id="regResponse"></p>
+    <script>
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const username = document.getElementById("regUsername").value;
+        const password = document.getElementById("regPassword").value;
+
+        try {
+            const res = await fetch("/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        document.getElementById("regResponse").textContent = data.message;
+        } catch (err) {
+        document.getElementById("regResponse").textContent = "Fehler bei der Registrierung";
+        console.error(err);
+        }
+    });
+    </script>
+</body>
+</html>
