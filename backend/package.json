@@ -16,6 +16,7 @@
     "body-parser": "^2.2.0",
     "connect-mongo": "^5.1.0",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
     "express-session": "^1.18.2",
     "mongoose": "^8.19.1",
     "swagger-jsdoc": "^6.2.8",
