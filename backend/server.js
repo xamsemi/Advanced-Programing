@@ -31,7 +31,6 @@ app.post('/api/message', (req, res) => {
 });
 
 
-
 app.listen(port, () => {
     console.log(`Backend läuft auf http://localhost:${port}`);
 });

@@ -22,11 +22,15 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 
 | Rolle  | Ziel | Nutzen |
 |--------|------|--------|
-| Admin  | Busfahrten planen | Mitglieder können sich für Fahrten anmelden und Informationen zum Ausflug erhalten |
+| Admin  | Busfahrten hinzufügen/planen | Mitglieder können sich für Fahrten anmelden und Informationen zum Ausflug erhalten |
+| Admin  | Übersicht anzeigen | Informationen über die Busfahrt erhalten |
 | Admin  | Busfahrten entfernen | Alte oder abgesagte Fahrten können gelöscht werden |
+| Admin  | Benutzer löschen | Kann registrierte Benutzer löschen |
 | Admin  | Automatische Mail an Busunternehmen senden | E-Mail-Anfrage an Busunternehmen, um geplante Ausflüge anzufragen |
 | User   | Für Busfahrt anmelden | Es wird ein Platz im Bus reserviert |
 | User   | Für Busfahrt abmelden | Es wird ein Platz freigegeben |
+| User   | Benutzeraccount erstellen | Kann sich an Seite anmelden und Ausflug buchen |
+| User   | Übersicht Busfahrten anzeigen | Informationen über die Busfahrt erhalten |
 
 ---
 
