@@ -24,12 +24,19 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
 const app = express();
-
 const port = 3000;
+
+
+// --- Middleware ---
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: "geheimesessionkey", resave: false, saveUninitialized: true }));
+
+app.use(
+  session({ 
+    secret: "geheimesessionkey", 
+    resave: false, 
+    saveUninitialized: false }));
 
 // --- Swagger Setup ---
 const swaggerOptions = {
@@ -46,17 +53,20 @@ const swaggerOptions = {
   },
   apis: ["./server.js"], // <- Pfad zu dieser Datei
 };
-
-
-
-
-
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
+// --- In-Memory-Daten ---
 const users = []; // Array für User
 const SALT_ROUNDS = 10;
 
+// --- Rate Limiting (gegen Brute Force) ---
+const loginLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 Minute
+  max: 5,
+  message: "Zu viele Login-Versuche. Bitte warte eine Minute.",
+});
+app.use("/api/login", loginLimiter);
 /**
  * 
  * @swagger
@@ -90,7 +100,8 @@ const SALT_ROUNDS = 10;
 // Benutzer regestrieren
 app.post("/api/register", async (req, res) => {
   const { username, password } = req.body;
-  if (!username || !password) return res.status(400).json({ message: 'Username & Passwort erforderlich' });
+  if (!username || !password) 
+    return res.status(400).json({ message: 'Username & Passwort erforderlich' });
 
   // Prüfen, ob Benutzer existiert
   if (users.find(u => u.username === username)) {
@@ -101,6 +112,7 @@ app.post("/api/register", async (req, res) => {
 
   // Benutzer speichern
   users.push({ username, passwordHash });
+  console.log("Registrierte Benutzer:", users);
   res.status(201).json({ message: 'Benutzer registriert' });
 });
 
@@ -140,10 +152,8 @@ app.post("/api/register", async (req, res) => {
  *       400:
  *         description: Falscher Benutzername oder Passwort
  */
-// Dummy-Login
+// Login
 app.post("/api/login", async (req, res) => {
-
-  console.log(`Dummy Login`);
   const { username, password } = req.body;
   console.log("Empfangen:", username, password);
    const user = users.find(u => u.username === username);
@@ -158,6 +168,23 @@ app.post("/api/login", async (req, res) => {
   res.json({ message: "Login erfolgreich" });
   
 });
+
+/**
+ * @swagger
+ * /api/logout:
+ *   post:
+ *     summary: Loggt den Benutzer aus
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logout erfolgreich
+ */
+app.post("/api/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.json({ message: "Logout erfolgreich" });
+  });
+});
+
 /**
  * @swagger
  * /api/profile:
@@ -180,6 +207,7 @@ app.post("/api/login", async (req, res) => {
  */
 // --- Session-Test --- noch nicht umgesetzt
 app.get('/api/profile', (req, res) => {
+  console.log("/api/profile");
   if (!req.session.userId) return res.status(401).json({ message: 'Nicht eingeloggt' });
   res.json({ username: req.session.userId });
 });
@@ -231,9 +259,8 @@ app.post('/api/message', (req, res) => {
 });
 
 
-
-
 // Server starten
 app.listen(port, () => {
     console.log(`Backend läuft auf http://localhost:${port}`);
+    console.log(`Swagger Docs: http://localhost:${port}/api-docs`);
 });
