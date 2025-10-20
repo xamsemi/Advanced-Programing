@@ -207,7 +207,6 @@ app.post("/api/logout", (req, res) => {
  */
 // --- Session-Test --- noch nicht umgesetzt
 app.get('/api/profile', (req, res) => {
-  console.log("/api/profile");
   if (!req.session.userId) return res.status(401).json({ message: 'Nicht eingeloggt' });
   res.json({ username: req.session.userId });
 });
