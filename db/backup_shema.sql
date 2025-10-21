@@ -17,10 +17,9 @@ CREATE TABLE IF NOT EXISTS users (
   username VARCHAR(50) NOT NULL UNIQUE,
   email VARCHAR(100) NOT NULL UNIQUE,
   user_role ENUM('admin', 'user') DEFAULT 'user',
-  tours_taken JSON DEFAULT '[]',
+  tours_taken JSON,
   password_hash VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-
 );
 
 -- -----------------------------------------------------
@@ -33,8 +32,7 @@ CREATE TABLE IF NOT EXISTS fahrten (
   tour_date datetime NOT NULL,
   bus_id INT NOT NULL,
   destination VARCHAR(100) NOT NULL,
-  pictures JSON DEFAULT '[]',
-
+  pictures JSON
 );
 
 -- -----------------------------------------------------
@@ -45,8 +43,7 @@ CREATE TABLE IF NOT EXISTS bus_companys (
   id INT AUTO_INCREMENT PRIMARY KEY,
   company_name VARCHAR(100) NOT NULL,
   contact_info VARCHAR(255) NOT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE,
- 
+  email VARCHAR(100) NOT NULL UNIQUE 
 );
 
 -- -----------------------------------------------------
@@ -55,7 +52,7 @@ CREATE TABLE IF NOT EXISTS bus_companys (
 
 CREATE TABLE IF NOT EXISTS bus (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  seats INT NOT NULL,
+  seats INT NOT NULL
 );
 
 -- -----------------------------------------------------

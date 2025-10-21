@@ -9,7 +9,7 @@ services:
       - "3306:3306"
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
-
+      - mysql_data:/var/lib/mysql
   nginx:
     image: nginx:alpine
     container_name: nginx-container
@@ -37,3 +37,6 @@ services:
     depends_on:
       - mysql
     command: sh -c "npm install && npm start"
+    
+volumes:
+  mysql_data:
