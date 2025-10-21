@@ -99,6 +99,8 @@ Shell im Docker-Container
 |--------|--------|
 | Paket installieren | `npm install <Paket>` |
 | Paket deinstallieren | `npm purge <Paket>` |
+| Node Server starten | `npm start` |
+| Swagger Doku schreiben| `npm docu` |
 
 ---
 
