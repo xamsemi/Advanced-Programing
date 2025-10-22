@@ -15,6 +15,27 @@ const swaggerDocument = require('./swagger-output.json');
 const swaggerUi = require('swagger-ui-express');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+/****************************************************/
+// Database connection
+const Database = require('mysql2');
+// Connect to MySQL database        
+try {
+    db = new Database.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'my-secret-pw',
+        database: 'busfahrt_app'
+    });
+    console.log('Connected to MySQL database.');
+} catch (err) {
+    console.error('Database opening error: ', err);
+}
+app.locals.dbConnection = db; // Globale Verfügbarkeit der DB-Verbindung
+/****************************************************/
+
+//app.use('/api/fahrt', require('./services/fahrt'));
+app.use('/api/user', require('./services/user'));
+
 // Endpoint, der Nachrichten empfängt
 app.post('/api/message', (req, res) => {
     const { text } = req.body;  // <-- hier lesen wir den Body aus
