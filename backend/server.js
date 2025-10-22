@@ -12,6 +12,10 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+
+//Swagger Config
+const swaggerDocument = require('./swagger-output.json');
+const swaggerUi = require('swagger-ui-express');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Endpoint, der Nachrichten empfängt
@@ -29,7 +33,7 @@ app.post('/api/message', (req, res) => {
     res.json({ status: 'success', reply });
 });
 
-// Start the server
+// Server starten
 const port = 3000;
 app.listen(port, () => {
     console.log(`Backend läuft auf http://localhost:${port}`);
