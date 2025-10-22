@@ -125,7 +125,10 @@ Shell im Docker-Container
 |       \---js
 +---db
 |   \---init
-|           create_shema.sql
+|       |   create_db.sql
+|       \---backup_schema.sql
+
+| 
 |           
 +---frontend
 |   \---public
