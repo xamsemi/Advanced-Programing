@@ -5,9 +5,6 @@ console.log('Starting server...');
 
 // Import required modules
 const express = require('express');
-const swaggerDocument = require('./swagger-output.json');
-const swaggerUi = require('swagger-ui-express');
-
 const app = express();
 
 // Middleware
