@@ -6,6 +6,20 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 
 ---
 
+#Benötige Software
+- Docker Desktop
+- git
+
+
+#Ablauf
+- Befehl `git clone https://github.com/xamsemi/Advanced-Programing.git` ausführen (Achtung ggf. URL anpassen)
+- in Ordner backend navigieren und `npm install` ausführen
+- in Ordner nginx/ssl navigieren und Befehl `openssl req -x509 -nodes -days 365 -newkey rsa:2048 \-keyout nginx-selfsigned.key \-out nginx-selfsigned.crt` ausführen (Zetifikate werden erzeugt.Eingaben könne mit Enter übersprungen werden)
+- in Ordner Advanced-Programming navigieren und `docker-compose up -d` ausführen (dauert paar Minuten beim ersten mal)
+- https://localhost:8443/ in Browser eingeben (Achtung Seite muss vertraut werden da das Zertifikat selbst erstellt wurde)
+
+---
+
 ## ⚙️ App-Funktionen
 
 - **Benutzer-Registrierung und -Anmeldung**
