@@ -39,6 +39,13 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 
 ---
 
+## SSL Zertifikate erstellen
+Ins Verzeichniss ssl navigieren. dDort mit z.B. bash folgende Befehle ausführen
+| Aktion | Befehl |
+|--------|--------|
+| Zertifikate erzeugen  | `openssl req -x509 -nodes -days 365 -newkey rsa:2048 \-keyout nginx-selfsigned.key \-out nginx-selfsigned.crt` |
+
+
 ## 🚀 Start der Anwendung
 
 1. **Repository klonen:**
