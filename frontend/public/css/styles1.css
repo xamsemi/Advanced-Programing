@@ -1,0 +1,299 @@
+/* === Grunddesign === */
+body {
+  background-color: #121212;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Layout im Goldenen Schnitt === */
+.auth-layout {
+  display: grid;
+  grid-template-rows: 38vh 62vh;
+  height: 100vh;
+  position: relative;
+}
+
+.auth-top {
+  background: url('../img/Testfoto.jpg') center center/cover no-repeat;
+  position: relative;
+}
+
+.auth-top::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+/* === Formularbereich === */
+.auth-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #121212;
+  position: relative;
+}
+
+/* === Karte (leicht über dem Bild schwebend) === */
+.auth-card {
+  background-color: rgba(30, 30, 30, 0.92); /* leicht durchsichtig */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: -80px; /* nach oben verschoben, überlappt das Bild */
+}
+
+.auth-card h2 {
+  color: #fff;
+  font-weight: 600;
+}
+
+.auth-card .btn-outline-primary {
+  border-color: #0d6efd;
+  color: #0d6efd;
+  transition: all 0.2s ease;
+}
+
+.auth-card .btn-outline-primary:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+/* === flexibles Design, falls Ansicht sich verändert === */
+@media (max-width: 768px) {
+  .auth-layout {
+    grid-template-rows: 30vh 70vh;
+  }
+  .auth-card {
+    top: -40px;
+    max-width: 90%;
+  }
+}
+
+/* === helleres Grunddesign, anwenden? === */
+.friendly-bg {
+  background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+  color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* === Allgemeine Karten-Optik === */
+.card {
+  background-color: #1f1f1f;
+  border: none;
+  border-radius: 1rem;
+  color: #e9e9e9;
+}
+
+.card h2, 
+.card h5 {
+  color: #fff;
+}
+
+.card p {
+  color: #ccc;
+}
+
+/* === Info-Karte (Infos.html) === */
+.info-card {
+  max-width: 700px;
+  overflow: hidden;
+}
+
+.info-card img {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  height: 300px;
+  object-fit: cover;
+}
+
+/* === etwas hellere Navbar, anwenden? === */
+.navbar-dark.bg-dark {
+  background-color: #1b1b1b !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* === Buttons === */
+.btn-outline-primary {
+  border-color: #0d6efd;
+  color: #0d6efd;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+/* === Tabellen für die Admin-Seite === */
+.table-dark {
+  background-color: #1f1f1f;
+}
+
+.table-dark th,
+.table-dark td {
+  color: #ddd;
+}
+
+.table-dark thead {
+  background-color: #2a2a2a;
+}
+
+/* neu /* === Admin Dashboard Styling === */
+.dashboard-body {
+  background: linear-gradient(180deg, #252525 0%, #1a1a1a 100%);
+  color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.dashboard-nav {
+  background-color: #1c1c1c !important;
+  border-bottom: 2px solid #0d6efd;
+}
+
+.dashboard-header {
+  background: url('bus-bg.jpg') center/cover no-repeat;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.dashboard-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.dashboard-header h1,
+.dashboard-header p {
+  position: relative;
+  z-index: 1;
+}
+
+/* === Cards === */
+.dashboard-card {
+  background-color: #2b2b2b;
+  border: none;
+  border-radius: 1rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* === Icon Circle === */
+.icon-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin: 0 auto;
+}
+
+/* === Buttons im Dashboard === */
+.dashboard-card .btn {
+  border: none;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.dashboard-card .btn:hover {
+  transform: scale(1.05);
+}
+
+
+
+/* === Mobile Anpassungen für Dashboard === */
+
+/* === Einheitliches Layout (auch für Admin) === */
+body {
+  background-color: #121212;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Karten */
+.card {
+  background-color: #1f1f1f;
+  border: none;
+  border-radius: 1rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.card h4 {
+  color: #fff;
+}
+
+.card p {
+  color: #aaa;
+}
+
+/* Navbar !?*/
+.navbar-dark.bg-dark {
+  background-color: #1b1b1b !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Buttons */
+.btn-outline-primary:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.btn-outline-success:hover {
+  background-color: #198754;
+  color: #fff;
+}
+
+.btn-outline-warning:hover {
+  background-color: #ffc107;
+  color: #000;
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 4rem;
+}
+
+
+/* === Einheitliche Buttons im Adminbereich === */
+
+/* Hauptaktions-Buttons (z. B. "Neues Mitglied hinzufügen", "Nachricht an alle senden") */
+.admin-action-btn {
+  background: linear-gradient(90deg, #0d6efd 0%, #0b5ed7 100%);
+  color: #fff;
+  border: none;
+  border-radius: 0.6rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  margin: 0.3rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.admin-action-btn:hover {
+  background: linear-gradient(90deg, #0b5ed7 0%, #094bb3 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.45);
+  color: #fff;
+}
+
