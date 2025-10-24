@@ -14,6 +14,10 @@ lerna-debug.log*
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
+#SSL Zertifikate
+nginx/ssl/nginx-selfsigned.key
+nginx/ssl/nginx-selfsigned.crt
+
 # Runtime data
 pids
 *.pid
