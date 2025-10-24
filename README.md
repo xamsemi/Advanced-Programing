@@ -103,6 +103,8 @@ Shell im Docker-Container
 | Swagger Doku schreiben| `npm docu` |
 
 ---
+### Zertifikate erzeugen in Bash (z.B VS-Code)
+| Zertifikate erzeugenopenssl | `req -x509 -nodes -days 365 -newkey rsa:2048 \-keyout nginx-selfsigned.key \-out nginx-selfsigned.crt`
 
 ## 📂 Projektstruktur (empfohlen)
 
@@ -153,3 +155,4 @@ Shell im Docker-Container
 
 Projektteam: *Sabine, Max, Daniel*  
 Stand: *Oktober 2025*
+
