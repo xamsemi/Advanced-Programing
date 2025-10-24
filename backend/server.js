@@ -13,7 +13,7 @@ const Database = require('mysql2');
 // Connect to MySQL database        
 try {
     db = new Database.createConnection({
-        host: 'localhost',
+        host: 'mysql', //oder 'localhost' wenn lokal
         user: 'root',
         password: 'my-secret-pw',
         database: 'busfahrt_app'
