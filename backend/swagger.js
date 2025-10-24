@@ -1,5 +1,3 @@
-const swaggerAutogen = require('swagger-autogen')();
-
 const doc = {
   info: {
     title: 'Busreservierungssystem API',
@@ -9,12 +7,14 @@ const doc = {
   schemes: ['http'],
 };
 
+const swaggerAutogen = require('swagger-autogen')();
 const outputFile = './swagger-output.json';
-const routes = ['./server.js'];
+const endpointsFiles = [
+  './server.js',
+  './services/user.js', // explizit mit aufnehmen
+  './services/*.js'     // optional: alle services
+];
 
-/* NOTE: If you are using the express Router, you must pass in the 'routes' only the 
-root file where the route starts, such as index.js, app.js, routes.js, etc ... */
-
-swaggerAutogen(outputFile, routes, doc).then(() => {
+swaggerAutogen(outputFile, endpointsFiles, doc).then(() => {
   require('./server.js'); // Your project's root file
 });

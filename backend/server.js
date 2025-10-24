@@ -1,13 +1,30 @@
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 const express = require('express');
 const session = require('express-session');
-const rateLimit = require('express-rate-limit');
+//const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const port = 3000;
 const app = express();
 
+/****************************************************/
+// Database connection
+const Database = require('mysql2');
+// Connect to MySQL database        
+try {
+    db = new Database.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'my-secret-pw',
+        database: 'busfahrt_app'
+    });
+    console.log('Connected to MySQL database.');
+} catch (err) {
+    console.error('Database opening error: ', err);
+}
+app.locals.dbConnection = db; // Globale Verfügbarkeit der DB-Verbindung
+/****************************************************/
 
 // --- Middleware ---
 app.use(bodyParser.json());
@@ -38,6 +55,13 @@ const swaggerOptions = {
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
+/*********************************** */
+//Routen zu den Services
+/*********************************** */
+//app.use('/api/tour', require('./services/tour'));
+app.use('/api/user', require('./services/user'));
+
+/*
 // --- In-Memory-Daten ---
 const users = []; // Array für User
 const SALT_ROUNDS = 10;
@@ -79,7 +103,8 @@ app.use("/api/login", loginLimiter);
  *       400:
  *         description: Benutzer existiert bereits oder Eingaben fehlen
  */
-// Benutzer regestrieren
+/*
+// Benutzer registrieren
 app.post("/api/register", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) 
@@ -134,6 +159,7 @@ app.post("/api/register", async (req, res) => {
  *       400:
  *         description: Falscher Benutzername oder Passwort
  */
+/*
 // Login
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
@@ -161,6 +187,7 @@ app.post("/api/login", async (req, res) => {
  *       200:
  *         description: Logout erfolgreich
  */
+/* Logout
 app.post("/api/logout", (req, res) => {
   req.session.destroy(() => {
     res.json({ message: "Logout erfolgreich" });
@@ -187,6 +214,7 @@ app.post("/api/logout", (req, res) => {
  *       401:
  *         description: Nicht eingeloggt
  */
+/*
 // --- Session-Test --- noch nicht umgesetzt
 app.get('/api/profile', (req, res) => {
   if (!req.session.userId) return res.status(401).json({ message: 'Nicht eingeloggt' });
@@ -224,6 +252,7 @@ app.get('/api/profile', (req, res) => {
  *                 reply:
  *                   type: string
  */
+
 // Endpoint, der Nachrichten empfängt
 app.post('/api/message', (req, res) => {
     const { text } = req.body;  

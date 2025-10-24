@@ -96,7 +96,7 @@
             const responsePara2 = document.getElementById('responseLogin');
 
             try {
-                const response = await fetch("/api/login", {
+                const response = await fetch("/api/user/login", {
                     method: "POST",
                     headers: { 'Content-Type': 'application/json; charset=UTF-8' },
                     credentials: 'include',
@@ -126,7 +126,7 @@
             const regResponse = document.getElementById("regResponse");
 
             try {
-                const res = await fetch("/api/register", {
+                const res = await fetch("/api/user/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: 'include',
