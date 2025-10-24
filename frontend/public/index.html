@@ -34,6 +34,11 @@
     <form class="container" id="registerContainer">
         <input id="regUsername" placeholder="Benutzername" required>
         <input id="regPassword" type="password" placeholder="Passwort" required>
+        <input id="regEmail" type="text" placeholder="Email">
+        <select title="Rolle" id="regRole">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
         <button type="submit">Registrieren</button>
         <p id="regResponse"></p>
     </form>
@@ -123,6 +128,8 @@
             e.preventDefault();
             const username = document.getElementById("regUsername").value;
             const password = document.getElementById("regPassword").value;
+            const email = document.getElementById("regEmail").value;    
+            const user_role = document.getElementById("regRole").value;
             const regResponse = document.getElementById("regResponse");
 
             try {
@@ -130,7 +137,7 @@
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: 'include',
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ username, password, email, user_role })
                 });
                 const data = await res.json();
                 regResponse.textContent = data.message;

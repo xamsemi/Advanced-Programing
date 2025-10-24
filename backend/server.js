@@ -3,8 +3,7 @@ const express = require('express');
 const session = require('express-session');
 //const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
+
 const port = 3000;
 const app = express();
 
@@ -37,7 +36,11 @@ app.use(
     resave: false, 
     saveUninitialized: false }));
 
+/********************************************************* */
 // --- Swagger Setup ---
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+/*
 const swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
@@ -53,12 +56,15 @@ const swaggerOptions = {
   apis: ["./server.js"], // <- Pfad zu dieser Datei
 };
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+/********************************************************* */
+/* Swagger UI Setup */
+const swaggerDocument = require('./swagger-output.json');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /*********************************** */
 //Routen zu den Services
 /*********************************** */
-//app.use('/api/tour', require('./services/tour'));
+//app.use('/api/tour', require('./services/'));
 app.use('/api/user', require('./services/user'));
 
 /*
