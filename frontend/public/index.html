@@ -2,36 +2,83 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Nachricht senden</title>
+    <title>Test Login und message</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 2rem; }
         input { width: 300px; padding: 0.5rem; margin-right: 0.5rem; }
-        button { padding: 0.5rem 1rem; }
-        #response { margin-top: 1rem; font-weight: bold; }
+        button { padding: 0.5rem 1rem; margin-top: 0.5rem; }
+        p { margin-top: 1rem; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>Nachricht senden</h1>
-    <input type="text" id="messageInput" placeholder="Nachricht eingeben">
-    <button id="sendBtn">Senden</button>
-    <p id="response"></p>
-
+    <!-- Anzeige eingeloggter Benutzer -->
+    <div class="container" id="userInfo">Kein Benutzer eingeloggt.</div>
+    <button id="logoutBtn" style="display:none;">Logout</button>
+    <!-- Nachricht senden -->
+    <div class="container" id="messageContainer">
+        <h1>Nachricht senden</h1>
+        <input type="text" id="messageInput" placeholder="Nachricht eingeben">
+        <button id="sendBtn">Senden</button>
+        <p id="response"></p>
+    </div>
+    <!-- Login -->
+    <h1>Login</h1>
+    <form class="container" id="loginContainer">
+        <input type="text" id="username" placeholder="Benutzername" required>
+        <input type="password" id="password" placeholder="Passwort" required>
+        <button type="submit">Login</button>
+        <p id="responseLogin"></p>
+    </form>
+    <!-- Registrierung -->
+    <h1>Registrierung</h1>
+    <form class="container" id="registerContainer">
+        <input id="regUsername" placeholder="Benutzername" required>
+        <input id="regPassword" type="password" placeholder="Passwort" required>
+        <button type="submit">Registrieren</button>
+        <p id="regResponse"></p>
+    </form>
     <script>
+        // Funktion: Login-Status prüfen
+        // ------------------------------
+        async function checkLogin() {
+            const res = await fetch('/api/profile', { credentials: 'include' });
+            const userInfo = document.getElementById('userInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const messageContainer = document.getElementById('messageContainer');
+
+            if (res.ok) {
+                const data = await res.json();
+                userInfo.textContent = `Eingeloggt als: ${data.username}`;
+                logoutBtn.style.display = 'inline';
+                 messageContainer.style.display = 'block';
+            } else {
+                userInfo.textContent = 'Kein Benutzer eingeloggt';
+                logoutBtn.style.display = 'none';
+                messageContainer.style.display = 'none';
+            }
+        }
+        // Direkt beim Laden prüfen
+        checkLogin();
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+            checkLogin();
+        });
+
+        // Nachricht senden
         const input = document.getElementById('messageInput');
-        const button = document.getElementById('sendBtn');
+        const sendBtn = document.getElementById('sendBtn');
         const responsePara = document.getElementById('response');
-
-        button.addEventListener('click', async () => {
+        sendBtn.addEventListener('click', async () => {
             const message = input.value;
-
             try {
-                // fetch an Nginx-Proxy-URL /api/message
                 const res = await fetch('/api/message', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                    credentials: 'include',
                     body: JSON.stringify({ text: message })
                 });
-
                 const data = await res.json();
                 responsePara.textContent = `Server antwortet: ${data.reply}`;
             } catch (err) {
@@ -39,6 +86,61 @@
                 console.error(err);
             }
         });
+
+
+        // Login
+        document.getElementById("loginContainer").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const responsePara2 = document.getElementById('responseLogin');
+
+            try {
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    responsePara2.textContent = data.message;
+                    checkLogin(); // Anzeige aktualisieren
+                } else {
+                    responsePara2.textContent = "Fehler beim Login: " + data.message;
+                }
+
+            } catch (error) {
+                console.error("Fehler beim Request:", error);
+                alert("Server konnte nicht erreicht werden.");
+            }
+        });
+
+
+        // Registrierung
+        document.getElementById("registerContainer").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const username = document.getElementById("regUsername").value;
+            const password = document.getElementById("regPassword").value;
+            const regResponse = document.getElementById("regResponse");
+
+            try {
+                const res = await fetch("/api/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                regResponse.textContent = data.message;
+            } catch (err) {
+                regResponse.textContent = "Fehler bei der Registrierung";
+                console.error(err);
+            }
+        });
     </script>
+
 </body>
 </html>
+    

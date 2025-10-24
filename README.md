@@ -1,7 +1,6 @@
 # 🚌 Busreservierungssystem für Vereinsfahrten
 
 ## 📖 Einführung
-
 Unser Projekt beschäftigt sich mit der Entwicklung eines **Busreservierungssystems für Vereinsfahrten**.  
 Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten auszuwählen und Sitzplätze zu reservieren**.
 
@@ -23,50 +22,61 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 
 | Rolle  | Ziel | Nutzen |
 |--------|------|--------|
-| Admin  | Busfahrten hinzufügen/planen | Mitglieder können sich für Fahrten anmelden und Informationen zum Ausflug erhalten |
-| Admin  | Übersicht anzeigen | Informationen über die Busfahrt erhalten |
+| Admin  | Busfahrten planen | Mitglieder können sich für Fahrten anmelden und Informationen zum Ausflug erhalten |
 | Admin  | Busfahrten entfernen | Alte oder abgesagte Fahrten können gelöscht werden |
-| Admin  | Benutzer löschen | Kann registrierte Benutzer löschen |
 | Admin  | Automatische Mail an Busunternehmen senden | E-Mail-Anfrage an Busunternehmen, um geplante Ausflüge anzufragen |
 | User   | Für Busfahrt anmelden | Es wird ein Platz im Bus reserviert |
 | User   | Für Busfahrt abmelden | Es wird ein Platz freigegeben |
-| User   | Benutzeraccount erstellen | Kann sich an Seite anmelden und Ausflug buchen |
-| User   | Übersicht Busfahrten anzeigen | Informationen über die Busfahrt erhalten |
 
 ---
 
 ## 💻 Lokale Entwicklung
 
 ### Voraussetzungen
-
-- Programme: **npm**, **git** und **Docker Desktop**
-- Editor: **vscode**
+- **Node.js** und **npm**
+- **nginx**
+- **git**
 
 ---
 
 ## 🚀 Start der Anwendung
 
 1. **Repository klonen:**
-
    ```bash
    git clone <repository-url>
    cd <projektname>
    ```
 
-2. **Stack starten:**
-
+2. **Abhängigkeiten installieren:**
    ```bash
-   docker-compose up -d
+   npm install
    ```
 
+3. **nginx starten:**
+   ```bash
+   .\nginx.exe
+   ```
+
+4. **nginx stoppen:**
+   ```bash
+   .\nginx.exe -s quit
+   ```
+5. **Server starten:**
+   ```bash
+   node .\server.js
+   ```
+6. **Seite im browser öffnen:**
+   ```Browser
+   http://localhost
+   ```
 
 
 ---
 
+
 ## 🧠 Wichtige Befehle
 
 ### 🔧 Git-Befehle
-
 | Aktion | Befehl |
 |--------|--------|
 | Status prüfen | `git status` |
@@ -79,83 +89,15 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 
 ---
 
-### 🐳 Docker-Befehle
-
+### 🧩 npm / Node.js
 | Aktion | Befehl |
 |--------|--------|
-|Stack starten (docker-compose.yml) | `docker-compose up -d` |
-
-Shell im Docker-Container
-
-| Aktion | Befehl |
-|--------|--------|
-| http message an Webserver | `curl -d '{"text":"hallo"}' -H "Content-Type: application/json"  -X POST http://host.docker.internal:3000/api/message` |
+| Pakete installieren | `npm install` |
 
 ---
 
-### 🧩 npm
-
-| Aktion | Befehl |
-|--------|--------|
-| Paket installieren | `npm install <Paket>` |
-| Paket deinstallieren | `npm purge <Paket>` |
-| Node Server starten | `npm start` |
-| Swagger Doku schreiben| `npm docu` |
-
----
-### Zertifikate erzeugen in Bash (z.B VS-Code)
-| Zertifikate erzeugen | `openssl req -x509 -nodes -days 365 -newkey rsa:2048 \-keyout nginx-selfsigned.key \-out nginx-selfsigned.crt`
-
----
-## 📂 Projektstruktur (empfohlen)
-
-```
-|   .gitignore
-|   docker-compose.yml
-|   README.md
-|   
-+---backend
-|   |   package-lock.json
-|   |   package.json
-|   |   server.js
-|   |   swagger-output.json
-|   |   swagger.js          
-|   \---public
-|       |   favicon.ico
-|       |   
-|       +---css
-|       +---img
-|       \---js
-+---db
-|   \---init
-|       |   create_db.sql
-|       \---backup_schema.sql
-
-| 
-|           
-+---frontend
-|   \---public
-|       |   favicon.ico
-|       |   index.html
-|       +---img      
-|       \---js
-+---mokup
-|       database.drawio
-|       
-+---nginx
-    +---conf
-    |       fastcgi.conf
-    |       nginx.conf
-    |       
-    \---logs
-```
-
----
 
 ## 🧑‍💻 Autoren
-
 Projektteam: *Sabine, Max, Daniel*  
 Stand: *Oktober 2025*
-
-
 
