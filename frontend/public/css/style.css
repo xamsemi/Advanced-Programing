@@ -1,0 +1,175 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #5c2f2f;
+    color: #fff;
+}
+
+header {
+    text-align: center;
+    background-color: #5c2f2f;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 15px 0;
+    border-bottom: 2px solid #fff;
+}
+
+.background {
+    background-image: url('../img/Bus.png');/*Bild hier, da grosses Headerbild*/
+    background-size: cover;
+    background-position: center;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box, .register-box {
+    background-color: rgba(60, 30, 30, 0.9);
+    padding: 30px 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.register-box h2{
+    margin-bottom: 20px;
+    color:#fff
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.login-box input[type="text"],
+.login-box input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 16px;
+    border: none;
+    border-radius: 4px;
+}
+
+.login-box input[type="submit"] {
+    background-color: #ddd;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-box input[type="submit"]:hover {
+    background-color: #bbb;
+}
+
+.register-box input[type="text"],
+.register-box input[type="email"],
+.register-box input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 16px;
+    border: none;
+    border-radius: 4px;
+}
+
+.register-box input[type="submit"] {
+    background-color: #ddd;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-box input[type="submit"]:hover {
+    background-color: #bbb;
+}
+
+
+
+/*Navbar, Footer und Header*/
+
+nav {
+    background-color: #4a1f1f;
+    border-bottom: 2px solid #fff;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+nav li {
+    margin: 0 15px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #ddd;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    border-top: 2px solid #fff;
+    color: #fff;
+    height: 60px;
+    display: flex;
+    justify-content: center;    
+    background-color: #5c2f2f;
+    padding: 20px;
+    flex-shrink: 0; /*verhindert, dass der Footer schrumpft*/
+    align-items: center; /* zentriert den Text vertikal */
+}
+
+/*Bildbereich*/
+
+.bildbereich {
+    display: flex;
+    justify-content: center;   /* zentriert das Bild horizontal */
+    margin-top: 30px;          /* Abstand nach oben */
+    margin-bottom: 30px;       /* Abstand nach unten */
+}
+
+.bildbereich img {
+    width: 400px;              /* feste Breite (aus HTML übernehmen oder hier definieren) */
+    border: 2px solid #fff;    /* weißer Rand */
+    border-radius: 8px;       /* abgerundete Ecken */
+    padding: 8px;              /* Abstand zwischen Bild und Rand */
+    background-color: #4a1f1f; /* dunkler Hintergrundrahmen */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* sanfter Schatten */
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}   
+main {
+    flex: 1;
+}   
+
