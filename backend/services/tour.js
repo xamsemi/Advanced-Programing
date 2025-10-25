@@ -5,7 +5,7 @@ const helper = require('../helper.js');
 const TourDao = require('../dao/tourDao.js');
 
 console.log('- Service Tour');
-
+/* liefert eine Tour anhand der übergebenen ID zurück */
 serviceRouter.get('/api/tour/:id', function(request, response) {
     console.log('Service Tour: Client requested one record, id=' + request.params.id);
 
@@ -23,7 +23,8 @@ serviceRouter.get('/api/tour/:id', function(request, response) {
     }
 });
 /*---------------------------------- */
-/*
+/* liefert alle Touren zurück 
+
 serviceRouter.get('/api/tours', function(request, response) {
     console.log('Service Tour: Client requested all records');
 
@@ -41,6 +42,7 @@ serviceRouter.get('/api/tours', function(request, response) {
     }
 });
 
+/*würde eine neue Tour anlegen 
 serviceRouter.post('/api/tour/', upload.single('file'), function(request, response) {
     console.log('Service Tour: Client requested creation of new record');
 
@@ -111,6 +113,8 @@ serviceRouter.post('/api/tour/', upload.single('file'), function(request, respon
     }
 });
 
+
+/* aktualisiert eine bestehende Tour 
 serviceRouter.post('/api/tour/:id', upload.single('file'), function(request, response) {
     console.log('Service Tour: Client requested update of record, id=' + request.params.id);
 
@@ -185,7 +189,7 @@ serviceRouter.post('/api/tour/:id', upload.single('file'), function(request, res
     }
 });
 
-
+/* löscht eine Tour anhand der übergebenen ID 
 serviceRouter.delete('/api/tour/:id', function(request, response) {
     console.log('Service Tour: Client requested deletion of record, id=' + request.params.id);
 
@@ -200,5 +204,5 @@ serviceRouter.delete('/api/tour/:id', function(request, response) {
         response.status(400).json({ 'fehler': true, 'nachricht': ex.message });
     }
 });
-/*---------------------------------- */
+/*----------------Export des Routers------------------ */
 module.exports = serviceRouter;
