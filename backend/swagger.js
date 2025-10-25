@@ -10,11 +10,16 @@ const doc = {
 const swaggerAutogen = require('swagger-autogen')();
 const outputFile = './swagger-output.json';
 const endpointsFiles = [
-  './server.js',
-  './services/user.js', // explizit mit aufnehmen
-  './services/*.js'     // optional: alle services
+  './server.js' // only scan server.js which requires/mounts the routers
 ];
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(() => {
-  require('./server.js'); // Your project's root file
+  // Don't start the server automatically after generation to avoid
+  // DB connection errors when running the generator in isolation.
+  // To start the server after docs generation set environment variable START_SERVER_AFTER_DOCS=1
+  if (process.env.START_SERVER_AFTER_DOCS === '1') {
+    require('./server.js'); // start server only when explicitly requested
+  } else {
+    console.log('swagger-autogen: generation finished — server not started (set environment variable START_SERVER_AFTER_DOCS=1 to start)');
+  }
 });
