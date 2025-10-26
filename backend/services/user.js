@@ -86,10 +86,13 @@ serviceRouter.get('/profile', (req, res) => {
 });
 
 serviceRouter.post("/register", async (req, res) => {
-    const { username, password, email, user_role } = req.body;
+    const { username, password, email } = req.body;
+    const user_role = 'user';
+    console.log('register route')
 
-    if (!username || !password || !email || !user_role) {
-        return res.status(400).json({ message: 'Username, Passwort, Email und Benutzerrolle erforderlich' });
+
+    if (!username || !password || !email ) {
+        return res.status(400).json({ message: 'Username, Passwort, Email erforderlich' });
     }
     // Prüfen, ob Benutzer existiert
     const userDao = new UserDao(req.app.locals.dbConnection);
