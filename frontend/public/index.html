@@ -20,12 +20,10 @@
               aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center">
           <li class="nav-item"><a class="nav-link" href="kontakt.html">Kontakt</a></li>
           <li id="logoutBtn" class="nav-link" >Logout</li>
-
         </ul>
       </div>
     </div>
@@ -140,10 +138,15 @@
 
         const data = await response.json();
         if (response.ok) {
+          /*
           responsePara2.textContent = '';
           document.getElementById("username").value = '';
           document.getElementById("password").value = '';
-          checkLogin();
+          checkLogin();*/
+          const check = await fetch('/api/user/profile', { credentials: 'include' });
+          if (check.ok){
+            window.location.href = 'fahrten.html'
+          }
         } else {
           responsePara2.textContent = "Fehler beim Login: " + (data.nachricht || data.message);
         }
