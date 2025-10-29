@@ -32,7 +32,7 @@ serviceRouter.post('/login', loginLimiter, function(req, res) {
             return res.status(500).json({ 'fehler': true, 'nachricht': 'Interner Serverfehler' });
         }
         if (!user) {
-            console.log('Service User: User not found');
+            console.error('Service User: User not found');
             return res.status(404).json({ 'fehler': true, 'nachricht': 'Benutzer nicht gefunden' });
         }
         
@@ -44,7 +44,7 @@ serviceRouter.post('/login', loginLimiter, function(req, res) {
             }
 
             if (!match) {
-                console.log('Service User: Passwords do not match');
+                console.error('Service User: Passwords do not match');
                 return res.status(401).json({ 'fehler': true, 'nachricht': 'Passwort ist falsch' });
             }
 
