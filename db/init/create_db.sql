@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS tours (
   tour_date DATETIME NOT NULL,
   destination VARCHAR(100) NOT NULL,
   bus_id INT NOT NULL,
-  pictures JSON,
+  picture_path VARCHAR(255),
   FOREIGN KEY (bus_id) REFERENCES buses(bus_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
