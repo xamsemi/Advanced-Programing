@@ -1,88 +1,108 @@
 const helper = require('../helper.js');
-//const ProduktkategorieDao = require('./genresDao.js');
-//const MehrwertsteuerDao = require('./mehrwertsteuerDao.js');
 
 class tourDao {
 
-    constructor(dbConnection) {
+    constructor(dbConnection) { // Übergabe der Datenbankverbindung
+        if (!dbConnection) {
+            throw new Error('UserDao requires a valid dbConnection');
+        }
         this._conn = dbConnection;
     }
 
     getConnection() {
         return this._conn;
     }
-
-    loadById(id) {
-        var sql = 'SELECT tour_id, tour_name, tour_description, tour_image, tour_date FROM tours WHERE tour_id = ?';
-        this._conn.query(sql, [id], (error, results) => {
-            if (error) {
-                throw new Error('Database error: ' + error.message);
+    
+    createTour(tour_description, tour_date, destination, bus_id, picture_path, callback) {
+        console.log('Creating tour with description:', tour_description);
+        const sql = `INSERT INTO tours (tour_description, destination, picture_path, tour_date, bus_id) VALUES (?, ?, ?, ?, ?)`;
+        this._conn.query(sql, [tour_description, destination, picture_path, tour_date, bus_id], (err, result) => {
+            if (err) {
+                console.error('Error creating tour:', err.message);
+                return callback(err);
             }
-            if (helper.isArrayEmpty(results)) {
-                throw new Error('No Record found by id=' + id);
+            if (result.affectedRows != 1) {
+                throw new Error('Could not insert new record. Data: ' + [tour_description, destination, picture_path, tour_date, bus_id]);
             }
-            return results[0];
+            
+            return callback(null, result.insertId);
         });
     }
-    /*---------------------------------- */
-    /*
 
-    loadAll() {
-        var sql = 'SELECT * FROM books';
-        var statement = this._conn.prepare(sql);
-        var result = statement.all(); 
-        if (helper.isArrayEmpty(result)) 
-            return [];
-        return result;
+    getTourById(id, callback) {
+        var sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours WHERE tour_id = ?';
+        this._conn.query(sql, [id], (error, results) => {
+            if (error) {
+                return callback(new Error('Database error: ' + error.message));
+            }
+            if (helper.isArrayEmpty(results)) {
+                return callback(new Error('No Record found by id=' + id));
+            }
+            return callback(null, results[0]);
+        });
+    }
+
+    //load tours on windows scroll
+    loadMore(offset, limit, callback) {
+        var sql = 'SELECT * FROM tours LIMIT ?, ?';
+         this._conn.query(sql, [offset, limit], (error, results) => {
+            if (error) {
+                return callback(new Error('Database error: ' + error.message));
+            }
+            if (helper.isArrayEmpty(results)) {
+                return callback(null, []);
+            }
+            return callback(null, results);
+        }   );
     }
 
 
-    create(bookTitle, bookAuthor, bookGenre, bookDescription, bookNr, bookStore, bookPrice, bookPath) {
-        const sql = `INSERT INTO books (book_title, book_author, book_genreid, book_description, book_nr, book_store, book_price, book_path)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-        const statement = this._conn.prepare(sql);
-        const params = [bookTitle, bookAuthor, bookGenre, bookDescription, bookNr, bookStore, bookPrice, bookPath];
-        const result = statement.run(params);
+    updateTour(tour_id, tourData, callback) {
+        console.log('Updating tour:', tourData);
+        var sql = 'UPDATE tours';
 
-        if (result.changes != 1) {
-            throw new Error('Could not insert new record. Data: ' + params);
+        // Dynamically build SET clause based on provided tourData
+        const setClauses = [];
+        const params = [];
+        for (const [key, value] of Object.entries(tourData)) {
+            setClauses.push(`${key} = ?`);
+            params.push(value);
+            console.log(`Updating field ${key} to value ${value}`);
         }
+        sql += ' SET ' + setClauses.join(', ') + ' WHERE tour_id = ?';
+        params.push(tour_id);
 
-        return this.loadById(result.lastInsertRowid);
+        console.log('Executing SQL:', sql, 'with params:', params);
+
+        this._conn.query(sql, params, (error, result) => {
+            if (error) {
+                return callback(new Error('Could not update Record. Reason: ' + error.message));
+            }
+            return callback(null, true);
+        });
     }
 
-    update(bookId, bookTitle, bookAuthor, bookGenreId, bookDescription, bookNr, bookStore, bookPrice, bookPath) {
-
-        var sql = 'UPDATE books SET book_title = ?, book_author = ?, book_genreid = ?, book_description = ?, book_nr = ?, book_store = ?, book_price = ?, book_path = ? WHERE book_id = ?';
-        var statement = this._conn.prepare(sql);
-        var params = [bookTitle, bookAuthor, bookGenreId, bookDescription, bookNr, bookStore, bookPrice, bookPath, bookId];
-        var result = statement.run(params);
-
-        if (result.changes != 1) 
-            throw new Error('Could not update existing Record. Data: ' + params);
-
-        return this.loadById(bookId);
-    }
-
-    delete(id) {
+    deleteTour(id, callback) {
         try {
-            var sql = 'DELETE FROM books WHERE book_id = ?';
-            var statement = this._conn.prepare(sql);
-            var result = statement.run(id);
-
-            if (result.changes != 1) 
-                throw new Error('Could not delete Record by id=' + id);
-
-            return true;
+            var sql = 'DELETE FROM tours WHERE tour_id = ?';
+            this._conn.query(sql, [id], (error, result) => {
+                if (error) {
+                    return callback(new Error('Could not delete Record by id=' + id + '. Reason: ' + error.message));
+                }
+                if (result.affectedRows != 1) {
+                    return callback(new Error('Could not delete Record by id=' + id));
+                }
+            });
+            return callback(null, true);
         } catch (ex) {
-            throw new Error('Could not delete Record by id=' + id + '. Reason: ' + ex.message);
+            return callback(new Error('Could not delete Record by id=' + id + '. Reason: ' + ex.message));
         }
+        
     }
 
     toString() {
-        console.log('ProduktDao [_conn=' + this._conn + ']');
+        console.log('TourDao [_conn=' + this._conn + ']');
     }
-    /*---------------------------------- */
 }
 
 module.exports = tourDao;
