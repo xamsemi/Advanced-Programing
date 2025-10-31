@@ -16,7 +16,7 @@ class UserDao {
 
     getUserByID(userId, callback) {
         const sql = 'SELECT username, email, user_role, password_hash FROM users WHERE user_id = ?';
-        console.error('Fetching user by ID:', userId);
+        console.log('Fetching user by ID:', userId);
         try {
 
             this._conn.query(sql, [userId], (err, results) => {
@@ -38,7 +38,7 @@ class UserDao {
 
     getUserByUsername(username, callback) {
         const sql = 'SELECT username, email, user_role, password_hash FROM users WHERE username = ?';
-        console.error('Fetching user by username:', username);
+        console.log('Fetching user by username:', username);
         try {
 
             this._conn.query(sql, [username], (err, results) => {
@@ -48,7 +48,7 @@ class UserDao {
                 }
                 if (results.length > 0) {
                     const user = results[0];
-                    console.error('Service User: DB returned keys =', Object.keys(user));
+                    console.log('Service User: DB returned keys =', Object.keys(user));
                     // Normalize common column names to password_hash
                     if (!user.password_hash) {
                         const alt = user.hashed_password || user.password || user.passwordHash || user.pass_hash;
@@ -59,7 +59,7 @@ class UserDao {
                             console.error('Service User: no password hash column found in DB result');
                         }
                     } else {
-                        console.error('Service User: password_hash length=', user.password_hash ? user.password_hash.length : 'undefined');
+                        console.log('Service User: password_hash length=', user.password_hash ? user.password_hash.length : 'undefined');
                     }
                     callback(null, user);
                 } else {
@@ -93,7 +93,7 @@ class UserDao {
             if (!result) {
                 console.error('Passwords do not match');
             } else {
-                console.error('Passwords match');
+                console.log('Passwords match');
             }
             callback(null, result);
         });

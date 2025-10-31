@@ -14,8 +14,19 @@ const loginLimiter = rateLimit({
   message: "Zu viele Login-Versuche. Bitte warte eine Minute.",
 });
 
-// Login endpoint
+
 serviceRouter.post('/login', loginLimiter, function(req, res) {
+
+    /*  #swagger.tags = ['Auth']
+        #swagger.description = 'Endpoint für Benutzer-Login'
+        #swagger.parameters['credentials'] = {
+            in: 'body',
+            description: 'Login-Daten',
+            required: true,
+            schema: { username: 'admin', password: 'Passwort1' }
+        }
+    */
+
     console.log('Service User: Client requested login');
 
     const { username, password } = req.body;
@@ -32,7 +43,7 @@ serviceRouter.post('/login', loginLimiter, function(req, res) {
             return res.status(500).json({ 'fehler': true, 'nachricht': 'Interner Serverfehler' });
         }
         if (!user) {
-            console.log('Service User: User not found');
+            console.error('Service User: User not found');
             return res.status(404).json({ 'fehler': true, 'nachricht': 'Benutzer nicht gefunden' });
         }
         
@@ -44,7 +55,7 @@ serviceRouter.post('/login', loginLimiter, function(req, res) {
             }
 
             if (!match) {
-                console.log('Service User: Passwords do not match');
+                console.error('Service User: Passwords do not match');
                 return res.status(401).json({ 'fehler': true, 'nachricht': 'Passwort ist falsch' });
             }
 
@@ -86,10 +97,17 @@ serviceRouter.get('/profile', (req, res) => {
 });
 
 serviceRouter.post("/register", async (req, res) => {
-    const { username, password, email } = req.body;
-    const user_role = 'user';
-    console.log('register route')
+    /*  #swagger.tags = ['Auth']
+        #swagger.description = 'Registriert einen neuen Benutzer'
+        #swagger.parameters['user'] = {
+            in: 'body',
+            description: 'Benutzerdaten',
+            required: true,
+            schema: { username: 'max', password: 'Passwort1', email: 'max@example.com', user_role: 'user' }
+        }
+    */
 
+    const { username, password, email, user_role } = req.body;
 
     if (!username || !password || !email ) {
         return res.status(400).json({ message: 'Username, Passwort, Email erforderlich' });
