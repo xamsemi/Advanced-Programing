@@ -1,10 +1,10 @@
 const helper = require('../helper.js');
 
-class tourDao {
+class TourDao {
 
     constructor(dbConnection) { // Übergabe der Datenbankverbindung
         if (!dbConnection) {
-            throw new Error('UserDao requires a valid dbConnection');
+            throw new Error('TourDao requires a valid dbConnection');
         }
         this._conn = dbConnection;
     }
@@ -114,4 +114,4 @@ class tourDao {
     }
 }
 
-module.exports = tourDao;
+module.exports = TourDao;
