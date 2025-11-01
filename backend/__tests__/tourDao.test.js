@@ -10,14 +10,6 @@ const DB_NAME = process.env.DB_NAME || 'busfahrt_app';
 
 let db;
 
-function parseLocalDatetimeString(dtStr) {
-	// dtStr expected format: YYYY-MM-DD HH:MM:SS
-	const m = dtStr.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/);
-	if (!m) return new Date(dtStr);
-	const [_, y, mm, d, hh, min, ss] = m;
-	return new Date(Number(y), Number(mm) - 1, Number(d), Number(hh), Number(min), Number(ss));
-}
-
 function queryPromise(conn, sql, params) {
 	return new Promise((resolve, reject) => {
 		conn.query(sql, params, (err, res) => (err ? reject(err) : resolve(res)));
