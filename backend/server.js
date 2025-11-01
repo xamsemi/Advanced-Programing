@@ -46,6 +46,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //Routen zu den Services
 app.use('/api/user', require('./services/user'));
+app.use('/api/tour', require('./services/tour'));
 
 // Endpoint, der Nachrichten empfängt
 app.post('/api/message', (req, res) => {

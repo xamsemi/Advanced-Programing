@@ -16,22 +16,20 @@
   <body>
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="fahrten.html">Fasnetsverein Reutlingen</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="fahrten.html">Fahrten</a></li>
-        <!--macht das Sinn, auf infos.html zu verweisen?     <li class="nav-item"><a class="nav-link" href="infos.html">Infos</a></li> -->
-                <li class="nav-item"><a class="nav-link" href="kontakt.html">Kontakt</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="indextest.html">Logout</a></li>
-            </ul> <!-- Logout href noch anpassen, oder ist man ausgeloggt, sobald man auf der Startseite ist? -->
-            </div>
+      <div class="container">
+        <a class="navbar-brand" href="fahrten.html">Fasnetsverein Reutlingen</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-center">
+            <li class="nav-item"><a class="nav-link" href="kontakt.html">Kontakt</a></li>
+            <li id="logoutBtn" class="nav-link" >Logout</li>
+          </ul>
         </div>
-        </nav>
-
+      </div>
+    </nav>
     <main>
       <section class="py-5 text-center">
         <div class="container">
@@ -43,53 +41,18 @@
           <!-- Klasse fuer Karten-Container -->
           <div class="row row-cols-1 row-cols-md-3 g-4" id="fahrten-container">
            
-          <!--groesse der Bilder noch einheitlich machen-->
-            <div class="col">
-              <div class="card h-100 text-center shadow-sm">
-                <img src="img/RV-Fasnet.jpg" class="card-img-top" alt="Ravensburg">
-                <div class="card-body">
-                  <h4 class="card-title">Ravensburg</h4>
-                  <p class="card-text">12.02.2025 – Ringumzug in Ravensburg</p>
-                  <a href="infos.html" class="btn btn-outline-primary">Mehr Infos</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card h-100 text-center shadow-sm">
-                <img src="img/RT_Fasnet.jpg" class="card-img-top" alt="Reutlingen">
-                <div class="card-body">
-                  <h4 class="card-title">Reutlingen</h4>
-                  <p class="card-text">13.02.2025 – Großer Fasnetsumzug in Reutlingen</p>
-                  <a href="infos.html" class="btn btn-outline-primary">Mehr Infos</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card h-100 text-center shadow-sm">
-                <img src="img/Rangendingen_Fasnet.jpg" class="card-img-top" alt="Rangendingen">
-                <div class="card-body">
-                  <h4 class="card-title">Rangendingen</h4>
-                  <p class="card-text">14.02.2025 – Nachtfasnetsumzug in Rangendingen</p>
-                  <a href="infos.html" class="btn btn-outline-primary">Mehr Infos</a>
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
       </section>
     </main>
-
      <footer class="text-center text-secondary py-4">
         <small>© 2025 Fasnets-Busreisen - Mitgliederbereich</small>
     </footer>
 
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    
-
+    <script type="module" src="js/fahrten.js"></script>
 
   </body>
 </html>
