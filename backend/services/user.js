@@ -37,7 +37,7 @@ serviceRouter.post('/login', loginLimiter, function(req, res) {
     }
 
     const userDao = new UserDao(req.app.locals.dbConnection);
-    userDao.getUserByUsername(username, (err, user) => {
+    userDao.getUserByUserName(username, (err, user) => {
         if (err) {
             console.error('Service User: Error fetching user:', err.message);
             return res.status(500).json({ 'fehler': true, 'nachricht': 'Interner Serverfehler' });
@@ -114,7 +114,7 @@ serviceRouter.post("/register", async (req, res) => {
     }
     // Prüfen, ob Benutzer existiert
     const userDao = new UserDao(req.app.locals.dbConnection);
-    userDao.getUserByUsername(username, (err, user) => {
+    userDao.getUserByUserName(username, (err, user) => {
         if (err) {
             console.error('Error fetching user:', err.message);
             return res.status(500).json({ message: 'Interner Serverfehler' });

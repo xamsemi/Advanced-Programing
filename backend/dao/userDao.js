@@ -36,7 +36,7 @@ class UserDao {
         }
     }
 
-    getUserByUsername(username, callback) {
+    getUserByUserName(username, callback) {
         const sql = 'SELECT username, email, user_role, password_hash FROM users WHERE username = ?';
         console.log('Fetching user by username:', username);
         try {
@@ -72,6 +72,37 @@ class UserDao {
         }
     }
 
+    createUser(username, email, user_role, passwordOrHash, callback) {
+        const sql = 'INSERT INTO users (username, email, user_role, password_hash) VALUES (?, ?, ?, ?)';
+        // Detect if passwordOrHash already looks like a bcrypt hash (starts with $2)
+        const seemsHashed = (typeof passwordOrHash === 'string' && passwordOrHash.startsWith('$2') && passwordOrHash.length >= 50);
+
+        const insert = (finalHash) => {
+            this._conn.query(sql, [username, email, user_role, finalHash], (err, results) => {
+                if (err) {
+                    console.error('Error creating user:', err.message);
+                    return callback(err);
+                }
+                callback(null, results.insertId);
+            });
+        };
+
+        if (seemsHashed) {
+            console.error('createUser: received pre-hashed password, skipping re-hash');
+            insert(passwordOrHash);
+            return;
+        }
+
+        // Otherwise hash now
+        bcrypt.hash(passwordOrHash, 10, (err, hashedPassword) => {
+            if (err) {
+                console.error('Error hashing password:', err.message);
+                return callback(err);
+            }
+            insert(hashedPassword);
+        });
+    }
+
     comparePassword(inputPassword, hashedPassword, callback) {
         // Validierung
         if (!inputPassword || !hashedPassword) {
@@ -103,34 +134,64 @@ class UserDao {
         return jwt.sign({ username: username }, secretKey, { expiresIn: '1h' });
     }
 
-    createUser(username, email, user_role, passwordOrHash, callback) {
-        const sql = 'INSERT INTO users (username, email, user_role, password_hash) VALUES (?, ?, ?, ?)';
-        // Detect if passwordOrHash already looks like a bcrypt hash (starts with $2)
-        const seemsHashed = (typeof passwordOrHash === 'string' && passwordOrHash.startsWith('$2') && passwordOrHash.length >= 50);
-
-        const insert = (finalHash) => {
-            this._conn.query(sql, [username, email, user_role, finalHash], (err, results) => {
-                if (err) {
-                    console.error('Error creating user:', err.message);
-                    return callback(err);
-                }
-                callback(null, results.insertId);
-            });
-        };
-
-        if (seemsHashed) {
-            console.error('createUser: received pre-hashed password, skipping re-hash');
-            insert(passwordOrHash);
-            return;
-        }
-
-        // Otherwise hash now
-        bcrypt.hash(passwordOrHash, 10, (err, hashedPassword) => {
+    updateUserPassword(username, newPassword, callback) {
+        bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
             if (err) {
-                console.error('Error hashing password:', err.message);
+                console.error('Error hashing new password:', err.message);
                 return callback(err);
             }
-            insert(hashedPassword);
+            const sql = 'UPDATE users SET password_hash = ? WHERE username = ?';
+            this._conn.query(sql, [hashedPassword, username], (err, results) => {
+                if (err) {
+                    console.error('Error changing user password:', err.message);
+                    return callback(err);
+                }
+                callback(null, results.affectedRows > 0);
+            });
+        });
+    }
+
+    updateUserEmail(username, newEmail, callback) {
+        const sql = 'UPDATE users SET email = ? WHERE username = ?';
+        this._conn.query(sql, [newEmail, username], (err, results) => {
+            if (err) {
+                console.error('Error updating user email:', err.message);
+                return callback(err);
+            }
+            callback(null, results.affectedRows > 0);
+        });
+    }
+
+    updateUserRole(username, newRole, callback) {
+        const sql = 'UPDATE users SET user_role = ? WHERE username = ?';
+        this._conn.query(sql, [newRole, username], (err, results) => {
+            if (err) {
+                console.error('Error updating user role:', err.message);
+                return callback(err);
+            }
+            callback(null, results.affectedRows > 0);
+        });
+    }
+
+    updateUserName(oldUsername, newUsername, callback) {
+        const sql = 'UPDATE users SET username = ? WHERE username = ?';
+        this._conn.query(sql, [newUsername, oldUsername], (err, results) => {
+            if (err) {
+                console.error('Error updating user name:', err.message);
+                return callback(err);
+            }
+            callback(null, results.affectedRows > 0);
+        });
+    }
+
+    deleteUser(username, callback) {
+        const sql = 'DELETE FROM users WHERE username = ?';
+        this._conn.query(sql, [username], (err, results) => {
+            if (err) {
+                console.error('Error deleting user:', err.message);
+                return callback(err);
+            }
+            callback(null, results.affectedRows > 0);
         });
     }
 }

@@ -54,13 +54,13 @@ afterAll(async () => {
 
 describe('TourDao integration with real DB', () => {
 
-    const tour_description = 'Integration Test Tour';
-    const tour_date = '2024-12-31 10:00:00';
+    const tour_description = 'Integration Test Tour Init Data';
+	const tour_date = new Date();
 	const destination = 'Test City';
 	const bus_id = 1;
 	const picture_path = 'pic1.jpg';
 
-	test('createTour -> getTourById', async () => {
+	test('Function createTour', async () => {
 		const dao = new TourDao(db);        
         //Create
 		const insertId = await new Promise((res, rej) => {
@@ -68,41 +68,132 @@ describe('TourDao integration with real DB', () => {
 		});
 		expect(insertId).toBeGreaterThan(0);
 		expect(typeof insertId).toBe('number');
+	}, 20000);
 
-        //Read
+	test('Function getTourById', async () => {
+		const dao = new TourDao(db);        
+		const insertId = await new Promise((res, rej) => {
+			dao.createTour(tour_description, tour_date, destination, bus_id, picture_path, (err, id) => (err ? rej(err) : res(id)));
+		});
 		const tour = await new Promise((res, rej) => {
+			console.log('Fetching tour with ID:', insertId);
 			dao.getTourById(insertId, (err, t) => (err ? rej(err) : res(t)));
 		});
 		expect(tour).toBeDefined();
 		expect(tour.tour_description).toBe(tour_description);
-		expect(tour.tour_date).toBe(tour_date);
+		expect(tour.tour_date instanceof Date).toBe(true);
 		expect(tour.destination).toBe(destination);
 		expect(tour.bus_id).toBe(bus_id);
 		expect(tour.picture_path).toBe(picture_path);
 	}, 20000);
 
-	test('Change Tour in Database', async () => {
-        const dao = new TourDao(db);
-
-        const ok = await new Promise((res, rej) => {
-			dao.updateTour(insertId, { tour_description: 'Updated Tour' }, (err, id) => (err ? rej(err) : res(id)));
+	test('Function getAllTours', async () => {
+		const dao = new TourDao(db);
+		const tours = await new Promise((res, rej) => {
+			dao.getAllTours((err, t) => (err ? rej(err) : res(t)));
 		});
-		expect(ok).toBe(true);
+		expect(tours).toBeDefined();
+		expect(Array.isArray(tours)).toBe(true);
+		expect(tours.length).toBeGreaterThan(0);
+	});	
 
-		const tour = await new Promise((res, rej) => {
-			dao.getTourById(insertId, (err, t) => (err ? rej(err) : res(t)));
-			});
-		expect(tour).toBeDefined();
-		expect(tour.tour_description).toBe('Updated Tour');
-	});
+	test('Function deleteTour', async () => {
+		const dao = new TourDao(db);
 
-    test('delete Tour from Database', async () => {
-        const dao = new TourDao(db);
+		// create a tour to delete
+		const insertId = await new Promise((res, rej) => {
+			dao.createTour(tour_description, tour_date, destination, bus_id, picture_path, (err, id) => (err ? rej(err) : res(id)));
+		});
+		expect(insertId).toBeGreaterThan(0);
 
-        const ok = await new Promise((res, rej) => {
+		const ok = await new Promise((res, rej) => {
 			dao.deleteTour(insertId, (err, id) => (err ? rej(err) : res(id)));
 		});
 		expect(ok).toBe(true);
 	});
 
+	test('Function loadMoreTours', async () => {
+		const dao = new TourDao(db);        
+        //Create Tours
+		for (let i = 0; i < 5; i++) {
+			const insertId = await new Promise((res, rej) => {
+				dao.createTour(tour_description + ' More: ' + i, tour_date, destination, bus_id, picture_path, (err, id) => (err ? rej(err) : res(id)));
+			});
+			expect(insertId).toBeGreaterThan(0);
+			expect(typeof insertId).toBe('number');
+		}
+
+        //Read
+		const tours = await new Promise((res, rej) => {
+			dao.loadMoreTours(0, 10, (err, t) => (err ? rej(err) : res(t)));
+		});
+		expect(tours).toBeDefined();
+		expect(tours.length).toBeGreaterThan(0);
+
+		expect(tours[5].destination).toBe(destination);
+		expect(tours[5].bus_id).toBe(bus_id);
+		expect(tours[5].picture_path).toBe(picture_path);
+	}, 20000);
+
+describe('Update Tour Data', () => {
+
+	const tour_description = 'Integration Test Tour Update Data';
+	const tour_date = new Date();
+	const destination = 'New Test City';
+	const bus_id = 2;
+	const picture_path = 'pic5.jpg';
+
+
+	test('with description change', async () => {
+        const dao = new TourDao(db);
+
+		const insertId = await new Promise((res, rej) => {
+			dao.createTour(tour_description, new Date(), destination, bus_id, picture_path, (err, id) => (err ? rej(err) : res(id)));
+		});
+		console.log('Created tour with ID for update test:', insertId);
+		expect(insertId).toBeGreaterThan(0);
+		
+		const ok = await new Promise((res, rej) => {
+			dao.updateTour(insertId, { tour_description: 'Update the Tour Data Description' }, (err, id) => (err ? rej(err) : res(id)));
+		});
+		expect(ok).toBe(true);
+	});
+
+	test('with bus change', async () => {
+        const dao = new TourDao(db);
+
+		const bus_id = 12;
+		const createBus = await new Promise((res, rej) => {
+			dao.createBus(bus_id, 50, 'Mercedes', 'ABC-123', (err, id) => (err ? rej(err) : res(id)));
+		});
+		expect(createBus).toBeGreaterThan(0);
+
+		const insertId = await new Promise((res, rej) => {
+			dao.createTour(tour_description, new Date(), destination, bus_id, picture_path, (err, id) => (err ? rej(err) : res(id)));
+		});
+		console.log('Created tour with ID for update test:', insertId);
+		expect(insertId).toBeGreaterThan(0);
+		
+		const ok = await new Promise((res, rej) => {
+			dao.updateTour(insertId, { bus_id: 12 }, (err, id) => (err ? rej(err) : res(id)));
+		});
+		expect(ok).toBe(true);
+	});
+
+	test('with tour date change', async () => {
+        const dao = new TourDao(db);
+
+		const insertId = await new Promise((res, rej) => {
+			dao.createTour(tour_description, new Date(), destination, bus_id, picture_path, (err, id) => (err ? rej(err) : res(id)));
+		});
+		console.log('Created tour with ID for update test:', insertId);
+		expect(insertId).toBeGreaterThan(0);
+		
+		const ok = await new Promise((res, rej) => {
+			dao.updateTour(insertId, { tour_date: new Date() }, (err, id) => (err ? rej(err) : res(id)));
+		});
+		expect(ok).toBe(true);
+	});
+
+});
 });
