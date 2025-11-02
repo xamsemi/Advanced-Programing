@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "swagger-autogen": "^2.23.7"
+  }
+}

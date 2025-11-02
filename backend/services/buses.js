@@ -1,6 +1,6 @@
 const express = require('express');
 const serviceRouter = express.Router();
-const TourDao = require('../dao/busesDao.js');
+const BusesDao = require('../dao/busesDao.js');
 const helper = require('../helper.js');
 
 console.log('- Service Buses');
@@ -10,12 +10,17 @@ serviceRouter.get('/buses', async (req, res) => {
     console.log('Service Buses: Client requested all buses');
 
     try {
-        // Fiktive Touren-Daten
+        /*
+        // Fiktive Bus-Daten
         const buses = [
-            { buses_id: 1, bus_seats: 123, company_id: 1 },
-            { buses_id: 2, bus_seats: 213, company_id: 2 },
+            { bus_id: 1, bus_seats: 123, company_id: 1 },
+            { bus_id: 2, bus_seats: 213, company_id: 2 },
         ];
 
+        */
+       const busesDao = new BusesDao(req.app.locals.dbConnection);
+
+        const buses = await busesDao.getAllBuses();
         res.status(200).json({ message: 'success', data: buses });
     } catch (err) {
         console.error('Service Buses: Error loading buses', err);
@@ -23,14 +28,14 @@ serviceRouter.get('/buses', async (req, res) => {
     }
 });
 
-// --- Einzelne Bus abrufen ---
+// --- Einzelnen Bus abrufen ---
 serviceRouter.get('/:id', async (req, res) => {
     const { id } = req.params;
     console.log('Service Buses: Client requested bus id=' + id);
     const busesDao = new BusesDao(req.app.locals.dbConnection);
 
     try {
-        const buses = await busesDao.loadById(id);
+        const buses = await busesDao.getBusById(id);
         res.status(200).json({ message: 'success', data: buses });
     } catch (err) {
         console.error('Service Buses: Error loading buses:', err.message);

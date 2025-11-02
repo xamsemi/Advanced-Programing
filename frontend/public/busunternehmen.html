@@ -106,7 +106,7 @@ async function loadBuses() {
   const tbody = document.getElementById("bus-table-body");
   tbody.innerHTML = ""; // leeren
 
-  data.forEach(bus => {
+  data.data.forEach(bus => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td> Name Bus9977</td>
@@ -114,10 +114,7 @@ async function loadBuses() {
       <td>${bus.bus_seats}</td>
       <td>Anschrift</td>
       <td>Kontakt</td>
-      <td class="text-center">
-        <a href="busunternehmen_bearbeiten.html?id=${bus.id}" class="btn btn-sm btn-outline-warning me-2">Bearbeiten</a>
-        <button class="btn btn-sm btn-outline-danger" onclick="deleteBus(${bus.id})">Löschen</button>
-      </td>
+      
     `;
     tbody.appendChild(row);
   });

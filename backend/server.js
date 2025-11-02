@@ -44,10 +44,6 @@ const swaggerDocument = require('./swagger-output.json');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
-//Routen zu den Services
-app.use('/api/user', require('./services/user'));
-app.use('/api/tour', require('./services/tour'));
-
 // Endpoint, der Nachrichten empfängt
 app.post('/api/message', (req, res) => {
     const { text } = req.body;  
@@ -74,6 +70,16 @@ db.connect((err) => {
   } else {
     console.log('- Connected to MySQL database.');
     app.locals.dbConnection = db; // set only after successful connect
+
+    
+    //Routen zu den Services
+    app.use('/api/user', require('./services/user'));
+    app.use('/api/tour', require('./services/tour'));
+    /*hinzugefuegt*/
+    app.use('/api/buses', require('./services/buses.js'));
+
+
+
     app.listen(port, () => {
       console.log(`Backend läuft auf http://localhost:${port}`);
       console.log(`Swagger Docs: http://localhost:${port}/api-docs`);
