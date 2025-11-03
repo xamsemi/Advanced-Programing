@@ -6,7 +6,8 @@ const helper = require('../helper.js');
 console.log('- Service Buses');
 
 // --- Alle Busse abrufen ---
-serviceRouter.get('/buses', async (req, res) => {
+//serviceRouter.get('/buses', async (req, res) => {
+serviceRouter.get('/', async (req, res) => {
     console.log('Service Buses: Client requested all buses');
 
     try {

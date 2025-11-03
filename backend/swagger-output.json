@@ -189,7 +189,7 @@
         }
       }
     },
-    "/api/buses/buses": {
+    "/api/buses/": {
       "get": {
         "description": "",
         "responses": {

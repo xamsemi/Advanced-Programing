@@ -7,6 +7,8 @@ console.log('Starting server...');
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+//Pfad zur public Mappe
+const path = require('path'); // 🟢 für den Pfad zur public-Mappe
 
 const port = 3000;
 const app = express();
@@ -34,6 +36,9 @@ app.use(
     resave: false, 
     saveUninitialized: false }));
 
+
+// Diese Zeile erlaubt es, HTML/CSS/JS aus /public zu laden, angepasst!
+app.use(express.static(path.join(__dirname, 'public')));
 
 // --- Swagger Setup ---
 const swaggerUi = require('swagger-ui-express');
