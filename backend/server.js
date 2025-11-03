@@ -3,7 +3,7 @@
 /****************************************************/
 console.log('Starting server...');
 
-
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -28,6 +28,9 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//Tell the express app to use static-folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(
   session({ 
     secret: "geheimesessionkey", 
@@ -47,6 +50,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 //Routen zu den Services
 app.use('/api/user', require('./services/user'));
 app.use('/api/tour', require('./services/tour'));
+
+// Endpoint, für Defaltseite
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
 
 // Endpoint, der Nachrichten empfängt
 app.post('/api/message', (req, res) => {
