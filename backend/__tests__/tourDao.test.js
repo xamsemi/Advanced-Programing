@@ -135,6 +135,8 @@ describe('TourDao integration with real DB', () => {
 		expect(tours[5].picture_path).toBe(picture_path);
 	}, 20000);
 
+});
+
 describe('Update Tour Data', () => {
 
 	const tour_description = 'Integration Test Tour Update Data';
@@ -195,5 +197,4 @@ describe('Update Tour Data', () => {
 		expect(ok).toBe(true);
 	});
 
-});
 });
