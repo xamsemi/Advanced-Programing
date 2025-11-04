@@ -1,5 +1,8 @@
 
+import { loadNavbar } from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
+
+loadNavbar();
 
 window.addEventListener('DOMContentLoaded', async () => {
     // 🔹 Prüfe Login-Status – leite weiter falls ausgeloggt

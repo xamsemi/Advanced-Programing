@@ -1,4 +1,7 @@
+import { loadNavbar } from './loadNavbar.js';
 import { checkLogin, setupLogout } from './checkLogin.js';
+
+loadNavbar();
 
 window.addEventListener('DOMContentLoaded', async () => {
     const loginForm = document.getElementById('loginContainer');
