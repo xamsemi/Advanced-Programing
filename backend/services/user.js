@@ -16,17 +16,6 @@ const loginLimiter = rateLimit({
 
 
 serviceRouter.post('/login', loginLimiter, function(req, res) {
-
-    /*  #swagger.tags = ['Auth']
-        #swagger.description = 'Endpoint für Benutzer-Login'
-        #swagger.parameters['credentials'] = {
-            in: 'body',
-            description: 'Login-Daten',
-            required: true,
-            schema: { username: 'admin', password: 'Passwort1' }
-        }
-    */
-
     console.log('Service User: Client requested login');
 
     const { username, password } = req.body;
@@ -97,15 +86,6 @@ serviceRouter.get('/profile', (req, res) => {
 });
 
 serviceRouter.post("/register", async (req, res) => {
-    /*  #swagger.tags = ['Auth']
-        #swagger.description = 'Registriert einen neuen Benutzer'
-        #swagger.parameters['user'] = {
-            in: 'body',
-            description: 'Benutzerdaten',
-            required: true,
-            schema: { username: 'max', password: 'Passwort1', email: 'max@example.com', user_role: 'user' }
-        }
-    */
 
     const { username, password, email, user_role } = req.body;
 

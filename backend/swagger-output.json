@@ -37,26 +37,19 @@
     },
     "/api/user/login": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "Endpoint für Benutzer-Login",
+        "description": "",
         "parameters": [
           {
-            "name": "credentials",
+            "name": "body",
             "in": "body",
-            "description": "Login-Daten",
-            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "username": {
-                  "type": "string",
-                  "example": "admin"
+                  "example": "any"
                 },
                 "password": {
-                  "type": "string",
-                  "example": "Passwort1"
+                  "example": "any"
                 }
               }
             }
@@ -109,34 +102,25 @@
     },
     "/api/user/register": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "Registriert einen neuen Benutzer",
+        "description": "",
         "parameters": [
           {
-            "name": "user",
+            "name": "body",
             "in": "body",
-            "description": "Benutzerdaten",
-            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "username": {
-                  "type": "string",
-                  "example": "max"
+                  "example": "any"
                 },
                 "password": {
-                  "type": "string",
-                  "example": "Passwort1"
+                  "example": "any"
                 },
                 "email": {
-                  "type": "string",
-                  "example": "max@example.com"
+                  "example": "any"
                 },
                 "user_role": {
-                  "type": "string",
-                  "example": "user"
+                  "example": "any"
                 }
               }
             }

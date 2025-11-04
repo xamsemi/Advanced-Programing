@@ -1,26 +1,16 @@
 
 import { setupLogout,checkLogin } from './checkLogin.js';
 
-checkLogin(false, true);
-setupLogout();
-ladeTouren();
+window.addEventListener('DOMContentLoaded', async () => {
+    // 🔹 Prüfe Login-Status – leite weiter falls ausgeloggt
+    const user = await checkLogin(false, true);
 
-// --- Seitenzugriff nur mit gültiger Session erlauben ---
-(async () => {
-    try {
-        const res = await fetch('/api/user/profile', { credentials: 'include' });
-        if (!res.ok) {
-            // Kein gültiges Session-Cookie → zur Login-Seite zurück
-            window.location.href = 'index.html';
-        } else {
-            ladeTouren();
-        }
-        } catch (err) {
-          console.error('Fehler bei der Sitzungsprüfung:', err);
-          window.location.href = 'index.html';
-        }
-      })();
-
+    // 🔹 Nur laden, wenn Benutzer eingeloggt ist
+    if (user) {
+        setupLogout();
+        ladeTouren();
+    }
+});
 // --- Fahrten dynamisch laden ---
     async function ladeTouren() {
         try {
