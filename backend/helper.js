@@ -272,3 +272,15 @@ module.exports.round = function(val) {
     val = Math.round(val*Math.pow(10,2))/Math.pow(10,2);
     return val;
 }
+
+// Accept a Promise and an optional node-style callback. If callback is provided
+// it will be invoked with (err, result). If no callback, the original Promise
+// is returned so callers can use async/await.
+module.exports.maybeCallback = function(promise, callback) {
+    if (typeof callback === 'function') {
+        promise.then(result => callback(null, result)).catch(err => callback(err));
+        // When callback is provided, do not return the Promise to encourage callback style
+        return undefined;
+    }
+    return promise;
+}
