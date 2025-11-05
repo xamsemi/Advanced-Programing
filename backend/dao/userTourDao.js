@@ -14,8 +14,8 @@ class UserTourDao {
     // User bucht eine Tour
     // Supports either (userId, tourId, callback) or returns a Promise when no callback provided
     bookTour(userId, tourId, callback) {
-        const sql = 'INSERT INTO user_tours (user_id, tour_id) VALUES (?, ?)';
         const promise = new Promise((resolve, reject) => {
+            const sql = 'INSERT INTO user_tours (user_id, tour_id) VALUES (?, ?)';
             this._conn.query(sql, [userId, tourId], (err, result) => {
                 if (err) {
                     return reject(new Error('Booking failed: ' + err.message));
@@ -28,9 +28,9 @@ class UserTourDao {
 
     // Alle Touren eines Users laden
     // Supports either (userId, callback) or returns a Promise when no callback provided
-    getToursByUser(userId, callback) {
-        const sql = `SELECT user_id, tour_id FROM user_tours WHERE user_id = ?`;
+    getToursByUser(userId, callback) {        
         const promise = new Promise((resolve, reject) => {
+            const sql = `SELECT user_id, tour_id FROM user_tours WHERE user_id = ?`;
             this._conn.query(sql, [userId], (err, results) => {
                 if (err) {
                     return reject(new Error('Could not fetch tours for user: ' + err.message));
