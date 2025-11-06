@@ -1,15 +1,31 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
   <div class="container">
-    <a class="navbar-brand" href="fahrten.html">Fasnetsverein Reutlingen</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+    <!-- Logo / Brand -->
+    <a class="navbar-brand fw-bold" href="fahrten.html">
+      Fasnetsverein Reutlingen
+    </a>
+
+    <!-- Toggler für Mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
+    <!-- Navbar Items -->
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item"><a class="nav-link" href="kontakt.html">Kontakt</a></li>
-        <li id="userInfo" class="nav-link">Kein Benutzer eingeloggt</li>
-        <li id="logoutBtn" class="nav-link" style="display:none;">Logout</li>
+        <li class="nav-item">
+          <a class="nav-link text-light fw-semibold" href="fahrten.html">Fahrten</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light fw-semibold" href="kontakt.html">Kontakt</a>
+        </li>
+        <li class="nav-item">
+          <span id="userInfo" class="nav-link text-warning">Kein Benutzer eingeloggt</span>
+        </li>
+        <li class="nav-item">
+          <button id="logoutBtn" class="btn btn-outline-warning btn-sm" style="display:none;">Logout</button>
+        </li>
       </ul>
     </div>
   </div>
