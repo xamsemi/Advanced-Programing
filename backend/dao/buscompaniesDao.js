@@ -72,23 +72,18 @@ async getAllBuscompanies() {
 }
 
 
+    async createBuscompany({ company_name, contact_info, company_email   }) {
+    const sql = "INSERT INTO bus_companies (company_name, contact_info, company_email) VALUES (?, ?, ?)";
+    try {
+        const [result] = await this._conn.promise().query(sql, [company_name, contact_info, company_email]);
+        return result.insertId; // ID des neuen Busses
+    } catch (error) {
+        throw new Error("Database error: " + error.message);
+    }
+    }
 
 /*
-    createTour(tour_description, tour_date, destination, bus_id, picture_path, callback) {
-        console.log('Creating tour with description:', tour_description);
-        const sql = `INSERT INTO tours (tour_description, destination, picture_path, tour_date, bus_id) VALUES (?, ?, ?, ?, ?)`;
-        this._conn.query(sql, [tour_description, destination, picture_path, tour_date, bus_id], (err, result) => {
-            if (err) {
-                console.error('Error creating tour:', err.message);
-                return callback(err);
-            }
-            if (result.affectedRows != 1) {
-                throw new Error('Could not insert new record. Data: ' + [tour_description, destination, picture_path, tour_date, bus_id]);
-            }
-            
-            return callback(null, result.insertId);
-        });
-    }
+   
 
     updateTour(tour_id, tourData, callback) {
         console.log('Updating tour:', tourData);

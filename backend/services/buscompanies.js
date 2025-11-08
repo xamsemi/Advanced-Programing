@@ -44,4 +44,22 @@ serviceRouter.get('/:id', async (req, res) => {
     }
 });
 
+// neuen Busunternehmen erstellen
+serviceRouter.post("/", async (req, res) => {
+  const { company_name, contact_info, company_email } = req.body;
+  const buscompaniesDao = new BuscompaniesDao(req.app.locals.dbConnection);
+
+  try {
+    const newCompanyId = await buscompaniesDao.createBuscompany({ company_name, contact_info, company_email });
+    res.status(200).json({ message: "Busunternehmen erfolgreich erstellt", company_id: newCompanyId });
+  } catch (err) {
+    console.error("Fehler beim Erstellen des Busunternehmens:", err.message);
+    res.status(500).json({ fehler: true, nachricht: err.message });
+  }
+});
+
+
+
+
+
 module.exports = serviceRouter;

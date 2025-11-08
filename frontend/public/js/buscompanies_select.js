@@ -82,6 +82,57 @@ form.addEventListener("submit", async (event) => {
 
 
 
+
+// Busunternehmen hinzufügen aus Formular
+const form_busunternehmen = document.querySelector("form");
+
+form_busunternehmen.addEventListener("submit", async (event) => {
+  event.preventDefault(); // Verhindert Seitenreload
+
+  // Werte aus Formularfeldern holen
+  const name = document.getElementById("name").value;
+  const address = document.getElementById("anschrift").value;
+  const contact = document.getElementById("kontakt").value;
+
+  // Validierung
+  if (!name || !address || !contact) {
+    alert("Bitte alle Felder ausfüllen.");
+    return;
+  }
+
+  // Objekt für API
+  const newCompany = {
+    company_name: name,
+    contact_info: address,
+    company_email: contact
+  };
+
+  try {
+    const response = await fetch("/api/buscompanies", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(newCompany)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Fehler beim Speichern: ${response.status}`);
+    }
+
+    const result = await response.json();
+    alert("Busunternehmen erfolgreich gespeichert!");
+    form_busunternehmen.reset(); // Formular zurücksetzen
+
+  } catch (error) {
+    console.error("Fehler beim Speichern des Busunternehmens:", error);
+    alert("Fehler beim Speichern des Busunternehmens.");
+  }
+});
+
+
+
+
+
 // Direkt beim Laden der Seite ausführen
 //document.addEventListener("DOMContentLoaded", loadBusCompanies);
 loadBusCompanies();
