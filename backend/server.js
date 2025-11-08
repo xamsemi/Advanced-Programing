@@ -82,6 +82,7 @@ db.connect((err) => {
     app.use('/api/tour', require('./services/tour'));
     /*hinzugefuegt*/
     app.use('/api/buses', require('./services/buses.js'));
+    app.use('/api/buscompanies', require('./services/buscompanies.js'));
 
 
 
