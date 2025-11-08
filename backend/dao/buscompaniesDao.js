@@ -13,8 +13,8 @@ class BuscompaniesDao {
         return this._conn;
     }
 /*
-    getAllBuses(callback) {
-        var sql = 'SELECT bus_id, bus_seats, company_id FROM buses';
+    getAllBuscompanies(callback) {
+        var sql = 'SELECT company_id, company_name FROM bus_companies';
         this._conn.query(sql, (error, results) => {
             if (error) {
                 return callback(new Error('Database error: ' + error.message));
@@ -25,7 +25,7 @@ class BuscompaniesDao {
 */
 
 async getAllBuscompanies() {
-    const sql = 'SELECT company_id, company_name FROM bus_companies';
+    const sql = 'SELECT company_id, company_name, contact_info, company_email FROM bus_companies';
     const [rows] = await this._conn.promise().query(sql);
     return rows;
   }
@@ -59,7 +59,7 @@ async getAllBuscompanies() {
     }
 */
     async getBuscompanyById(id) {
-    const sql = 'SELECT company_id, company_name FROM bus_companies WHERE company_id = ?';
+    const sql = 'SELECT company_id, company_name, contact_info, company_email FROM bus_companies WHERE company_id = ?';
     try {
         const [rows] = await this._conn.promise().query(sql, [id]);
         if (helper.isArrayEmpty(rows)) {
@@ -115,9 +115,10 @@ async getAllBuscompanies() {
         });
     }
 
-    deleteTour(id, callback) {
+    
+    deleteBuscompany(id, callback) {
         try {
-            var sql = 'DELETE FROM tours WHERE tour_id = ?';
+            var sql = 'DELETE FROM bus_companies WHERE company_id = ?';
             this._conn.query(sql, [id], (error, result) => {
                 if (error) {
                     return callback(new Error('Could not delete Record by id=' + id + '. Reason: ' + error.message));
@@ -132,7 +133,7 @@ async getAllBuscompanies() {
         }
         
     }
-*/
+    */
     toString() {
         console.log('BuscompaniesDao [_conn=' + this._conn + ']');
     }

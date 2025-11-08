@@ -20,20 +20,32 @@ async function loadBuses() {
       return;
     }
 //${bus.bus_type || "-"} 
-    buses.forEach(bus => {
+    for (const bus of buses) {
+      const response = await fetch(`/api/buscompanies/${bus.company_id}`, { credentials: "include" });
+      console.log("Response beim Laden der Busunternehmen:", response.status);
+      
+      if (!response.ok) {
+        throw new Error(`Fehler beim Laden: ${response.status}`);
+      }
+
+      const json_bu = await response.json();
+      const company = json_bu.data;
+
       const row = document.createElement("tr");
+
       row.innerHTML = `
-        <td>${bus.bus_id}</td>
-        <td>Bustyp</td> 
+        
+        <td>${company.company_name}</td>
         <td>${bus.bus_seats}</td>
-        <td>${bus.company_id}</td>
+        <td>${company.contact_info}</td>
+        <td>${company.company_email}</td>
         <td class="text-center">
           <a href="busunternehmen_bearbeiten.html?id=${bus.bus_id}" class="btn btn-sm btn-outline-warning me-2">Bearbeiten</a>
           <button class="btn btn-sm btn-outline-danger" onclick="deleteBus(${bus.bus_id})">Löschen</button>
         </td>
       `;
       tbody.appendChild(row);
-    });
+    };
   } catch (error) {
     console.error("Fehler beim Laden der Busse:", error);
     console.log("Response:", response?.status);

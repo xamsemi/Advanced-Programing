@@ -44,4 +44,33 @@ serviceRouter.get('/:id', async (req, res) => {
     }
 });
 
+serviceRouter.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    console.log('Service Buses: Client requested deletion of bus id=' + id);
+    const busesDao = new BusesDao(req.app.locals.dbConnection);
+
+    busesDao.deleteBus(id, (err, result) => {
+        if (err) {
+            console.error('Service Buses: Error deleting bus:', err.message);
+            return res.status(500).json({ fehler: true, nachricht: err.message });
+        }
+        return res.status(200).json({ message: 'Bus erfolgreich gelöscht' });
+    });
+});
+
+serviceRouter.post("/", async (req, res) => {
+  const { bus_seats, company_id } = req.body;
+  const busesDao = new BusesDao(req.app.locals.dbConnection);
+
+  try {
+    const newBusId = await busesDao.createBus({ bus_seats, company_id });
+    res.status(201).json({ message: "Bus erfolgreich erstellt", bus_id: newBusId });
+  } catch (err) {
+    console.error("Fehler beim Erstellen des Busses:", err.message);
+    res.status(500).json({ fehler: true, nachricht: err.message });
+  }
+});
+
+
+
 module.exports = serviceRouter;

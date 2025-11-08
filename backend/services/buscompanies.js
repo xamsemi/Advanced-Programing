@@ -19,7 +19,7 @@ serviceRouter.get('/', async (req, res) => {
         ];
 
         */
-       const buscompaniesDao = new BuscompaniesDao(req.app.locals.dbConnection);
+        const buscompaniesDao = new BuscompaniesDao(req.app.locals.dbConnection);
 
         const buscompanies = await buscompaniesDao.getAllBuscompanies();
         res.status(200).json({ message: 'success', data: buscompanies });

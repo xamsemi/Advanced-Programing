@@ -73,23 +73,18 @@ async getAllBuses() {
 
 
 
-/*
-    createTour(tour_description, tour_date, destination, bus_id, picture_path, callback) {
-        console.log('Creating tour with description:', tour_description);
-        const sql = `INSERT INTO tours (tour_description, destination, picture_path, tour_date, bus_id) VALUES (?, ?, ?, ?, ?)`;
-        this._conn.query(sql, [tour_description, destination, picture_path, tour_date, bus_id], (err, result) => {
-            if (err) {
-                console.error('Error creating tour:', err.message);
-                return callback(err);
-            }
-            if (result.affectedRows != 1) {
-                throw new Error('Could not insert new record. Data: ' + [tour_description, destination, picture_path, tour_date, bus_id]);
-            }
-            
-            return callback(null, result.insertId);
-        });
+
+    async createBus({ bus_seats, company_id }) {
+    const sql = "INSERT INTO buses (bus_seats, company_id) VALUES (?, ?)";
+    try {
+        const [result] = await this._conn.promise().query(sql, [bus_seats, company_id]);
+        return result.insertId; // ID des neuen Busses
+    } catch (error) {
+        throw new Error("Database error: " + error.message);
+    }
     }
 
+/*
     updateTour(tour_id, tourData, callback) {
         console.log('Updating tour:', tourData);
         var sql = 'UPDATE tours';
@@ -114,25 +109,26 @@ async getAllBuses() {
             return callback(null, true);
         });
     }
-
-    deleteTour(id, callback) {
+    */
+    deleteBus(id, callback) {
         try {
-            var sql = 'DELETE FROM tours WHERE tour_id = ?';
+            var sql = 'DELETE FROM buses WHERE bus_id = ?';
             this._conn.query(sql, [id], (error, result) => {
                 if (error) {
-                    return callback(new Error('Could not delete Record by id=' + id + '. Reason: ' + error.message));
+                    return callback(new Error('Could not delete Record (bus) by id=' + id + '. Reason: ' + error.message));
                 }
                 if (result.affectedRows != 1) {
-                    return callback(new Error('Could not delete Record by id=' + id));
+                    return callback(new Error('Could not delete Record (bus) by id=' + id));
                 }
+                return callback(null, true);
             });
-            return callback(null, true);
+            
         } catch (ex) {
-            return callback(new Error('Could not delete Record by id=' + id + '. Reason: ' + ex.message));
+            return callback(new Error('Could not delete Record (bus) by id=' + id + '. Reason: ' + ex.message));
         }
         
     }
-*/
+
     toString() {
         console.log('BusesDao [_conn=' + this._conn + ']');
     }
