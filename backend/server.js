@@ -69,21 +69,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
-// --- Message Endpoint ---
-app.post('/api/message', (req, res) => {
-    const { text } = req.body;  
-    console.log('Nachricht erhalten:', text);
-    let reply;
-    if (text.toLowerCase().includes('feierabend')) {
-        reply = 'na klar erholung muss auch sein :-).';
-    } else if (text.toLowerCase().includes('danke')) {
-        reply = 'Bis bald.';
-    } else {
-        reply = `Deine Nachricht war: "${text}"`;
-    }
-    res.json({ status: 'success', reply });
-});
-
 // --- Server starten, sobald DB bereit ist ---
 connectWithRetry(db)
   .then(() => {

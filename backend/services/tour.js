@@ -34,4 +34,24 @@ serviceRouter.get('/:id', async (req, res) => {
     }
 });
 
+// --- Einzelne Tour löschen ---
+serviceRouter.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log('Service Tour: Delete requested for tour id=' + id);
+    const tourDao = new TourDao(req.app.locals.dbConnection);
+
+    try {
+        const deleted = await tourDao.deleteTour(id);
+        if (deleted) {
+            res.status(200).json({ message: 'Tour erfolgreich gelöscht' });
+        } else {
+            res.status(404).json({ fehler: true, nachricht: 'Tour nicht gefunden' });
+        }
+    } catch (err) {
+        console.error('Service Tour: Error deleting tour:', err.message);
+        res.status(500).json({ fehler: true, nachricht: 'Fehler beim Löschen der Tour' });
+    }
+});
+
+
 module.exports = serviceRouter;

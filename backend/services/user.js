@@ -19,7 +19,7 @@ serviceRouter.post('/login', loginLimiter, function(req, res) {
     console.log('Service User: Client requested login');
 
     const { username, password } = req.body;
-
+    
     if (!username || !password) {
         console.log('Service User: Login not possible, missing username or password');
         return res.status(400).json({ 'fehler': true, 'nachricht': 'Benutzername oder Passwort fehlen' });
