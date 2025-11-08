@@ -2,7 +2,6 @@
 export async function checkLogin(redirectIfLoggedIn = false, redirectIfLoggedOut = false) {
     let userData = null;
     
-
     try{
         const res = await fetch('/api/user/profile', { credentials: 'include' });
         if (res.ok) userData = await res.json();
@@ -14,7 +13,7 @@ export async function checkLogin(redirectIfLoggedIn = false, redirectIfLoggedOut
     const logoutBtn = document.getElementById('logoutBtn');
 
     if (userData) {
-        if(userInfo) userInfo.textContent = `Eingeloggt als: ${userData.username}`;
+        if(userInfo) userInfo.textContent = `Eingeloggt als: ${userData.username} (${userData.role})`;
         if(logoutBtn) logoutBtn.style.display = 'inline-block';
         if(redirectIfLoggedIn && (window.location.pathname === '/' || window.location.pathname.includes('index.html'))){
             window.location.href = 'fahrten.html';
