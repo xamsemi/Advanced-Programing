@@ -58,6 +58,7 @@ serviceRouter.delete('/:id', (req, res) => {
     });
 });
 
+// neuen Bus erstellen
 serviceRouter.post("/", async (req, res) => {
   const { bus_seats, company_id } = req.body;
   const busesDao = new BusesDao(req.app.locals.dbConnection);
@@ -67,6 +68,22 @@ serviceRouter.post("/", async (req, res) => {
     res.status(201).json({ message: "Bus erfolgreich erstellt", bus_id: newBusId });
   } catch (err) {
     console.error("Fehler beim Erstellen des Busses:", err.message);
+    res.status(500).json({ fehler: true, nachricht: err.message });
+  }
+});
+
+
+//Update Bus
+serviceRouter.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { bus_seats} = req.body;
+  const busesDao = new BusesDao(req.app.locals.dbConnection);
+  console.log("DB vorhanden?", req.app.locals.dbConnection ? "JA" : "NEIN");
+  try {
+    const newBusId = await busesDao.updateBus(id, { bus_seats });
+    res.status(200).json({ message: "Bus erfolgreich geändert", bus_id: newBusId.bus_id });
+  } catch (err) {
+    console.error("Fehler beim Ändern des Busses:", err.message);
     res.status(500).json({ fehler: true, nachricht: err.message });
   }
 });

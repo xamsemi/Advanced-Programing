@@ -84,32 +84,36 @@ async getAllBuses() {
     }
     }
 
-/*
-    updateTour(tour_id, tourData, callback) {
-        console.log('Updating tour:', tourData);
-        var sql = 'UPDATE tours';
 
-        // Dynamically build SET clause based on provided tourData
-        const setClauses = [];
-        const params = [];
-        for (const [key, value] of Object.entries(tourData)) {
-            setClauses.push(`${key} = ?`);
-            params.push(value);
-            console.log(`Updating field ${key} to value ${value}`);
-        }
-        sql += ' SET ' + setClauses.join(', ') + ' WHERE tour_id = ?';
-        params.push(tour_id);
+    updateBus(bus_id, {bus_seats}) {
+        //console.log('Updating bus:', bus_seats);
+        
 
-        console.log('Executing SQL:', sql, 'with params:', params);
+        //const { bus_seats } = busData;
+        const sql = `
+            UPDATE buses
+            SET bus_seats = ?
+            WHERE bus_id = ?;
+        `;
 
-        this._conn.query(sql, params, (error, result) => {
-            if (error) {
-                return callback(new Error('Could not update Record. Reason: ' + error.message));
+       const params = [bus_seats,bus_id];
+
+       //this._conn.query(sql, params);
+       //return id; // oder rows.affectedRows > 0
+       //}
+      return new Promise((resolve, reject) => {
+      this._conn.query(sql, params, (err, result) => {
+        if (err) {
+          console.error("Fehler beim Update:", err);
+          reject(err);
+        } else {
+          resolve({ affectedRows: result.affectedRows, bus_id });
             }
-            return callback(null, true);
         });
-    }
-    */
+        });
+        }
+
+
     deleteBus(id, callback) {
         try {
             var sql = 'DELETE FROM buses WHERE bus_id = ?';
