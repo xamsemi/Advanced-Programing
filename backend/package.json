@@ -7,6 +7,7 @@
     "test": "jest --runInBand --detectOpenHandles",
     "test:user": "jest __tests__/userDao.test.js --runInBand",
     "test:tour": "jest __tests__/tourDao.test.js --runInBand",
+    "test:user-tour": "jest __tests__/userTourDao.test.js --runInBand",
     "start": "node server.js",
     "swagger": "node swagger.js"
   },

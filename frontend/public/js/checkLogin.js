@@ -1,28 +1,32 @@
 // --- Login Status prüfen ---
 export async function checkLogin(redirectIfLoggedIn = false, redirectIfLoggedOut = false) {
-    const res = await fetch('/api/user/profile', { credentials: 'include' });
+    let userData = null;
+    
+    try{
+        const res = await fetch('/api/user/profile', { credentials: 'include' });
+        if (res.ok) userData = await res.json();
+    } catch (err){
+        console.error("Fehler bei Profilabfrage:",err);
+    }
+
     const userInfo = document.getElementById('userInfo');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    if (res.ok) {
-        const data = await res.json();
-        userInfo.textContent = `Eingeloggt als: ${data.username}`;
-        logoutBtn.style.display = 'inline-block';
-         if (redirectIfLoggedIn && window.location.pathname.includes('index.html')) {
-            // Wenn eingeloggt und auf Login-Seite -> weiterleiten
+    if (userData) {
+        if(userInfo) userInfo.textContent = `Eingeloggt als: ${userData.username} (${userData.role})`;
+        if(logoutBtn) logoutBtn.style.display = 'inline-block';
+        if(redirectIfLoggedIn && (window.location.pathname === '/' || window.location.pathname.includes('index.html'))){
             window.location.href = 'fahrten.html';
-         }
-        
+        }        
     } else {
         if (userInfo) userInfo.textContent = 'Kein Benutzer eingeloggt';
         if (logoutBtn) logoutBtn.style.display = 'none';
-        if (redirectIfLoggedOut && !window.location.pathname.includes('index.html')) {
+        if (redirectIfLoggedOut && !window.location.pathname.endsWith('index.html')) {
             // Wenn nicht eingeloggt und nicht auf Login-Seite -> weiterleiten
             window.location.href = 'index.html';
         }
-        
-
     }
+    return userData;
 }
 
 // --- Logout Setup ---

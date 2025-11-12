@@ -15,7 +15,7 @@ class UserDao {
     }
 
     getUserByID(userId, callback) {
-        const sql = 'SELECT username, email, user_role, password_hash FROM users WHERE user_id = ?';
+        const sql = 'SELECT user_id, username, email, user_role, password_hash FROM users WHERE user_id = ?';
         console.log('Fetching user by ID:', userId);
         try {
 

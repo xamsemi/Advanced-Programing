@@ -1,68 +1,93 @@
-import { checkLogin} from './checkLogin.js';
+import { loadNavbar } from './loadNavbar.js';
+import { checkLogin, setupLogout } from './checkLogin.js';
 
-checkLogin(true, false);
+loadNavbar();
 
-// --- Login ---
-document.getElementById("loginContainer").addEventListener("submit", async (e) => {
-  e.preventDefault();
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const responsePara2 = document.getElementById('responseLogin');
+window.addEventListener('DOMContentLoaded', async () => {
+    const loginForm = document.getElementById('loginContainer');
+    const status = document.getElementById('responseLogin');
+    const toggleRegisterBtn = document.getElementById('toggleRegisterBtn');
+    const regContainer = document.getElementById('registerContainer');
+    const registerBtn = document.getElementById('registerBtn');
+    const regResponse = document.getElementById('regResponse');
 
-    try {
-      const response = await fetch("/api/user/login", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-        credentials: 'include',
-        body: JSON.stringify({ username, password })
-      });
+    // --- Login-Status prüfen (leitet ggf. weiter zu fahrten.html)
+    await checkLogin(true, false);
 
-      const data = await response.json();
-      if (response.ok) {
+    // ---Logout-Button aktivieren
+    setupLogout();
 
-        const check = await fetch('/api/user/profile', { credentials: 'include' });
-        if (check.ok){
-          window.location.href = 'fahrten.html'
+    // ---Login-Handler
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        status.textContent = '';
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        try {
+            const res = await fetch('/api/user/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                status.classList.remove('text-danger');
+                status.classList.add('text-success');
+                status.textContent = 'Login erfolgreich!';
+                await checkLogin(true, false); // Navbar aktualisieren & ggf. redirect
+            } else {
+                status.classList.remove('text-success');
+                status.classList.add('text-danger');
+                status.textContent = `Fehler: ${data.message || 'Login fehlgeschlagen'}`;
+            }
+        } catch (err) {
+            console.error(err);
+            status.textContent = 'Serverfehler beim Login';
         }
-        } else {
-          responsePara2.textContent = "Fehler beim Login: " + (data.nachricht || data.message);
-        }
-    } catch (error) {
-      console.error("Fehler beim Request:", error);
-      alert("Server konnte nicht erreicht werden.");
-    }
     });
 
-    // --- Registrierung anzeigen/verstecken ---
-    document.getElementById('toggleRegisterBtn').addEventListener('click', () => {
-      const regContainer = document.getElementById('registerContainer');
-      regContainer.style.display = regContainer.style.display === 'none' ? 'block' : 'none';
+    // ---Registrierung anzeigen/verstecken ---
+    toggleRegisterBtn.addEventListener('click', () => {
+        const isVisible = regContainer.style.display === 'block';
+        regContainer.style.display = isVisible ? 'none' : 'block';
+        toggleRegisterBtn.textContent = isVisible
+            ? 'Noch kein Konto? Jetzt registrieren'
+            : 'Zurück zum Login';
     });
 
-    // --- Registrierung absenden ---
-    document.getElementById('registerBtn').addEventListener('click', async () => {
-      const username = document.getElementById('regUsername').value;
-      const password = document.getElementById('regPassword').value;
-      const email = document.getElementById('regEmail').value;
-      const regResponse = document.getElementById('regResponse');
+    // ---Registrierung absenden ---
+    registerBtn.addEventListener('click', async () => {
+        const username = document.getElementById('regUsername').value.trim();
+        const password = document.getElementById('regPassword').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
 
-      try {
-        const res = await fetch('/api/user/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-          credentials: 'include',
-          body: JSON.stringify({ username, password, email })
-        });
+        try {
+            const res = await fetch('/api/user/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                body: JSON.stringify({ username, password, email })
+            });
 
-        const data = await res.json();
-        if (res.ok) {
-          regResponse.textContent = 'Registrierung erfolgreich! Bitte jetzt einloggen.';
-          document.getElementById('registerContainer').style.display = 'none';
-        } else {
-          regResponse.textContent = 'Fehler: ' + (data.message);
+            const data = await res.json();
+
+            if (res.ok) {
+                regResponse.classList.remove('text-danger');
+                regResponse.classList.add('text-success');
+                regResponse.textContent = 'Registrierung erfolgreich! Bitte jetzt einloggen.';
+                regContainer.style.display = 'none';
+            } else {
+                regResponse.classList.remove('text-success');
+                regResponse.classList.add('text-danger');
+                regResponse.textContent = `Fehler: ${data.message}`;
+            }
+        } catch (err) {
+            console.error(err);
+            regResponse.textContent = 'Fehler bei der Registrierung.';
         }
-      } catch (err) {
-        regResponse.textContent = 'Fehler bei der Registrierung.';
-        console.error(err);
-      }
+    });
 });

@@ -15,55 +15,63 @@ class TourDao {
 
     getAllTours(callback) {
         var sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours';
-        this._conn.query(sql, (error, results) => {
-            if (error) {
-                return callback(new Error('Database error: ' + error.message));
-            }
-            return callback(null, results);
+        const promise = new Promise((resolve, reject) => {
+            this._conn.query(sql, (error, results) => {
+                if (error) {
+                    return reject(new Error('Database error: ' + error.message));
+                }
+                console.log('Fetched all tours, count:', results);
+                resolve(results);
+            });
         });
-    }    
+        return require('../helper.js').maybeCallback(promise, callback);
+    }
 
     //load tours on windows scroll
     loadMoreTours(offset, limit, callback) {
         var sql = 'SELECT * FROM tours LIMIT ?, ?';
-         this._conn.query(sql, [offset, limit], (error, results) => {
-            if (error) {
-                return callback(new Error('Database error: ' + error.message));
-            }
-            if (helper.isArrayEmpty(results)) {
-                return callback(null, []);
-            }
-            return callback(null, results);
+        const promise = new Promise((resolve, reject) => {
+            this._conn.query(sql, [offset, limit], (error, results) => {
+                if (error) {
+                    return reject(new Error('Database error: ' + error.message));
+                }
+                if (helper.isArrayEmpty(results)) {
+                    resolve([]);
+                }
+                resolve(results);
+            });
         });
+        return require('../helper.js').maybeCallback(promise, callback);
     }
 
     getTourById(id, callback) {
         var sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours WHERE tour_id = ?';
-        this._conn.query(sql, [id], (error, results) => {
-            if (error) {
-                return callback(new Error('Database error: ' + error.message));
-            }
-            if (helper.isArrayEmpty(results)) {
-                return callback(new Error('No Record found by id=' + id));
-            }
-            return callback(null, results[0]);
+        const promise = new Promise((resolve, reject) => {
+            this._conn.query(sql, [id], (error, results) => {
+                if (error) {
+                    return reject(new Error('Database error: ' + error.message));
+                }
+                if (helper.isArrayEmpty(results)) {
+                    return reject(new Error('No Record found by id=' + id));
+                }
+                resolve(results[0]);
+            });
         });
+        return require('../helper.js').maybeCallback(promise, callback);
     }
 
     createTour(tour_description, tour_date, destination, bus_id, picture_path, callback) {
-        console.log('Creating tour with description:', tour_description);
         const sql = `INSERT INTO tours (tour_description, destination, picture_path, tour_date, bus_id) VALUES (?, ?, ?, ?, ?)`;
-        this._conn.query(sql, [tour_description, destination, picture_path, tour_date, bus_id], (err, result) => {
-            if (err) {
-                console.error('Error creating tour:', err.message);
-                return callback(err);
-            }
-            if (result.affectedRows != 1) {
-                throw new Error('Could not insert new record. Data: ' + [tour_description, destination, picture_path, tour_date, bus_id]);
-            }
-            
-            return callback(null, result.insertId);
+        const promise = new Promise((resolve, reject) => {
+            this._conn.query(sql, [tour_description, destination, picture_path, tour_date, bus_id], (err, result) => {
+                if (err) {
+                    console.error('Error creating tour:', err.message);
+                    return reject(err);
+                }
+                resolve(result.insertId);
+            });
         });
+        return require('../helper.js').maybeCallback(promise, callback);
     }
 
     updateTour(tour_id, tourData, callback) {
@@ -82,36 +90,35 @@ class TourDao {
         params.push(tour_id);
 
         console.log('Executing SQL:', sql, 'with params:', params);
-
-        this._conn.query(sql, params, (error, result) => {
-            if (error) {
-                return callback(new Error('Could not update Record. Reason: ' + error.message));
-            }
-            return callback(null, true);
+        const promise = new Promise((resolve, reject) => {
+            this._conn.query(sql, params, (error, result) => {
+                if (error) {
+                    return reject(new Error('Could not update Record. Reason: ' + error.message));
+                }
+                resolve(true);
+            });
         });
+        return require('../helper.js').maybeCallback(promise, callback);
     }
 
     deleteTour(id, callback) {
-        try {
-            var sql = 'DELETE FROM tours WHERE tour_id = ?';
-            this._conn.query(sql, [id], (error, result) => {
+        const sql = 'DELETE FROM tours WHERE tour_id = ?';
+        const promise = new Promise((resolve, reject) => {
+        this._conn.query(sql, [id], (error, result) => {
                 if (error) {
-                    return callback(new Error('Could not delete Record by id=' + id + '. Reason: ' + error.message));
+                    return reject(new Error('Could not delete Record by id=' + id + '. Reason: ' + error.message));
                 }
                 if (result.affectedRows != 1) {
-                    return callback(new Error('Could not delete Record by id=' + id));
+                    return reject(new Error('Could not delete Record by id=' + id));
                 }
+                resolve(true);
             });
-            return callback(null, true);
-        } catch (ex) {
-            return callback(new Error('Could not delete Record by id=' + id + '. Reason: ' + ex.message));
-        }
-        
+        });
+        return require('../helper.js').maybeCallback(promise, callback);
     }
 
     toString() {
         console.log('TourDao [_conn=' + this._conn + ']');
     }
 }
-
 module.exports = TourDao;

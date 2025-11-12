@@ -11,23 +11,9 @@
     "http"
   ],
   "paths": {
-    "/api/message": {
-      "post": {
+    "/": {
+      "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "text": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -37,26 +23,19 @@
     },
     "/api/user/login": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "Endpoint für Benutzer-Login",
+        "description": "",
         "parameters": [
           {
-            "name": "credentials",
+            "name": "body",
             "in": "body",
-            "description": "Login-Daten",
-            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "username": {
-                  "type": "string",
-                  "example": "admin"
+                  "example": "any"
                 },
                 "password": {
-                  "type": "string",
-                  "example": "Passwort1"
+                  "example": "any"
                 }
               }
             }
@@ -109,34 +88,25 @@
     },
     "/api/user/register": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "Registriert einen neuen Benutzer",
+        "description": "",
         "parameters": [
           {
-            "name": "user",
+            "name": "body",
             "in": "body",
-            "description": "Benutzerdaten",
-            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "username": {
-                  "type": "string",
-                  "example": "max"
+                  "example": "any"
                 },
                 "password": {
-                  "type": "string",
-                  "example": "Passwort1"
+                  "example": "any"
                 },
                 "email": {
-                  "type": "string",
-                  "example": "max@example.com"
+                  "example": "any"
                 },
                 "user_role": {
-                  "type": "string",
-                  "example": "user"
+                  "example": "any"
                 }
               }
             }
@@ -185,6 +155,38 @@
           },
           "404": {
             "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/tour/test": {
+      "delete": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
