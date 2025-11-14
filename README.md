@@ -124,7 +124,7 @@ Achtung Seite muss vertraut werden da das Zertifikat selbst erstellt wurde!
 | Rolle  | User | Passwort |
 |--------|------|--------|
 | Admin  | admin | admin |
-| Mitlied  | user | password |
+| Mitglied  | user | password |
 
 ---
 
@@ -148,4 +148,5 @@ Achtung Seite muss vertraut werden da das Zertifikat selbst erstellt wurde!
 
 Projektteam: *Sabine, Max, Daniel*  
 Stand: *Oktober 2025*
+
 
