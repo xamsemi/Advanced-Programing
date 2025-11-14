@@ -27,6 +27,7 @@ serviceRouter.post('/login', loginLimiter, function(req, res) {
 
     const userDao = new UserDao(req.app.locals.dbConnection);
     userDao.getUserByUserName(username, (err, user) => {
+
         if (err) {
             console.error('Service User: Error fetching user:', err.message);
             return res.status(500).json({ 'fehler': true, 'nachricht': 'Interner Serverfehler' });
@@ -87,7 +88,8 @@ serviceRouter.get('/profile', (req, res) => {
 
 serviceRouter.post("/register", async (req, res) => {
 
-    const { username, password, email, user_role } = req.body;
+    const { username, password, email} = req.body;
+    const user_role = 'user'; // default role
 
     if (!username || !password || !email ) {
         return res.status(400).json({ message: 'Username, Passwort, Email erforderlich' });
