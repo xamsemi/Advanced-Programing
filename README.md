@@ -1,22 +1,9 @@
 # 🚌 Busreservierungssystem für Vereinsfahrten
 
 ## 📖 Einführung
+
 Unser Projekt beschäftigt sich mit der Entwicklung eines **Busreservierungssystems für Vereinsfahrten**.  
 Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten auszuwählen und Sitzplätze zu reservieren**.
-
----
-
-#Benötige Software
-- Docker Desktop
-- git
-
-
-#Ablauf
-- Befehl `git clone https://github.com/xamsemi/Advanced-Programing.git` ausführen (Achtung ggf. URL anpassen)
-- in Ordner backend navigieren und `npm install` ausführen
-- in Ordner nginx/ssl navigieren und Befehl `openssl req -x509 -nodes -days 365 -newkey rsa:2048 \-keyout nginx-selfsigned.key \-out nginx-selfsigned.crt` ausführen (Zetifikate werden erzeugt.Eingaben könne mit Enter übersprungen werden)
-- in Ordner Advanced-Programming navigieren und `docker-compose up -d` ausführen (dauert paar Minuten beim ersten mal)
-- https://localhost:8443/ in Browser eingeben (Achtung Seite muss vertraut werden da das Zertifikat selbst erstellt wurde)
 
 ---
 
@@ -36,68 +23,106 @@ Ziel ist es, den Mitgliedern eine einfache Möglichkeit zu geben, **Fahrten ausz
 
 | Rolle  | Ziel | Nutzen |
 |--------|------|--------|
-| Admin  | Busfahrten planen | Mitglieder können sich für Fahrten anmelden und Informationen zum Ausflug erhalten |
+| Admin  | Busfahrten hinzufügen/planen | Mitglieder können sich für Fahrten anmelden und Informationen zum Ausflug erhalten |
+| Admin  | Übersicht anzeigen | Informationen über die Busfahrt erhalten |
 | Admin  | Busfahrten entfernen | Alte oder abgesagte Fahrten können gelöscht werden |
+| Admin  | Benutzer löschen | Kann registrierte Benutzer löschen |
 | Admin  | Automatische Mail an Busunternehmen senden | E-Mail-Anfrage an Busunternehmen, um geplante Ausflüge anzufragen |
 | User   | Für Busfahrt anmelden | Es wird ein Platz im Bus reserviert |
 | User   | Für Busfahrt abmelden | Es wird ein Platz freigegeben |
+| User   | Benutzeraccount erstellen | Kann sich an Seite anmelden und Ausflug buchen |
+| User   | Übersicht Busfahrten anzeigen | Informationen über die Busfahrt erhalten |
 
 ---
 
 ## 💻 Lokale Entwicklung
 
-### Voraussetzungen
+### Benötige Software
+
+- **Docker Desktop**
 - **Node.js** und **npm**
 - **nginx**
 - **git**
 
----
+### SSL Zertifikate erstellen
 
-## SSL Zertifikate erstellen
-Ins Verzeichniss ssl navigieren. dDort mit z.B. bash folgende Befehle ausführen
+Ins Verzeichniss ssl navigieren. Dort mit z.B. bash folgende Befehle ausführen
+
 | Aktion | Befehl |
 |--------|--------|
 | Zertifikate erzeugen  | `openssl req -x509 -nodes -days 365 -newkey rsa:2048 \-keyout nginx-selfsigned.key \-out nginx-selfsigned.crt` |
 
+---
 
-## 🚀 Start der Anwendung
+### Repository
 
 1. **Repository klonen:**
+
    ```bash
-   git clone <repository-url>
-   cd <projektname>
+   git clone https://github.com/xamsemi/Advanced-Programing.git
+   cd Advanced-Programing
    ```
 
-2. **Abhängigkeiten installieren:**
+2. **Abhängigkeiten Node-Server installieren:**
+
    ```bash
+   cd backend
    npm install
    ```
 
-3. **nginx starten:**
+## 🚀 Start der Anwendungen
+
+### Lokaler Server
+
+1. **nginx starten:**
+
    ```bash
    .\nginx.exe
    ```
 
-4. **nginx stoppen:**
+2. **nginx stoppen:**
+
    ```bash
    .\nginx.exe -s quit
    ```
-5. **Server starten:**
+
+3. **Node-Server starten:**
+
    ```bash
    node .\server.js
    ```
-6. **Seite im browser öffnen:**
+
+4. **Seite im Browser öffnen:**
+
    ```Browser
-   http://localhost
+   http://localhost:8443 //Nginx - Frontend
+   http://localhost:3000 //Backend
    ```
 
+### Docker-Container starten
+
+**Container mysql, node, nginx mit Compose starten:**
+
+   ```bash
+   docker-compose up -d
+   ```
+
+### Seite im Browser öffnen
+
+Achtung Seite muss vertraut werden da das Zertifikat selbst erstellt wurde!
+
+   ```Browser
+   https://localhost:8443 //Nginx - Frontend
+   https://localhost:3000 //Backend
+   https://localhost:3006 //DB
+   ```
 
 ---
-
 
 ## 🧠 Wichtige Befehle
 
 ### 🔧 Git-Befehle
+
 | Aktion | Befehl |
 |--------|--------|
 | Status prüfen | `git status` |
@@ -110,15 +135,7 @@ Ins Verzeichniss ssl navigieren. dDort mit z.B. bash folgende Befehle ausführen
 
 ---
 
-### 🧩 npm / Node.js
-| Aktion | Befehl |
-|--------|--------|
-| Pakete installieren | `npm install` |
-
----
-
-
 ## 🧑‍💻 Autoren
+
 Projektteam: *Sabine, Max, Daniel*  
 Stand: *Oktober 2025*
-
