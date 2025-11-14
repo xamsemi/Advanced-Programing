@@ -180,16 +180,6 @@
           }
         }
       }
-    },
-    "/api/tour/test": {
-      "delete": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
     }
   }
 }
