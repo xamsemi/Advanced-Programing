@@ -82,16 +82,17 @@ CREATE TABLE IF NOT EXISTS user_tours (
 -- -----------------------------------------------------
 -- Defaults for users
 INSERT INTO users (username, email, password_hash, user_role) VALUES
-('admin', 'admin@example.com', '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'admin'),
+('admin', 'admin@example.com', '$2b$10$mxcoBSQtSQ9Uo3U3V1a3Hu0FHtANKUN46eRXdRbP4C00HMYWglnjG', 'admin'),
 ('max', 'max@example.com', '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
 ('sabine', 'sabine@example.com', '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
-('daniel', 'daniel@example.com', '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user');
+('daniel', 'daniel@example.com', '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
+('user', 'user@example.com', '$2b$10$sFY2aG9/Uno19hIDbu7FWuhr.JiS/K5PwbkpZM.nFGzLzjyWnGQbu', 'user');
 
 INSERT INTO bus_companies (company_name, contact_info, company_email) VALUES
 ('BestBus GmbH', 'Musterstraße 1, 12345 Musterstadt', 'best@bus.de'),
 ('TravelExpress', 'Reiseweg 5, 54321 Reisestadt', 'travel@express.de');
 
------------------------------------------------------
+-- -----------------------------------------------------
 -- Defaults for buses
 INSERT INTO buses (bus_seats, company_id) VALUES
 (50, 1),
@@ -99,7 +100,7 @@ INSERT INTO buses (bus_seats, company_id) VALUES
 (200, 1),
 (40, 2);
 
------------------------------------------------------
+-- -----------------------------------------------------
 -- Defaults for tours und user_tours
 INSERT INTO tours (tour_description, tour_date, destination, bus_id, picture_path) VALUES
 ('Faschingsfahrt nach Köln - Karnevalsumzug', '2026-02-15 10:00:00', 'Köln', 1, '/images/tours/koeln_fasching.jpg'),
@@ -109,7 +110,7 @@ INSERT INTO tours (tour_description, tour_date, destination, bus_id, picture_pat
 ('Karneval in Nürnberg - Festumzug', '2026-02-14 10:30:00', 'Nürnberg', 1, '/images/tours/nuernberg_karneval.jpg'),
 ('Faschingsfahrt Berlin - Kostümparade', '2026-02-18 09:45:00', 'Berlin', 2, '/images/tours/berlin_kostuemparde.jpg');
 
------------------------------------------------------
+-- -----------------------------------------------------
 -- Defaults for tours und user_tours
 INSERT INTO user_tours (user_id, tour_id) VALUES
 (1, 3),
