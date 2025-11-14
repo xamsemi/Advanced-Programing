@@ -119,6 +119,15 @@ Achtung Seite muss vertraut werden da das Zertifikat selbst erstellt wurde!
 
 ---
 
+## 🧩 Default-User
+
+| Rolle  | User | Passwort |
+|--------|------|--------|
+| Admin  | admin | admin |
+| Mitlied  | user | password |
+
+---
+
 ## 🧠 Wichtige Befehle
 
 ### 🔧 Git-Befehle
@@ -139,3 +148,4 @@ Achtung Seite muss vertraut werden da das Zertifikat selbst erstellt wurde!
 
 Projektteam: *Sabine, Max, Daniel*  
 Stand: *Oktober 2025*
+
