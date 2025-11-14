@@ -10,6 +10,10 @@ class UserTourDao {
         this._conn = dbConnection;
     }
 
+    getConnection() {
+        return this._conn;
+    }
+
     // Versuch als Promise Funktion...
     // User bucht eine Tour
     // Supports either (userId, tourId, callback) or returns a Promise when no callback provided

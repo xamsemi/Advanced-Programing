@@ -14,7 +14,7 @@ class TourDao {
     }
 
     getAllTours(callback) {
-        var sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours';
+        const sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, (error, results) => {
                 if (error) {
@@ -29,7 +29,7 @@ class TourDao {
 
     //load tours on windows scroll
     loadMoreTours(offset, limit, callback) {
-        var sql = 'SELECT * FROM tours LIMIT ?, ?';
+        const sql = 'SELECT * FROM tours LIMIT ?, ?';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, [offset, limit], (error, results) => {
                 if (error) {
@@ -45,7 +45,7 @@ class TourDao {
     }
 
     getTourById(id, callback) {
-        var sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours WHERE tour_id = ?';
+        const sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours WHERE tour_id = ?';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, [id], (error, results) => {
                 if (error) {
@@ -75,9 +75,7 @@ class TourDao {
     }
 
     updateTour(tour_id, tourData, callback) {
-        console.log('Updating tour:', tourData);
-        var sql = 'UPDATE tours';
-
+        let sql = 'UPDATE tours';
         // Dynamically build SET clause based on provided tourData
         const setClauses = [];
         const params = [];
