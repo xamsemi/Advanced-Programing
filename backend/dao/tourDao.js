@@ -9,18 +9,14 @@ class TourDao {
         this._conn = dbConnection;
     }
 
-    getConnection() {
-        return this._conn;
-    }
-
     getAllTours(callback) {
-        var sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours';
+        const sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, (error, results) => {
                 if (error) {
                     return reject(new Error('Database error: ' + error.message));
                 }
-                console.log('Fetched all tours, count:', results);
+                // Debug log removed for production
                 resolve(results);
             });
         });
@@ -29,7 +25,7 @@ class TourDao {
 
     //load tours on windows scroll
     loadMoreTours(offset, limit, callback) {
-        var sql = 'SELECT * FROM tours LIMIT ?, ?';
+        const sql = 'SELECT * FROM tours LIMIT ?, ?';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, [offset, limit], (error, results) => {
                 if (error) {
@@ -45,7 +41,7 @@ class TourDao {
     }
 
     getTourById(id, callback) {
-        var sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours WHERE tour_id = ?';
+        const sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours WHERE tour_id = ?';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, [id], (error, results) => {
                 if (error) {
@@ -75,21 +71,15 @@ class TourDao {
     }
 
     updateTour(tour_id, tourData, callback) {
-        console.log('Updating tour:', tourData);
-        var sql = 'UPDATE tours';
-
         // Dynamically build SET clause based on provided tourData
         const setClauses = [];
         const params = [];
         for (const [key, value] of Object.entries(tourData)) {
             setClauses.push(`${key} = ?`);
             params.push(value);
-            console.log(`Updating field ${key} to value ${value}`);
         }
-        sql += ' SET ' + setClauses.join(', ') + ' WHERE tour_id = ?';
+        const sql = 'UPDATE tours SET ' + setClauses.join(', ') + ' WHERE tour_id = ?';
         params.push(tour_id);
-
-        console.log('Executing SQL:', sql, 'with params:', params);
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, params, (error, result) => {
                 if (error) {
@@ -116,9 +106,6 @@ class TourDao {
         });
         return require('../helper.js').maybeCallback(promise, callback);
     }
-
-    toString() {
-        console.log('TourDao [_conn=' + this._conn + ']');
-    }
 }
+
 module.exports = TourDao;
