@@ -19,7 +19,7 @@ class UserDao {
                     return reject(new Error('Error fetching User: ' + error.message));
                 }
                 if (helper.isArrayEmpty(results)) {
-                    return reject(new Error('No Record found by id=' + userId));
+                    return resolve(null);
                 }
                 resolve(results[0]);
             });
@@ -34,8 +34,9 @@ class UserDao {
                 if (err) {
                     return reject(new Error('Error fetching User: ' + err.message));
                 }
+                // If no row found, resolve with null so callers can check for absence
                 if (helper.isArrayEmpty(results)) {
-                    return reject(new Error('No Record found by username=' + username));
+                    return resolve(null);
                 }
                 resolve(results[0]);
             });
@@ -52,8 +53,7 @@ class UserDao {
             const insert = (finalHash) => {
                 this._conn.query(sql, [username, email, user_role, finalHash], (err, results) => {
                     if (err) {
-                        console.error('Error creating user:', err.message);
-                        return reject(err);
+                        return reject(new Error('Error creating user: ' + err.message));
                     }
                     resolve(results.insertId);
                 });
@@ -68,8 +68,7 @@ class UserDao {
             // Otherwise hash now
             bcrypt.hash(passwordOrHash, 10, (err, hashedPassword) => {
                 if (err) {
-                    console.error('Error hashing password:', err.message);
-                    return callback(err);
+                    return reject(new Error('Error hashing password: ' + err.message));
                 }
                 insert(hashedPassword);
             });
