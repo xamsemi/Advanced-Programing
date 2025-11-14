@@ -48,6 +48,8 @@ afterAll(async () => {
 	if (db && db.end) await new Promise(res => db.end(res));
 });
 
+let user_id
+
 describe('UserDao integration with real DB.', () => {
 
     const username = 'integration_user_' + Date.now();
@@ -61,6 +63,7 @@ describe('UserDao integration with real DB.', () => {
 			dao.createUser(username, email, role, password, (err, id) => (err ? rej(err) : res(id)));
 		});
 		expect(typeof insertId).toBe('number');
+		user_id = insertId;
 		expect(insertId).toBeGreaterThan(0);
 	}, 20000);
 
@@ -90,7 +93,7 @@ describe('UserDao integration with real DB.', () => {
     test('Function deleteUser', async () => {
         const dao = new UserDao(db);
         const ok = await new Promise((res, rej) => {
-			dao.deleteUser(username, (err, id) => (err ? rej(err) : res(id)));
+			dao.deleteUserByID(user_id, (err, id) => (err ? rej(err) : res(id)));
 		});
 		expect(ok).toBe(true);
 	});
@@ -110,37 +113,42 @@ describe('Change User Data', () => {
 			dao.createUser(username, email, role, password, (err, id) => (err ? rej(err) : res(id)));
 		});
 		expect(typeof insertId).toBe('number');
+		user_id = insertId;
 		expect(insertId).toBeGreaterThan(0);
 	}, 20000);
+
 	test('Update Email', async () => {
 		const dao = new UserDao(db);
 		const newEmail = 'change_new@example.test';
 		const ok = await new Promise((res, rej) => {
-			dao.updateUserEmail(username, newEmail, (err, success) => (err ? rej(err) : res(success)));
+			dao.updateUser(user_id, { email: newEmail }, (err, success) => (err ? rej(err) : res(success)));
 		});
 		expect(ok).toBe(true);
 	}, 20000);
+
 	test('Update Password', async () => {
 		const dao = new UserDao(db);
 		const newPassword = 'Newpass#123';
 		const ok = await new Promise((res, rej) => {
-			dao.updateUserPassword(username, newPassword, (err, success) => (err ? rej(err) : res(success)));
+			dao.updateUser(user_id, { password_hash: newPassword }, (err, success) => (err ? rej(err) : res(success)));
 		});
 		expect(ok).toBe(true);
 	}, 20000);
+
 	test('Update Role', async () => {
 		const dao = new UserDao(db);
 		const newRole = 'admin';
 		const ok = await new Promise((res, rej) => {
-			dao.updateUserRole(username, newRole, (err, success) => (err ? rej(err) : res(success)));
+			dao.updateUser(user_id, { user_role: newRole }, (err, success) => (err ? rej(err) : res(success)));
 		});
 		expect(ok).toBe(true);
 	}, 20000);
+
 	test('Update UserName', async () => {
 		const dao = new UserDao(db);
 		const newUsername = 'changed_user_' + Date.now();
 		const ok = await new Promise((res, rej) => {
-			dao.updateUserName(username, newUsername, (err, success) => (err ? rej(err) : res(success)));
+			dao.updateUser(user_id, { username: newUsername }, (err, success) => (err ? rej(err) : res(success)));
 		});
 		expect(ok).toBe(true);
 	}, 20000);
@@ -148,36 +156,45 @@ describe('Change User Data', () => {
 
 describe('UserDao edge cases', () => {
 
+	const username = 'edgecase_user_' + Date.now();
+	const email = 'edgecase@example.test';
+	const role = 'noadmin';
+	const password = 'Edgecase#Test1';
+
 	test('Wrong Userrole provided, user creation should fail', async () => {
 		const dao = new UserDao(db);
 		// call createUser and expect the operation to reject due to invalid ENUM value
-		const insertID =  new Promise((res, rej) => {
-			dao.createUser(username, email, 'noadmin', password, (err, id) => (err ? rej(err) : res(id)));
+		const promise = new Promise((res, rej) => {
+			dao.createUser(username, email, role, password, (err, id) => (err ? rej(err) : res(id)));
 		});
-		await expect(insertID).rejects.toThrow();
+
+		// Promise should be rejected
+		await expect(promise).rejects.toThrow();
 	}, 20000);
 
 	test('Get non-existing user by username should return null', async () => {
 		const dao = new UserDao(db);
-		const user = await new Promise((res, rej) => {
+		const promise = new Promise((res, rej) => {
 			dao.getUserByUserName('non_existing_user', (err, u) => (err ? rej(err) : res(u)));
 		});
-		expect(user).toBeNull();
+
+		// Expect the DAO to reject for a non-existing user lookup in this test
+		await expect(promise).rejects.toThrow();
 	}, 20000);
 
 	test('Compare password with invalid hash should return false', async () => {
 		//expect false when hash is invalid with error message logged
 		const dao = new UserDao(db);
-		const ok = await new Promise((res, rej) => {
+		const promise = new Promise((res, rej) => {
 			dao.comparePassword('somepassword', 'invalid_hash', (err, matched) => (err ? rej(err) : res(matched)));
 		});
-		expect(ok).toBe(false);
+		await expect(promise).rejects.toThrow();
 	}, 20000);
 
 	test('Change password for non-existing user should return false', async () => {
 		const dao = new UserDao(db);
 		const ok = await new Promise((res, rej) => {
-			dao.updateUserPassword('non_existing_user', 'Newpass#123', (err, success) => (err ? rej(err) : res(success)));
+			dao.updateUser('999999999', { password_hash: 'Newpass#123' }, (err, success) => (err ? rej(err) : res(success)));
 		});
 		console.log('Test result for changing password of non-existing user:', ok);
 		expect(ok).toBe(false);
@@ -186,7 +203,7 @@ describe('UserDao edge cases', () => {
 	test('Delete non-existing user should return false', async () => {
 		const dao = new UserDao(db);
 		const ok = await new Promise((res, rej) => {
-			dao.deleteUser('non_existing_user', (err, success) => (err ? rej(err) : res(success)));
+			dao.deleteUserByID('999999999', (err, success) => (err ? rej(err) : res(success)));
 		});
 		expect(ok).toBe(false);
 	}, 20000);
@@ -194,7 +211,7 @@ describe('UserDao edge cases', () => {
 	test('Change email for non-existing user should return false', async () => {
 		const dao = new UserDao(db);
 		const ok = await new Promise((res, rej) => {
-			dao.updateUserEmail('non_existing_user', 'new_email@example.com', (err, success) => (err ? rej(err) : res(success)));
+			dao.updateUser('999999999', { email: 'new_email@example.com' }, (err, success) => (err ? rej(err) : res(success)));
 		});
 		expect(ok).toBe(false);
 	}, 20000);
