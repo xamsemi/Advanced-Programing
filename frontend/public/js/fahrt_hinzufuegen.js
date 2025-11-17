@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     setupLogout();
     saveButton.addEventListener("click", async (e) => {
         e.preventDefault();
-        console.log("🚀 Button wurde geklickt");
+        console.log(" Button wurde geklickt");
 
         const body = {
             tour_description: document.getElementById("zielort").value,
