@@ -53,5 +53,31 @@ serviceRouter.delete('/:id', async (req, res) => {
     }
 });
 
+// --- Tour hinzugügen ---
+serviceRouter.post("/tours", async (req, res) => {
+    console.log("POST Request Body:", req.body);
+
+    const { tour_description, tour_date, destination, bus_id, picture_path } = req.body;
+    const tourDao = new TourDao(req.app.locals.dbConnection);
+
+    try {
+        const newId = await tourDao.createTour(
+            tour_description,
+            tour_date,
+            destination,
+            bus_id,
+            picture_path
+        );
+
+        res.status(201).json({
+            message: "Tour erfolgreich erstellt",
+            id: newId
+        });
+
+    } catch (err) {
+        console.error("Service Tour: Fehler beim Anlegen:", err);
+        res.status(500).json({ error: "Fehler beim Erstellen der Tour." });
+    }
+});
 
 module.exports = serviceRouter;

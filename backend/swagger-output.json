@@ -104,9 +104,6 @@
                 },
                 "email": {
                   "example": "any"
-                },
-                "user_role": {
-                  "example": "any"
                 }
               }
             }
@@ -131,6 +128,43 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tour_description": {
+                  "example": "any"
+                },
+                "tour_date": {
+                  "example": "any"
+                },
+                "destination": {
+                  "example": "any"
+                },
+                "bus_id": {
+                  "example": "any"
+                },
+                "picture_path": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
           },
           "500": {
             "description": "Internal Server Error"
