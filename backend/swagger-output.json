@@ -104,9 +104,6 @@
                 },
                 "email": {
                   "example": "any"
-                },
-                "user_role": {
-                  "example": "any"
                 }
               }
             }

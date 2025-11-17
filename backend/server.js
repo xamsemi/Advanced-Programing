@@ -8,7 +8,7 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 //Pfad zur public Mappe
-const path = require('path'); // 🟢 für den Pfad zur public-Mappe
+//const path = require('path'); 
 
 const port = 3000;
 const app = express();
