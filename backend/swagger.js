@@ -10,7 +10,7 @@ const doc = {
 const swaggerAutogen = require('swagger-autogen')();
 const outputFile = './swagger-output.json';
 const endpointsFiles = [
-  './server.js' // only scan server.js which requires/mounts the routers
+  './server.js', // only scan server.js which requires/mounts the routers
 ];
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(() => {

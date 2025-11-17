@@ -7,6 +7,8 @@ const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+//Pfad zur public Mappe
+const path = require('path'); // 🟢 für den Pfad zur public-Mappe
 
 const port = 3000;
 const app = express();
@@ -77,6 +79,9 @@ connectWithRetry(db)
     // --- Services ---
     app.use('/api/user', require('./services/user'));
     app.use('/api/tour', require('./services/tour'));
+    app.use('/api/buses', require('./services/buses.js'));
+    app.use('/api/buscompanies', require('./services/buscompanies.js'));
+
 
     app.listen(port, () => {
       console.log(`Backend läuft auf http://localhost:${port}`);
