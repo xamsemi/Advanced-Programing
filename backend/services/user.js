@@ -151,6 +151,23 @@ serviceRouter.put('/:id', async (req, res) => {
     }
 });
 
+// neuen Nutzer erstellen
+serviceRouter.post("/", async (req, res) => {
+  const { username, address, email, user_role, password_hash, created_at } = req.body;
+  const usersDao = new UserDao(req.app.locals.dbConnection);
+
+  try {
+    const newUserId = await usersDao.createUser({ username, address, email, user_role, password_hash, created_at });
+    res.status(201).json({ message: "Benutzer erfolgreich erstellt", user_id: newUserId });
+  } catch (err) {
+    console.error("Fehler beim Erstellen des Users:", err.message);
+    res.status(500).json({ fehler: true, nachricht: err.message });
+  }
+});
+
+
+
+
 serviceRouter.post("/register", async (req, res) => {
 
     const { username, password, email} = req.body;
