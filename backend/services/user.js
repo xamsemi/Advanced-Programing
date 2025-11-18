@@ -3,7 +3,7 @@ const express = require('express');
 const serviceRouter = express.Router();
 const bcrypt = require('bcrypt');
 const rateLimit = require('express-rate-limit');
-const UserDao = require('../dao/userDao');
+const UserDao = require('../dao/userDao.js');
 
 console.log('- Service User');
 
@@ -85,6 +85,27 @@ serviceRouter.get('/profile', (req, res) => {
         res.status(401).json({ message: 'Kein Benutzer eingeloggt' });
     }
 });
+
+
+// --- Alle User abrufen ---
+
+serviceRouter.get('/', async (req, res) => {
+    console.log('Service Users: Client requested all users');
+
+    try {
+        
+       const usersDao = new UserDao(req.app.locals.dbConnection);
+
+        const users = await usersDao.getAllUsers();
+        res.status(200).json({ message: 'success', data: users });
+    } catch (err) {
+        console.error('Service Users: Error loading users', err);
+        res.status(500).json({ fehler: true, nachricht: err.message });
+    }
+});
+
+
+
 
 serviceRouter.post("/register", async (req, res) => {
 

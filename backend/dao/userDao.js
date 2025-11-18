@@ -158,5 +158,17 @@ class UserDao {
         });
         return require('../helper.js').maybeCallback(promise, callback);
     }
+
+
+    async getAllUsers() {
+    const sql = 'SELECT user_id, username, email, user_role, password_hash, created_at FROM users';
+    const [rows] = await this._conn.promise().query(sql);
+    return rows;
+  }
 }
+
+
+
+
+
 module.exports = UserDao;

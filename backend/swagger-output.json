@@ -86,6 +86,19 @@
         }
       }
     },
+    "/api/user/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/user/register": {
       "post": {
         "description": "",
@@ -103,9 +116,6 @@
                   "example": "any"
                 },
                 "email": {
-                  "example": "any"
-                },
-                "user_role": {
                   "example": "any"
                 }
               }
