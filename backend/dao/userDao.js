@@ -146,6 +146,30 @@ class UserDao {
         return require('../helper.js').maybeCallback(promise, callback);
     }
 
+    //bestehenden benutzer ändern via id
+        updateUserByID(userId, userData, callback) {
+        // Dynamically build SET clause based on provided userData
+        const setClauses = [];
+        const params = [];
+        for (const [key, value] of Object.entries(userData)) {
+            setClauses.push(`${key} = ?`);
+            params.push(value);
+        }
+        const sql = `UPDATE users SET ${setClauses.join(', ')} WHERE user_id = ?`;
+        console.log('Update User SQL:', sql, 'Params:', params.concat([userId]));
+        params.push(userId);
+        const promise = new Promise((resolve, reject) => {
+            this._conn.query(sql, params, (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                console.log('Update User Results:', results);
+                resolve(results.affectedRows > 0);
+            });
+        });
+        return require('../helper.js').maybeCallback(promise, callback);
+    }
+
     deleteUserByID(userId, callback) {
         const sql = 'DELETE FROM users WHERE user_id = ?';
         const promise = new Promise((resolve, reject) => {

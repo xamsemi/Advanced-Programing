@@ -136,6 +136,20 @@ serviceRouter.delete('/:id', (req, res) => {
     });
 });
 
+// Bestehenden Benutzer aktualisieren
+serviceRouter.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { username, address, email, user_role, created_at } = req.body;
+    console.log('Service Users: Client requested update of user id=' + id);
+    const usersDao = new UserDao(req.app.locals.dbConnection);
+    try {
+        const updated = await usersDao.updateUserByID(id, { username, address, email, user_role, created_at }); 
+        res.status(200).json({ message: 'Benutzer aktualisiert', data: updated });
+    } catch (err) {
+        console.error('Service Users: Error updating user:', err.message);
+        res.status(500).json({ fehler: true, nachricht: 'Fehler beim Aktualisieren des Benutzers' });
+    }
+});
 
 serviceRouter.post("/register", async (req, res) => {
 

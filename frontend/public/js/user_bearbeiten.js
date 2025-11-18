@@ -94,27 +94,28 @@ if (user_id) {
 
 
 
-//***************************************** */
+//*********************** Mitglied bearbeiten (submit) ****************** */
 
 const form = document.querySelector("form");
 
     form.addEventListener("submit", async (event) => {
     event.preventDefault(); // Verhindert Seitenreload
-        const name = document.getElementById("name").value;
-        const adresse = document.getElementById("anschrift").value;
-        const email = document.getElementById("email").value;
-        const mitgliedSeit = document.getElementById("mitgliedSeit").value;
+        const name_var = document.getElementById("vorname").value;
+        const adresse_var = document.getElementById("adresse").value;
+        const email_var = document.getElementById("email").value;
+        const mitgliedSeit_var = document.getElementById("mitgliedSeit").value;
      
         // Objekt für API
         const newUser= {
-            user_name: name,
-            user_adresse  : adresse,
-            user_mail: email,
-            mitglied_seit: created_at
+            username: name_var,
+            address: adresse_var,
+            email: email_var,
+            created_at: mitgliedSeit_var,
+            user_role: "user" 
         };
         try {
             console.log("User ID geladen für Update:", user_id);
-            const response = await fetch(`/api/users/${user_id}`, {
+            const response = await fetch(`/api/user/${user_id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
