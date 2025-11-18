@@ -61,7 +61,7 @@ async function deleteUser(id) {
   if (!confirm("Dieses Mitglied wirklich löschen?")) return;
 
   try {
-    const res = await fetch(`/api/users/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/user/${id}`, { method: "DELETE" });
     if (res.ok) {
       alert("Mitglied gelöscht!");
       loadUsers();

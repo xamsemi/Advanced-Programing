@@ -119,6 +119,23 @@ serviceRouter.get('/:id', async (req, res) => {
     }
 });
 
+// Benutzer löschen
+serviceRouter.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    console.log('Service Users: Client requested deletion of user id=' + id);
+    const usersDao = new UserDao(req.app.locals.dbConnection);  
+    usersDao.deleteUserByID(id, (err, result) => {
+        if (err) {
+            console.error('Service Users: Fehler beim Löschen des Users:', err.message);
+            return res.status(500).json({ fehler: true, nachricht: err.message });
+        }
+        if (!result) {
+            return res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
+        }
+        res.status(200).json({ message: 'Benutzer gelöscht' });
+    });
+});
+
 
 serviceRouter.post("/register", async (req, res) => {
 
