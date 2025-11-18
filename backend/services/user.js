@@ -157,7 +157,7 @@ serviceRouter.post("/", async (req, res) => {
   const usersDao = new UserDao(req.app.locals.dbConnection);
 
   try {
-    const newUserId = await usersDao.createUser({ username, address, email, user_role, password_hash, created_at });
+    const newUserId = await usersDao.createUser_form({ username, address, email, user_role, password_hash, created_at });
     res.status(201).json({ message: "Benutzer erfolgreich erstellt", user_id: newUserId });
   } catch (err) {
     console.error("Fehler beim Erstellen des Users:", err.message);

@@ -76,6 +76,19 @@ class UserDao {
         return require('../helper.js').maybeCallback(promise, callback);
     }
 
+
+    async createUser_form({ username, address, email, user_role, password_hash, created_at }) {
+    const sql = "INSERT INTO users (username, address, email, user_role, password_hash, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+    try {
+        const [result] = await this._conn.promise().query(sql, [username, address, email, user_role, password_hash, created_at]);
+        return result.insertId; // ID des neuen Users
+    } catch (error) {
+        throw new Error("Database error: " + error.message);
+    }
+    }
+
+
+
     comparePassword(inputPassword, hashedPassword, callback) {
         const promise = new Promise((resolve, reject) => {
             // Validierung
