@@ -12,7 +12,7 @@ class UserDao {
     }
 
     getUserByID(userId, callback) {
-        var sql = 'SELECT user_id, username, email, user_role, password_hash FROM users WHERE user_id = ?';
+        var sql = 'SELECT user_id, username, email, user_role, password_hash, created_at, address FROM users WHERE user_id = ?';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, [userId], (error, results) => {
                 if (error) {
@@ -161,7 +161,7 @@ class UserDao {
 
 
     async getAllUsers() {
-    const sql = 'SELECT user_id, username, email, user_role, password_hash, created_at FROM users';
+    const sql = 'SELECT user_id, username, email, user_role, password_hash, address, created_at FROM users';
     const [rows] = await this._conn.promise().query(sql);
     return rows;
   }

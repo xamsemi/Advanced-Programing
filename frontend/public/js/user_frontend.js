@@ -38,9 +38,10 @@ async function loadUsers() {
       row.innerHTML = `
         
         <td>${user.username}</td>
+        <td>${user.address}</td>
         <td>${user.email}</td>
         <td>${user.user_role}</td>
-        <td>${user.created_at}</td>
+        <td>${user.created_at.substring(0, 10)}</td>
         <td class="text-center">
           <a href="mitglied_bearbeiten.html?id=${user.user_id}" class="btn btn-sm btn-outline-warning me-2">Bearbeiten</a>
           <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${user.user_id})">Löschen</button>

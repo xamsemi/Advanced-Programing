@@ -104,7 +104,20 @@ serviceRouter.get('/', async (req, res) => {
     }
 });
 
+// --- Einzelnen Benutzer abrufen ---
+serviceRouter.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log('Service User: Client requested user id=' + id);
+    const usersDao = new UserDao(req.app.locals.dbConnection);
 
+    try {
+        const users = await usersDao.getUserByID(id);
+        res.status(200).json({ message: 'success', data: users });
+    } catch (err) {
+        console.error('Service Users: Error loading users:', err.message);
+        res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
+    }
+});
 
 
 serviceRouter.post("/register", async (req, res) => {

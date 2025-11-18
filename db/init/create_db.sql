@@ -15,6 +15,7 @@ USE busfahrt_app;
 CREATE TABLE IF NOT EXISTS users (
   user_id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
+  address VARCHAR(100) Not NULL UNIQUE,
   email VARCHAR(100) NOT NULL UNIQUE,
   user_role ENUM('admin', 'user') DEFAULT 'user',
   password_hash VARCHAR(255) NOT NULL,
