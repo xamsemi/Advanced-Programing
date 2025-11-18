@@ -106,12 +106,29 @@ const form = document.querySelector("form");
         const mitgliedSeit_var = document.getElementById("mitgliedSeit").value;
      
         // Objekt für API
+        //wenn admin, dann soll user_role admin sein
+        
+        // Nutzerrolle laden
+        
+    
+            const response = await fetch(`/api/user/${user_id}`, { credentials: "include" });
+            console.log("Response beim Laden des Mitglieds:", response.status);
+            if (!response.ok) {
+            throw new Error(`Fehler beim Laden: ${response.status}`);
+            }
+
+            const json = await response.json();
+            const user_temp = json.data;
+        
+            //console.log("User Rolle ist:", user_temp.user_role);
+
+
         const newUser= {
             username: name_var,
             address: adresse_var,
             email: email_var,
             created_at: mitgliedSeit_var,
-            user_role: "user" 
+            user_role: user_temp.user_role  
         };
         try {
             console.log("User ID geladen für Update:", user_id);
