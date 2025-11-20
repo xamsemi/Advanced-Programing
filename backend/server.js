@@ -79,8 +79,9 @@ connectWithRetry(db)
     // --- Services ---
     app.use('/api/user', require('./services/user'));
     app.use('/api/tour', require('./services/tour'));
-    app.use('/api/buses', require('./services/buses.js'));
-    app.use('/api/buscompanies', require('./services/buscompanies.js'));
+    app.use('/api/buses', require('./services/buses'));
+    app.use('/api/buscompanies', require('./services/buscompanies'));
+    app.use('/api/mailer', require('./services/mailer'));
 
 
     app.listen(port, () => {
