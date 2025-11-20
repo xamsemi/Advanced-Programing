@@ -8,7 +8,7 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 //Pfad zur public Mappe
-//const path = require('path'); 
+
 
 const port = 3000;
 const app = express();
@@ -77,7 +77,7 @@ connectWithRetry(db)
     app.locals.dbConnection = db;
 
     // --- Services ---
-    app.use('/api/user', require('./services/user'));
+    app.use('/api/user', require('./services/user.js'));
     app.use('/api/tour', require('./services/tour'));
     app.use('/api/buses', require('./services/buses.js'));
     app.use('/api/buscompanies', require('./services/buscompanies.js'));

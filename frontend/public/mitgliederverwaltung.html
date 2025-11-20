@@ -63,48 +63,16 @@
         <table class="table table-dark table-hover align-middle mb-0 rounded">
           <thead>
             <tr class="text-primary">
-              <th scope="col">Vorname</th>
-              <th scope="col">Nachname</th>
-              <th scope="col">E-Mail</th>
+              <th scope="col">Name</th>
               <th scope="col">Adresse</th>
+              <th scope="col">E-Mail</th>
+              <th scope="col">Rolle</th>
               <th scope="col">Mitglied seit</th>
               <th scope="col" class="text-center">Aktionen</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Anna</td>
-              <td>Müller</td>
-              <td>anna.mueller@example.com</td>
-              <td>Hauptstraße 8, 72379 Hechingen</td>
-              <td>2021</td>
-              <td class="text-center">
-                <a href="mitglied_bearbeiten.html" class="btn btn-sm btn-outline-warning me-2">Bearbeiten</a>
-                <button class="btn btn-sm btn-outline-danger">Löschen</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Thomas</td>
-              <td>Schneider</td>
-              <td>thomas.schneider@example.com</td>
-              <td>Blumenweg 3, 72406 Bisingen</td>
-              <td>2022</td>
-              <td class="text-center">
-                <a href="mitglied_bearbeiten.html" class="btn btn-sm btn-outline-warning me-2">Bearbeiten</a>
-                <button class="btn btn-sm btn-outline-danger">Löschen</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Lisa</td>
-              <td>Huber</td>
-              <td>lisa.huber@example.com</td>
-              <td>Feldstraße 10, 72336 Balingen</td>
-              <td>2023</td>
-              <td class="text-center">
-                <a href="mitglied_bearbeiten.html" class="btn btn-sm btn-outline-warning me-2">Bearbeiten</a>
-                <button class="btn btn-sm btn-outline-danger">Löschen</button>
-              </td>
-            </tr>
+          <tbody id="user-table-body">
+            <!-- Wird jetzt dynamisch mit user.js gefüllt -->
           </tbody>
         </table>
       </div>
@@ -117,6 +85,6 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+ <script src="js/user_frontend.js"></script>
 </body>
 </html>

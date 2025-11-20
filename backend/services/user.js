@@ -3,7 +3,7 @@ const express = require('express');
 const serviceRouter = express.Router();
 const bcrypt = require('bcrypt');
 const rateLimit = require('express-rate-limit');
-const UserDao = require('../dao/userDao');
+const UserDao = require('../dao/userDao.js');
 
 console.log('- Service User');
 
@@ -85,6 +85,88 @@ serviceRouter.get('/profile', (req, res) => {
         res.status(401).json({ message: 'Kein Benutzer eingeloggt' });
     }
 });
+
+
+// --- Alle User abrufen ---
+
+serviceRouter.get('/', async (req, res) => {
+    console.log('Service Users: Client requested all users');
+
+    try {
+        
+       const usersDao = new UserDao(req.app.locals.dbConnection);
+
+        const users = await usersDao.getAllUsers();
+        res.status(200).json({ message: 'success', data: users });
+    } catch (err) {
+        console.error('Service Users: Error loading users', err);
+        res.status(500).json({ fehler: true, nachricht: err.message });
+    }
+});
+
+// --- Einzelnen Benutzer abrufen ---
+serviceRouter.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log('Service User: Client requested user id=' + id);
+    const usersDao = new UserDao(req.app.locals.dbConnection);
+
+    try {
+        const users = await usersDao.getUserByID(id);
+        res.status(200).json({ message: 'success', data: users });
+    } catch (err) {
+        console.error('Service Users: Error loading users:', err.message);
+        res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
+    }
+});
+
+// Benutzer löschen
+serviceRouter.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    console.log('Service Users: Client requested deletion of user id=' + id);
+    const usersDao = new UserDao(req.app.locals.dbConnection);  
+    usersDao.deleteUserByID(id, (err, result) => {
+        if (err) {
+            console.error('Service Users: Fehler beim Löschen des Users:', err.message);
+            return res.status(500).json({ fehler: true, nachricht: err.message });
+        }
+        if (!result) {
+            return res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
+        }
+        res.status(200).json({ message: 'Benutzer gelöscht' });
+    });
+});
+
+// Bestehenden Benutzer aktualisieren
+serviceRouter.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { username, address, email, user_role, created_at } = req.body;
+    console.log('Service Users: Client requested update of user id=' + id);
+    const usersDao = new UserDao(req.app.locals.dbConnection);
+    try {
+        const updated = await usersDao.updateUserByID(id, { username, address, email, user_role, created_at }); 
+        res.status(200).json({ message: 'Benutzer aktualisiert', data: updated });
+    } catch (err) {
+        console.error('Service Users: Error updating user:', err.message);
+        res.status(500).json({ fehler: true, nachricht: 'Fehler beim Aktualisieren des Benutzers' });
+    }
+});
+
+// neuen Nutzer erstellen
+serviceRouter.post("/", async (req, res) => {
+  const { username, address, email, user_role, password_hash, created_at } = req.body;
+  const usersDao = new UserDao(req.app.locals.dbConnection);
+
+  try {
+    const newUserId = await usersDao.createUser_form({ username, address, email, user_role, password_hash, created_at });
+    res.status(201).json({ message: "Benutzer erfolgreich erstellt", user_id: newUserId });
+  } catch (err) {
+    console.error("Fehler beim Erstellen des Users:", err.message);
+    res.status(500).json({ fehler: true, nachricht: err.message });
+  }
+});
+
+
+
 
 serviceRouter.post("/register", async (req, res) => {
 
