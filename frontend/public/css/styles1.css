@@ -274,7 +274,6 @@ footer {
   margin-top: 4rem;
 }
 
-
 /* === Einheitliche Buttons im Adminbereich === */
 
 /* Hauptaktions-Buttons (z. B. "Neues Mitglied hinzufügen", "Nachricht an alle senden") */
@@ -297,3 +296,13 @@ footer {
   color: #fff;
 }
 
+/* Modal Anpassungen */
+.modal-content {
+  background-color: #1e1e1e;
+  border-radius: 1rem;
+  color: #f0f0f0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}

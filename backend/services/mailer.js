@@ -3,13 +3,14 @@ const serviceRouter = express.Router();
 const helper = require('../helper.js');
 const nodemailer = require("nodemailer");
 const session = require('express-session');
+const TourDao = require('../dao/tourDao.js');
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
+    host: process.env.MAIL_HOST,
     port: 587,
     auth: {
-        user: 'bette.thompson@ethereal.email',
-        pass: 'mSVCT2wa67f3HHAfDS'
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD
     }
 });
 
@@ -30,7 +31,36 @@ const sessionChecker = (req, res, next) => {
 };
 
 // --- Alle Touren abrufen ---
-serviceRouter.post('/getTour', sessionChecker, async (req, res) => {
+serviceRouter.post('/tour', sessionChecker, async (req, res) => {
+
+
+    const { tourId, emailSubject, emailBody } = req.body;
+    const tourDao = new TourDao(req.app.locals.dbConnection);
+
+    tourDao.getTourById(tourId).then(async () => {
+        const data = tourDao.getTourById(tourId);
+        console.log('Mailer: Tour data fetched', data);
+    });
+
+    console.log('Mailer: tourId, emailSubject, emailBody', tourId, emailSubject, emailBody);
+    try {
+        const info = await transporter.sendMail({
+            from: "Fasnetsverein Reutlingen <narinaro@reutlingen.to>",
+            to: "test",
+            subject: emailSubject,
+            text: emailBody, // plain‑text body
+            html: `<p>${emailBody}</p>`, // HTML body
+        });
+        console.log("Message sent:", info.messageId);
+        res.status(200).json({ message: 'Message sent!' });
+    } catch (err) {
+        console.error('Service Mailer: Error sending mail', err);
+        res.status(500).json({ fehler: true, nachricht: err.message });
+    }    
+});
+
+// --- Alle Touren abrufen ---
+serviceRouter.post('/member', sessionChecker, async (req, res) => {
     console.log('Mailer: Member booked a tour, sending confirmation email.');
     try {
         const info = await transporter.sendMail({
