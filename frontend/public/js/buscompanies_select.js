@@ -51,11 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
-
-
-
-
 //Busse hinzufügen aus Formular
 
 function setupBusAddForm(form) {

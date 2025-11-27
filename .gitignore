@@ -156,7 +156,6 @@ dist
 
 # Swagger Output files
 */swagger-output.json
-
-# Bilder
+# Images
 *.png
 *.jpg

@@ -34,7 +34,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         console.log("Formulardaten:", body);
 
         try {
-            const res = await fetch('/api/tour/tours', {
+            const res = await fetch('/api/tour/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json; charset=UTF-8' },
                 body: JSON.stringify(body)

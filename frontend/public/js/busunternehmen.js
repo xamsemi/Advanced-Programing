@@ -19,8 +19,10 @@ async function loadBuses() {
       tbody.innerHTML = `<tr><td colspan="5" class="text-center text-secondary">Keine Busse gefunden.</td></tr>`;
       return;
     }
-//${bus.bus_type || "-"} 
     for (const bus of buses) {
+      
+      //## Kommt bereits mit Bus Objekt mit
+      /*
       const response = await fetch(`/api/buscompanies/${bus.company_id}`, { credentials: "include" });
       console.log("Response beim Laden der Busunternehmen:", response.status);
       
@@ -29,7 +31,9 @@ async function loadBuses() {
       }
 
       const json_bu = await response.json();
-      const company = json_bu.data;
+      */
+
+      const company = bus.company;
 
       const row = document.createElement("tr");
 
