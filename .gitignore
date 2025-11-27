@@ -153,3 +153,7 @@ dist
 .github
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+
+# Swagger Output files
+/swagger-output.json
