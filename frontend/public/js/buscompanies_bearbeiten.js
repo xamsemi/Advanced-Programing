@@ -22,11 +22,15 @@ async function loadBusParameters(bus_id) {
         
         //  Standard-Eintrag setzen
         seats.value = bus.bus_seats ?? ""; //änderung ??""
-            
+
+        /*    
         const resCompany = await fetch(`/api/buscompanies/${bus.company_id}`, { credentials: "include" });
         if (!resCompany.ok) throw new Error("Unternehmen konnte nicht geladen werden");
         const company = (await resCompany.json()).data;
+        */
 
+        const company = bus.company
+        
         name.value = company.company_name ?? "";
         anschrift.value = company.contact_info ?? "";
         kontakt.value = company.company_email ?? "";

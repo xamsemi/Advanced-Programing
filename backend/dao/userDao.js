@@ -11,6 +11,12 @@ class UserDao {
         this._conn = dbConnection;
     }
 
+    async getAllUsers() {
+        const sql = 'SELECT user_id, username, email, user_role, password_hash, address, created_at FROM users';
+        const [rows] = await this._conn.promise().query(sql);
+        return rows;
+    }
+
     getUserByID(userId, callback) {
         var sql = 'SELECT user_id, username, email, user_role, password_hash, created_at, address FROM users WHERE user_id = ?';
         const promise = new Promise((resolve, reject) => {
@@ -196,16 +202,6 @@ class UserDao {
         return require('../helper.js').maybeCallback(promise, callback);
     }
 
-
-    async getAllUsers() {
-    const sql = 'SELECT user_id, username, email, user_role, password_hash, address, created_at FROM users';
-    const [rows] = await this._conn.promise().query(sql);
-    return rows;
-  }
 }
-
-
-
-
 
 module.exports = UserDao;

@@ -18,16 +18,16 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "luxon": "^3.7.2",
     "express-rate-limit": "^8.1.0",
     "express-session": "^1.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "luxon": "^3.7.2",
+    "multer": "^2.0.2",
     "mysql2": "^3.15.2",
     "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
-  }
-  ,
+  },
   "devDependencies": {
     "jest": "^29.6.1",
     "supertest": "^6.3.3"

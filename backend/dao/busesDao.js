@@ -12,20 +12,33 @@ class BusesDao {
 
     async getAllBuses() {
         const sql = 'SELECT bus_id, bus_seats, company_id FROM buses';
-        const [rows] = await this._conn.promise().query(sql);
-        return rows;
+        const [result] = await this._conn.promise().query(sql);
+
+        for (let bus of result) {
+            const buscompaniesDao = new BuscompaniesDao(this._conn);
+            bus.company = await buscompaniesDao.getBuscompanyById(bus.company_id);
+            delete bus.company_id;
+        }
+
+        return result;
     }
 
     async getBusById(id) {
         const buscompaniesDao = new BuscompaniesDao(this._conn);
+        console.log("Fetching Bus with ID:", id);
         const sql = 'SELECT bus_id, bus_seats, company_id FROM buses WHERE bus_id = ?';
         try {
-            var result = await this._conn.promise().query(sql, [id]);
-            if (helper.isArrayEmpty(rows)) {
-                throw new Error('No Record found by id=' + id);
-            }
-            result.company = buscompaniesDao.getBuscompanyById(rows[0].company_id);
-            return result;
+            const [result] = await this._conn.promise().query(sql, [id]);
+            if (helper.isArrayEmpty(result)) {
+                throw new Error('No Record found by bus id=' + id);
+            }     
+
+            result[0].company = await buscompaniesDao.getBuscompanyById(result[0].company_id);
+            delete result[0].company_id
+            console.log("Gefundener Bus:", result[0]);
+
+            return result[0];
+
         } catch (error) {
             throw new Error('Database error: ' + error.message);
         }

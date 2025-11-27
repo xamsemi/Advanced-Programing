@@ -16,11 +16,12 @@ class BuscompaniesDao {
     }
 
     async getBuscompanyById(id) {
+        console.log("Fetching Buscompany with ID:", id);
         const sql = 'SELECT company_id, company_name, contact_info, company_email FROM bus_companies WHERE company_id = ?';
         try {
             const [rows] = await this._conn.promise().query(sql, [id]);
             if (helper.isArrayEmpty(rows)) {
-                throw new Error('No Record found by id=' + id);
+                throw new Error('No Record found by company id=' + id);
             }
             return rows[0];
         } catch (error) {

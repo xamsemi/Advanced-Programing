@@ -4,6 +4,10 @@ const serviceRouter = express.Router();
 const bcrypt = require('bcrypt');
 const rateLimit = require('express-rate-limit');
 const UserDao = require('../dao/userDao.js');
+const UserTourDao = require('../dao/userTourDao.js');
+const TourDao = require('../dao/tourDao.js');
+const BusesDao = require('../dao/busesDao.js');
+const BuscompaniesDao = require('../dao/buscompaniesDao.js');
 
 console.log('- Service User');
 
@@ -83,19 +87,19 @@ serviceRouter.post('/login', loginLimiter, function(req, res) {
             const token = userDao.generateToken(username);
             console.log('Service User: Login successful');
             req.session.user = { username: user.username, role: user.user_role };
-            res.status(200).json({ 'token': token });
+            return res.status(200).json({ 'token': token });
         });
     });
 });
 
 serviceRouter.post('/logout', (req, res) => {
     /*
-    swagger.tags = ['Users']
+    #swagger.tags = ['Users']
     #swagger.description = 'Endpoint zum Ausloggen eines Benutzers.'
     #swagger.summary = 'Logout eines Benutzers'
     #swagger.responses[200] = {
         description: 'Erfolgreiches Logout',
-        schema: { message: 'Logout erfolgreich' 
+        schema: { message: 'Logout erfolgreich' } 
     }
     #swagger.responses[404] = {
         description: 'Keine aktive Session',
@@ -116,10 +120,10 @@ serviceRouter.post('/logout', (req, res) => {
             }
             res.clearCookie('connect.sid'); // Session-Cookie löschen
             console.log('Service User: Logout successful');
-            res.status(200).json({ message: 'Logout erfolgreich' });
+            return res.status(200).json({ message: 'Logout erfolgreich' });
         });
     } else {
-        res.status(404).json({ message: 'Keine aktive Session' });
+        return res.status(404).json({ message: 'Keine aktive Session' });
     }
 });
 
@@ -138,9 +142,9 @@ serviceRouter.get('/profile', (req, res) => {
     }
     */
     if (req.session && req.session.user) {
-        res.json({ username: req.session.user.username, role: req.session.user.role });
+        return res.json({ username: req.session.user.username, role: req.session.user.role });
     } else {
-        res.status(401).json({ message: 'Kein Benutzer eingeloggt' });
+        return res.status(401).json({ message: 'Kein Benutzer eingeloggt' });
     }
 });
 
@@ -148,28 +152,46 @@ serviceRouter.get('/profile', (req, res) => {
 // --- Alle User abrufen ---
 serviceRouter.get('/', async (req, res) => {
     const usersDao = new UserDao(req.app.locals.dbConnection);
+    const userTourDao = new UserTourDao(req.app.locals.dbConnection);
     console.log('Service Users: Client requested all users');
     try {
-        const users = await usersDao.getAllUsers();
-        res.status(200).json({ message: 'success', data: users });
+        const user = await usersDao.getAllUsers();
+        if (!user) return res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
+
+        for (const u of user) {
+            // Zugeordnete Touren laden
+            const userTours = await userTourDao.getToursByUser(u.user_id);
+            delete userTours.user_id; // user_id entfernen, da bereits im user-Objekt vorhanden
+            u.tours = userTours.tours; // Touren dem user-Objekt hinzufügen  
+        }
+
+        return res.status(200).json({ message: 'success', data: user});
     } catch (err) {
-        console.error('Service Users: Error loading users', err);
-        res.status(500).json({ fehler: true, nachricht: err.message });
+        console.error('Service Users: Error loading user details:', err);
+        return res.status(500).json({ fehler: true, nachricht: err.message });
     }
 });
 
 // --- Einzelnen Benutzer abrufen ---
 serviceRouter.get('/:id', async (req, res) => {
     const usersDao = new UserDao(req.app.locals.dbConnection);
+    const userTourDao = new UserTourDao(req.app.locals.dbConnection);
     const { id } = req.params;
-    console.log('Service User: Client requested user id=' + id); 
+    console.log('Service User: Client requested user id=' + id);
 
     try {
-        const users = await usersDao.getUserByID(id);
-        res.status(200).json({ message: 'success', data: users });
+        const user = await usersDao.getUserByID(id);
+        if (!user) return res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
+
+        // Zugeordnete Touren laden
+        const userTours = await userTourDao.getToursByUser(id);
+        delete userTours.user_id; // user_id entfernen, da bereits im user-Objekt vorhanden
+        user.tours = userTours.tours; // Touren dem user-Objekt hinzufügen
+
+        return res.status(200).json({ message: 'success', data: user});
     } catch (err) {
-        console.error('Service Users: Error loading users:', err.message);
-        res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
+        console.error('Service Users: Error loading user details:', err);
+        return res.status(500).json({ fehler: true, nachricht: err.message });
     }
 });
 
@@ -180,10 +202,10 @@ serviceRouter.post("/", async (req, res) => {
 
   try {
     const newUserId = await usersDao.createUser_form({ username, address, email, user_role, password_hash, created_at });
-    res.status(201).json({ message: "Benutzer erfolgreich erstellt", user_id: newUserId });
+    return res.status(201).json({ message: "Benutzer erfolgreich erstellt", user_id: newUserId });
   } catch (err) {
     console.error("Fehler beim Erstellen des Users:", err.message);
-    res.status(500).json({ fehler: true, nachricht: err.message });
+    return res.status(500).json({ fehler: true, nachricht: err.message });
   }
 });
 
@@ -195,10 +217,10 @@ serviceRouter.put('/:id', async (req, res) => {
     console.log('Service Users: Client requested update of user id=' + id);    
     try {
         const updated = await usersDao.updateUserByID(id, { username, address, email, user_role, created_at }); 
-        res.status(200).json({ message: 'Benutzer aktualisiert', data: updated });
+        return res.status(200).json({ message: 'Benutzer aktualisiert', data: updated });
     } catch (err) {
         console.error('Service Users: Error updating user:', err.message);
-        res.status(500).json({ fehler: true, nachricht: 'Fehler beim Aktualisieren des Benutzers' });
+        return res.status(500).json({ fehler: true, nachricht: 'Fehler beim Aktualisieren des Benutzers' });
     }
 });
 
@@ -215,7 +237,7 @@ serviceRouter.delete('/:id', (req, res) => {
         if (!result) {
             return res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
         }
-        res.status(200).json({ message: 'Benutzer gelöscht' });
+        return res.status(200).json({ message: 'Benutzer gelöscht' });
     });
 });
 
@@ -251,7 +273,7 @@ serviceRouter.post("/register", async (req, res) => {
                     console.error('Error creating user:', err.message);
                     return res.status(500).json({ message: 'Interner Serverfehler' });
                 }
-                res.status(201).json({ message: 'Benutzer registriert' });
+                return res.status(201).json({ message: 'Benutzer registriert' });
             });
         });
     });
