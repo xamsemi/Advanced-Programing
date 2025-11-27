@@ -5,8 +5,10 @@ const helper = require('../helper.js');
 
 console.log('- Service Tour');
 
+
+
 // --- Alle Touren abrufen ---
-serviceRouter.get('/tours', async (req, res) => {
+serviceRouter.get('/', async (req, res) => {
     console.log('Service Tour: Client requested all tours');
     const tourDao = new TourDao(req.app.locals.dbConnection);
 
@@ -16,21 +18,6 @@ serviceRouter.get('/tours', async (req, res) => {
     } catch (err) {
         console.error('Service Tour: Error loading tours', err);
         res.status(500).json({ fehler: true, nachricht: err.message });
-    }
-});
-
-// --- Einzelne Tour abrufen ---
-serviceRouter.get('/:id', async (req, res) => {
-    const { id } = req.params;
-    console.log('Service Tour: Client requested tour id=' + id);
-    const tourDao = new TourDao(req.app.locals.dbConnection);
-
-    try {
-        const tour = await tourDao.getTourById(id);
-        res.status(200).json({ message: 'success', data: tour });
-    } catch (err) {
-        console.error('Service Tour: Error loading tour:', err.message);
-        res.status(404).json({ fehler: true, nachricht: 'Tour nicht gefunden' });
     }
 });
 

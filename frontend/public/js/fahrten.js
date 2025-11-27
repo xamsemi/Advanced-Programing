@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 // --- Fahrten dynamisch laden ---
 async function ladeTouren() {
   try {
-    const res = await fetch('/api/tour/tours', { credentials: 'include' });
+    const res = await fetch('/api/tour/', { credentials: 'include' });
     if (!res.ok) throw new Error('Fehler beim Laden der Touren.');
 
     const data = await res.json();
