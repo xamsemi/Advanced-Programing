@@ -6,9 +6,7 @@ console.log('- Service Upload');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {        
-        var tourId = req.params.tour_id;
-        tourFolderName = "tour-" + tourId;
-        pathName = './public/img/' + tourFolderName;
+        const pathName = './public/img/tours/';
         if (!fs.existsSync(pathName)){
             fs.mkdirSync(pathName, { recursive: true });
         }

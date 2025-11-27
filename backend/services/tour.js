@@ -6,13 +6,48 @@ const upload = require('./upload.js');
 
 console.log('- Service Tour');
 
+const imageServerPath = './img/tours/';
+
+// helper: gemeinsame Update-Logik
+async function performUpdate(req, res, id, fileNameCoverImage) {
+    console.log("REQUEST BODY in performUpdate:", req.body);
+    const { tour_description, tour_date, destination} = req.body;
+    const tourDao = new TourDao(req.app.locals.dbConnection);
+    var bus_id = 1; // temporarily set bus_id to 1 if not provided
+    try {
+        const updated = await tourDao.updateTour(id,{
+            picture_path: fileNameCoverImage,
+            tour_description: tour_description,
+            tour_date: tour_date,
+            destination: destination,
+            bus_id: bus_id //darf nicht null sein, muss validiert werden
+        });
+        if (updated) {
+            return res.status(200).json({ message: 'Tour erfolgreich aktualisiert' });
+        } else {
+            return res.status(404).json({ fehler: true, nachricht: 'Tour nicht gefunden' });
+        }
+    } catch (err) {
+        console.error('Service Tour: Error updating tour:', err.message);
+        return res.status(500).json({ fehler: true, nachricht: 'Fehler beim Aktualisieren der Tour' });
+    }
+}
+
 // --- Alle Touren abrufen ---
 serviceRouter.get('/', async (req, res) => {
     console.log('Service Tour: Client requested all tours');
     const tourDao = new TourDao(req.app.locals.dbConnection);
 
     try {
-        const tours = await tourDao.getAllTours();
+        var tours = await tourDao.getAllTours();
+        tours.forEach(tour => {
+            var picture_name = tour.picture_path
+            delete tour.picture_path;
+            tour.picture_url = imageServerPath + picture_name;
+        });
+
+        console.log('Service Tour: Retrieved tours:', tours);
+
         res.status(200).json({ message: 'success', data: tours });
     } catch (err) {
         console.error('Service Tour: Error loading tours', err);
@@ -27,7 +62,12 @@ serviceRouter.get('/:id', async (req, res) => {
     const tourDao = new TourDao(req.app.locals.dbConnection);
 
     try {
-        const tour = await tourDao.getTourById(id);
+        var tour = await tourDao.getTourById(id);
+        tour.forEach(tour => {
+            var picture_name = tour.picture_path
+            delete tour.picture_path;
+            tour.picture_url = imageServerPath + picture_name;
+        });
         res.status(200).json({ message: 'success', data: tour });
     } catch (err) {
         console.error('Service Tour: Error loading tour:', err.message);
@@ -36,66 +76,59 @@ serviceRouter.get('/:id', async (req, res) => {
 });
 
 // --- Tour hinzufügen ---
-serviceRouter.post("/", upload.single('coverimage'), async (req, res) => {
-    console.log("POST Request Body:", req.body);
-    console.log("POST File:", req.file);
+// multer manuell aufrufen, damit wir nach dem Upload entscheiden können (create oder override->update)
+serviceRouter.post("/", async (req, res) => {
+    upload.single('coverimage')(req, res, async (err) => {
+        if (err) {
+            console.error('Upload error:', err);
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(413).json({ fehler: true, nachricht: 'Datei zu groß' });
+            }
+            return res.status(400).json({ fehler: true, nachricht: err.message || 'Upload-Fehler' });
+        }
 
-    const fileNameCoverImage = req.file ? req.file.filename : null;
-    const { tour_description, tour_date, destination, bus_id, tour_id} = req.body;
-    const tourDao = new TourDao(req.app.locals.dbConnection);
+        console.log("POST Request Body:", req.body);
+        console.log("POST File:", req.file);
 
-/*
-    if (req.body._method && req.body._method.toLowerCase() === 'put') {
-        req.method = "PUT";
-        req.url = "/tour/" + tour_id;
-        req.app._router.handle(req, res, next);
-    }
-        */
-    try {
-        const newId = await tourDao.createTour(
-            tour_description,
-            tour_date,
-            destination,
-            bus_id,
-            fileNameCoverImage
-        );
+        const fileNameCoverImage = req.file ? req.file.filename : null;
 
-        res.status(201).json({
-            message: "Tour erfolgreich erstellt",
-            id: newId
-        });
+        // POST enthält _method=put -> Update ausführen (multipart: body ist jetzt verfügbar)
+        if (req.body._method && req.body._method.toLowerCase() === 'put') {
+            const tour_id = req.body.tour_id || req.body.id;
+            if (!tour_id) return res.status(400).json({ fehler: true, nachricht: 'Tour-ID fehlt' });
+            return await performUpdate(req, res, tour_id, fileNameCoverImage);
+        }
 
-    } catch (err) {
-        console.error("Service Tour: Fehler beim Anlegen:", err);
-        res.status(500).json({ error: "Fehler beim Erstellen der Tour." });
-    }
+        // normale Create-Logik
+        try {
+            const { tour_description, tour_date, destination, bus_id } = req.body;
+            const tourDao = new TourDao(req.app.locals.dbConnection);
+
+            const newId = await tourDao.createTour(
+                tour_description,
+                tour_date,
+                destination,
+                bus_id,
+                fileNameCoverImage
+            );
+
+            res.status(201).json({
+                message: "Tour erfolgreich erstellt",
+                id: newId
+            });
+
+        } catch (err2) {
+            console.error("Service Tour: Fehler beim Anlegen:", err2);
+            res.status(500).json({ error: "Fehler beim Erstellen der Tour." });
+        }
+    });
 });
 
 // --- Tour aktualisieren ---
-serviceRouter.put('/:id', upload.single('coverimage'), async (req, res) => {
-    const { id } = req.params;
-    console.log('Service Tour: Update requested for tour id=' + id);
+serviceRouter.put('/:tour_id', upload.single('coverimage'), async (req, res) => {
+    const id = req.params.tour_id; // use same param name
     const fileNameCoverImage = req.file ? req.file.filename : null;
-    const { tour_description, tour_date, destination, bus_id } = req.body;
-    const tourDao = new TourDao(req.app.locals.dbConnection);
-    try {
-        const updated = await tourDao.updateTour(
-            id,
-            tour_description,
-            tour_date,
-            destination,
-            bus_id,
-            fileNameCoverImage
-        );
-        if (updated) {
-            res.status(200).json({ message: 'Tour erfolgreich aktualisiert' });
-        } else {
-            res.status(404).json({ fehler: true, nachricht: 'Tour nicht gefunden' });
-        }
-    } catch (err) {
-        console.error('Service Tour: Error updating tour:', err.message);
-        res.status(500).json({ fehler: true, nachricht: 'Fehler beim Aktualisieren der Tour' });
-    }
+    return await performUpdate(req, res, id, fileNameCoverImage);
 });
 
 // --- Einzelne Tour löschen ---
