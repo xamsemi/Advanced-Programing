@@ -156,4 +156,4 @@ dist
 
 
 # Swagger Output files
-/swagger-output.json
+*/swagger-output.json

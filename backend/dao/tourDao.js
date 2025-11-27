@@ -1,4 +1,5 @@
 const helper = require('../helper.js');
+const BusDao = require('./busesDao.js');
 
 class TourDao {
 
@@ -16,7 +17,6 @@ class TourDao {
                 if (error) {
                     return reject(new Error('Database error: ' + error.message));
                 }
-                // Debug log removed for production
                 resolve(results);
             });
         });
@@ -50,9 +50,20 @@ class TourDao {
                 if (helper.isArrayEmpty(results)) {
                     return reject(new Error('No Record found by id=' + id));
                 }
-                resolve(results[0]);
+
+                const busDao = new BusDao(this._conn);
+                busObject = busDao.getBusById(results[0].bus_id)
+                    if (busError) {
+                        return reject(new Error('Could not fetch bus with id ' + results[0].bus_id + ': ' + busError.message));
+                    }
+                    //remove bus_id field and add bus object
+                    delete results[0].bus_id;
+                    results[0].bus = bus || null;
+
+                    // Debug log removed for production
+                    resolve(results[0]);
+                });
             });
-        });
         return require('../helper.js').maybeCallback(promise, callback);
     }
 
