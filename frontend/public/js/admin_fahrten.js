@@ -45,7 +45,7 @@ function ladeAdminButtons() {
 
 async function ladeTourenAdmin() {
   try {
-    const res = await fetch('/api/tour/tours', { credentials: 'include' });
+    const res = await fetch('/api/tour/', { credentials: 'include' });
     if (!res.ok) throw new Error('Fehler beim Laden der Touren.');
 
     const data = await res.json();
@@ -91,7 +91,7 @@ async function ladeTourenAdmin() {
         <td>${(tour.max_participants || 0) - (tour.participants || 0)}</td>
         <td>${tour.bus_company || '-'}</td>
         <td class="text-center">
-          <a href="fahrt_bearbeiten.html?id=${tour.tour_id}" class="btn btn-sm btn-outline-warning me-2">Bearbeiten</a>
+          <a href="fahrt_bearbeiten.html?tour_id=${tour.tour_id}" class="btn btn-sm btn-outline-warning me-2">Bearbeiten</a>
           <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${tour.tour_id}">Löschen</button>
         </td>
       `;

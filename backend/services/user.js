@@ -165,9 +165,6 @@ serviceRouter.post("/", async (req, res) => {
   }
 });
 
-
-
-
 serviceRouter.post("/register", async (req, res) => {
 
     const { username, password, email} = req.body;

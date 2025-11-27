@@ -7,8 +7,6 @@ const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-//Pfad zur public Mappe
-
 
 const port = 3000;
 const app = express();
@@ -82,14 +80,14 @@ connectWithRetry(db)
     app.use('/api/buses', require('./services/buses.js'));
     app.use('/api/buscompanies', require('./services/buscompanies.js'));
 
-
     app.listen(port, () => {
       console.log(`Backend läuft auf http://localhost:${port}`);
       console.log(`Swagger Docs: http://localhost:${port}/api-docs`);
     });
   })
   .catch((err) => {
-    console.error('- MySQL connect error:', err.code || err.message || err);
+    console.error('## Error starting server:', err.code || err.message || err);
+    console.error(err.stack)
+    console.error('Could not start server. Exiting.');
     app.locals.dbConnection = null;
-    console.error('Datenbankverbindung nicht verfügbar. Server wird nicht gestartet.');
   });
