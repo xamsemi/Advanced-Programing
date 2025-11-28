@@ -38,64 +38,65 @@ serviceRouter.post('/tour', sessionChecker, async (req, res) => {
     const { tourId, emailSubject, emailBody } = req.body;
     const tourDao = new TourDao(req.app.locals.dbConnection);
 
-    const emailAdress = '';
-    tourDao.getTourById(tourId).then(async () => {
-        const tourData = await tourDao.getTourById(tourId);
-        console.log('Mailer: Tour data fetched', tourData);
-        console.log('Mailer: Email data fetched', tourData.bus.company.company_email);
-        emailAdress = tourData.bus.company.company_email;
-    });
-
-    console.log('Mailer: tourId, emailSubject, emailBody', tourId, emailSubject, emailBody);
     try {
+        // Warten bis Tourdaten geladen sind
+        const tourData = await tourDao.getTourById(tourId);
+        if (!Array.isArray(tourData) || tourData.length === 0) {
+            return res.status(404).json({ fehler: true, nachricht: 'Tour nicht gefunden' });
+        }
+
+        const tour = tourData[0];
+        const companyEmail = tour?.bus?.company?.company_email;
+        if (!companyEmail) {
+            return res.status(400).json({ fehler: true, nachricht: 'Keine Firmen-E-Mail gefunden' });
+        }
+
+        console.log('Mailer: Tour data fetched', tour);
+        console.log('Mailer: Email data fetched', companyEmail);
+
         const info = await transporter.sendMail({
             from: '"Fasnetsverein Reutlingen" <narinaro@reutlingen.to>',
-            to: emailAdress,
+            to: companyEmail,
             subject: emailSubject,
-            text: emailBody, // plain‑text body
-            html: `<p>${emailBody}</p>`, // HTML body
+            text: emailBody,
+            html: `<p>${emailBody}</p>`,
         });
+
         console.log("Message sent:", info.messageId);
-        res.status(200).json({ message: 'Message sent!' });
+        return res.status(200).json({ message: 'Message sent!' });
+
     } catch (err) {
         console.error('Service Mailer: Error sending mail', err);
-        res.status(500).json({ fehler: true, nachricht: err.message });
+        return res.status(500).json({ fehler: true, nachricht: err.message });
     }    
 });
 
-// --- Alle Touren abrufen ---
+// --- Member Mail --- (korrigiert: user DAO nutzen, await)
 serviceRouter.post('/member', sessionChecker, async (req, res) => {
-    console.log('Mailer: Member booked a tour, sending confirmation email.');
-
     const { userId, emailSubject, emailBody } = req.body;
     const userDao = new UserDao(req.app.locals.dbConnection);
 
-    const emailAdress = '';
-    userDao.getTourById(userId).then(async () => {
-        const userData = await userDao.getUserById(tourId);
-        console.log('Mailer: Tour data fetched', userData);
-        console.log('Mailer: Email data fetched', userData.user_email);
-        emailAdress = userData.user_email;
-    });
-
-
     try {
+        const userData = await userDao.getUserById(userId);
+        if (!userData) return res.status(404).json({ fehler: true, nachricht: 'User nicht gefunden' });
+
+        const userEmail = userData.user_email || userData.email || userData.email_address;
+        if (!userEmail) return res.status(400).json({ fehler: true, nachricht: 'Keine Nutzer-E-Mail gefunden' });
+
         const info = await transporter.sendMail({
             from: '"Fasnetsverein Reutlingen" <narinaro@reutlingen.to>',
-            to: emailAdress,
+            to: userEmail,
             subject: emailSubject,
-            text: emailBody, // plain‑text body
-            html: "<p>${emailBody}</p>", // HTML body
+            text: emailBody,
+            html: `<p>${emailBody}</p>`,
         });
 
-        // return url for previewing the email
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
         console.log("Message sent:", info.messageId);
-
-        res.status(200).json({ message: 'Message sent!' });
+        return res.status(200).json({ message: 'Message sent!' });
     } catch (err) {
         console.error('Service Mailer: Error sending mail', err);
-        res.status(500).json({ fehler: true, nachricht: err.message });
+        return res.status(500).json({ fehler: true, nachricht: err.message });
     }
 });
 

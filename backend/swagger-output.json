@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Busreservierungssystem API",
-    "description": "Documentation for Busreservierungssystem API",
+    "title": "Busreservierungssystem für Vereinfahrten",
+    "description": "Dokumentation für Busreservierungssystem API",
     "version": "1.0.0"
   },
   "host": "localhost:3000",
@@ -23,65 +23,232 @@
     },
     "/api/user/login": {
       "post": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "summary": "Login eines Benutzers",
+        "description": "Endpoint zum Einloggen eines Benutzers.",
         "parameters": [
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "Benutzername und Passwort des Benutzers",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "username": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "MaxMustermann"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "geheim"
                 }
-              }
+              },
+              "required": [
+                "username",
+                "password"
+              ]
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Erfolgreiches Login",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Fehlende Parameter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fehler": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nachricht": {
+                  "type": "string",
+                  "example": "Benutzername oder Passwort fehlen"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Falsches Passwort",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fehler": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nachricht": {
+                  "type": "string",
+                  "example": "Passwort ist falsch"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Benutzer nicht gefunden",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fehler": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nachricht": {
+                  "type": "string",
+                  "example": "Benutzer nicht gefunden"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Interner Serverfehler",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fehler": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nachricht": {
+                  "type": "string",
+                  "example": "Interner Serverfehler"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/api/user/logout": {
       "post": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "summary": "Logout eines Benutzers",
+        "description": "Endpoint zum Ausloggen eines Benutzers.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Erfolgreiches Logout",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Logout erfolgreich"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Keine aktive Session",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Keine aktive Session"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Fehler beim Logout",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fehler": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "nachricht": {
+                  "type": "string",
+                  "example": "Logout fehlgeschlagen"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/api/user/profile": {
       "get": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "summary": "Profil des eingeloggten Benutzers abrufen",
+        "description": "Endpoint zum Abrufen des Profils des eingeloggten Benutzers.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Erfolgreiches Abrufen des Profils",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "MaxMustermann"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "user"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Kein Benutzer eingeloggt",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Kein Benutzer eingeloggt"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -92,6 +259,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -156,25 +326,6 @@
           },
           "404": {
             "description": "Not Found"
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -218,6 +369,28 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -272,33 +445,7 @@
             "description": "Internal Server Error"
           }
         }
-      }
-    },
-    "/api/tour/{id}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/tour/tours": {
+      },
       "post": {
         "description": "",
         "parameters": [
@@ -481,12 +628,12 @@
         }
       }
     },
-    "/api/buses/{id}": {
+    "/api/buses/{bus_id}": {
       "get": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "bus_id",
             "in": "path",
             "required": true,
             "type": "string"
@@ -500,26 +647,9 @@
             "description": "Not Found"
           }
         }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
+      }
+    },
+    "/api/buses/{id}": {
       "put": {
         "description": "",
         "parameters": [
@@ -540,6 +670,25 @@
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -681,8 +830,14 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -717,8 +872,14 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"

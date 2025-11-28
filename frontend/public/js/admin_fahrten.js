@@ -152,6 +152,10 @@ async function ladeTourenAdmin() {
 
               if (!res.ok) throw new Error('Fehler beim Senden der Email.');
               console.log('Email erfolgreich an Busunternehmen gesendet.');
+              //close modal
+              const mailerModal = bootstrap.Modal.getInstance(document.getElementById('mailerModal'));
+              mailerModal.hide();
+              alert('Email erfolgreich an Busunternehmen gesendet.');
             });
 
           } catch (err) {
