@@ -11,12 +11,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- <script type="module" src="js/fahrten.js"></script> -->
     <script>
+
         window.addEventListener('DOMContentLoaded', (event) => {
             //url-Parameter auslesen
             const urlParams = new URLSearchParams(window.location.search);
             const tourId = urlParams.get('tour_id');
             document.getElementById('tour_id').value = tourId;
+
+            submitTourData = () => {
+                const form = document.getElementById('editTourForm');
+                const formData = new FormData(form);
+
+                fetch('/api/tour/'+tourId, {
+                    method: 'PUT',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Fahrt erfolgreich bearbeitet!');
+                        window.location.href = 'admin_fahrten.html';
+                    } else {
+                        alert('Fehler beim Bearbeiten der Fahrt.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fehler:', error);
+                    alert('Fehler beim Bearbeiten der Fahrt.');
+                });
+            };
         });
+
     </script>
 </head>
 
@@ -32,7 +56,7 @@
         </div>
         <div class="card shadow-lg admin-card mx-auto">
             <div class="card-body p-4">
-            <form method="POST" id="editTourForm" action="/api/tour/" enctype="multipart/form-data">
+            <form method="POST" id="editTourForm" onsubmit="submitTourData(); return false" enctype="multipart/form-data">
                 <input type="hidden" name="_method" value="put" />
                 <div class="mb-3">
                 <label for="zielort" class="form-label text-light">Zielort</label>
