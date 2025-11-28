@@ -7,8 +7,6 @@ const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-//Pfad zur public Mappe
-
 
 const port = 3000;
 const app = express();
