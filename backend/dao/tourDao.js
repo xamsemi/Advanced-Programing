@@ -1,4 +1,7 @@
 const helper = require('../helper.js');
+const BusDao = require('./busesDao.js');
+
+const imageServerPath = './img/tours/';
 
 class TourDao {
 
@@ -10,13 +13,25 @@ class TourDao {
     }
 
     getAllTours(callback) {
+        const busDao = new BusDao(this._conn);
         const sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours';
         const promise = new Promise((resolve, reject) => {
-            this._conn.query(sql, (error, results) => {
+            this._conn.query(sql, async (error, results) => {
                 if (error) {
                     return reject(new Error('Database error: ' + error.message));
                 }
-                // Debug log removed for production
+
+                if (helper.isArrayEmpty(results)) {
+                    resolve([]);
+                }
+                for (let tour of results) {
+                    // Bild-URL hinzufügen
+                    var picture_name = tour.picture_path;
+                    tour.picture_url = './img/tours/' + picture_name;
+                    delete tour.picture_path;
+                    tour.bus = await busDao.getBusById(tour.bus_id);
+                    delete tour.bus_id;
+                }
                 resolve(results);
             });
         });
@@ -25,15 +40,26 @@ class TourDao {
 
     //load tours on windows scroll
     loadMoreTours(offset, limit, callback) {
+        const busDao = new BusDao(this._conn);
         const sql = 'SELECT * FROM tours LIMIT ?, ?';
         const promise = new Promise((resolve, reject) => {
-            this._conn.query(sql, [offset, limit], (error, results) => {
+            this._conn.query(sql, [offset, limit], async (error, results) => {
                 if (error) {
                     return reject(new Error('Database error: ' + error.message));
                 }
                 if (helper.isArrayEmpty(results)) {
                     resolve([]);
                 }
+
+                for (let tour of results) {
+                    // Bild-URL hinzufügen
+                    var picture_name = tour.picture_path;
+                    tour.picture_url = imageServerPath + picture_name;
+                    delete tour.picture_path;
+                    tour.bus = await busDao.getBusById(tour.bus_id);
+                    delete tour.bus_id;
+                }
+
                 resolve(results);
             });
         });
@@ -41,16 +67,26 @@ class TourDao {
     }
 
     getTourById(id, callback) {
+        const busDao = new BusDao(this._conn);
         const sql = 'SELECT tour_id, tour_description, tour_date, destination, bus_id, picture_path FROM tours WHERE tour_id = ?';
         const promise = new Promise((resolve, reject) => {
-            this._conn.query(sql, [id], (error, results) => {
+            this._conn.query(sql, [id], async (error, results) => {
                 if (error) {
                     return reject(new Error('Database error: ' + error.message));
                 }
                 if (helper.isArrayEmpty(results)) {
                     return reject(new Error('No Record found by id=' + id));
                 }
-                resolve(results[0]);
+
+                for (let tour of results) {
+                    // Bild-URL hinzufügen
+                    var picture_name = tour.picture_path;
+                    tour.picture_url = imageServerPath + picture_name;
+                    delete tour.picture_path;
+                    tour.bus = await busDao.getBusById(tour.bus_id);
+                    delete tour.bus_id;
+                }
+                resolve(results);
             });
         });
         return require('../helper.js').maybeCallback(promise, callback);

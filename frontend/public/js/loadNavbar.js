@@ -50,9 +50,11 @@ export async function zeigeAdminBereich() {
 
     const adminBar = makeButton('Fahrten bearbeiten', ['btn-primary'], '#0056b3', 'admin_fahrten.html');
     const userBtn   = makeButton('Benutzer verwalten',   ['btn-primary'], '#0056b3', 'mitgliederverwaltung.html');
+    const companiesBtn   = makeButton('Busunternehmen verwalten',   ['btn-primary'], '#0056b3', 'busunternehmen.html');
 
     wrapper.appendChild(adminBar);
     wrapper.appendChild(userBtn);
+    wrapper.appendChild(companiesBtn);
 
     // WICHTIG: wrapper NACH dem <nav> einfügen (also außerhalb der Navbar)
     navbar.insertAdjacentElement('afterend', wrapper);

@@ -154,9 +154,8 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
-
 # Swagger Output files
-/swagger-output.json
-
-
+*/swagger-output.json
+# Images
 *.png
+*.jpg

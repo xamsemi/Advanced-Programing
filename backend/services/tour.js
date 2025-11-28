@@ -1,6 +1,8 @@
 const express = require('express');
 const serviceRouter = express.Router();
 const TourDao = require('../dao/tourDao.js');
+const BusesDao = require('../dao/busesDao.js');
+const BuscompaniesDao = require('../dao/buscompaniesDao.js');
 const helper = require('../helper.js');
 const upload = require('./upload.js');
 
@@ -37,21 +39,14 @@ async function performUpdate(req, res, id, fileNameCoverImage) {
 serviceRouter.get('/', async (req, res) => {
     console.log('Service Tour: Client requested all tours');
     const tourDao = new TourDao(req.app.locals.dbConnection);
-
     try {
-        var tours = await tourDao.getAllTours();
-        tours.forEach(tour => {
-            var picture_name = tour.picture_path
-            delete tour.picture_path;
-            tour.picture_url = imageServerPath + picture_name;
-        });
-
+        const tours = await tourDao.getAllTours();
         console.log('Service Tour: Retrieved tours:', tours);
 
-        res.status(200).json({ message: 'success', data: tours });
+        return res.status(200).json({ message: 'success', data: tours });
     } catch (err) {
         console.error('Service Tour: Error loading tours', err);
-        res.status(500).json({ fehler: true, nachricht: err.message });
+        return res.status(500).json({ fehler: true, nachricht: err.message });
     }
 });
 
@@ -60,7 +55,6 @@ serviceRouter.get('/:id', async (req, res) => {
     const { id } = req.params;
     console.log('Service Tour: Client requested tour id=' + id);
     const tourDao = new TourDao(req.app.locals.dbConnection);
-
     try {
         var tour = await tourDao.getTourById(id);
         tour.forEach(tour => {
