@@ -1,17 +1,19 @@
-import { loadNavbar } from './loadNavbar.js';
+import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
-loadNavbar();
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // Prüfe Login-Status – leite weiter falls ausgeloggt
-    const user = await checkLogin(false, true);
 
-    // Nur laden, wenn Benutzer eingeloggt ist
-    if (user) {
-        setupLogout();
-        ladeAdminButtons();
-        ladeTourenAdmin();
-    }
+  await navbar.loadNavbar();
+  navbar.zeigeAdminBereich();
+  // Prüfe Login-Status – leite weiter falls ausgeloggt
+  const user = await checkLogin(false, true);
+
+  // Nur laden, wenn Benutzer eingeloggt ist
+  if (user) {
+    setupLogout();
+    ladeAdminButtons();
+    ladeTourenAdmin();
+  }
 });
 
 function loadMailerForm() {
@@ -94,7 +96,7 @@ async function ladeTourenAdmin() {
         <td>${(tour.max_participants || 0) - (tour.participants || 0)}</td>
         <td>${tour.bus_company || '-'}</td>
         <td class="text-center">
-          <a href="fahrt_bearbeiten.html?id=${tour.tour_id}" class="btn btn-sm btn-outline-warning mx-2">Bearbeiten</a>
+          <a href="fahrt_bearbeiten.html?tour_id=${tour.tour_id}" class="btn btn-sm btn-outline-warning mx-2">Bearbeiten</a>
           <button class="btn btn-sm btn-outline-danger btn-delete mx-2"">Löschen</button>
           <button class="btn btn-sm btn-outline-info btn-mail mx-2">Mail</button>
         </td>

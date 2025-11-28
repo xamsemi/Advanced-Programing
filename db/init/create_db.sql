@@ -15,6 +15,7 @@ USE busfahrt_app;
 CREATE TABLE IF NOT EXISTS users (
   user_id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
+  address VARCHAR(255) DEFAULT NULL,
   email VARCHAR(100) NOT NULL UNIQUE,
   user_role ENUM('admin', 'user') DEFAULT 'user',
   password_hash VARCHAR(255) NOT NULL,
@@ -81,12 +82,12 @@ CREATE TABLE IF NOT EXISTS user_tours (
 -- Default-Values
 -- -----------------------------------------------------
 -- Defaults for users
-INSERT INTO users (username, email, password_hash, user_role) VALUES
-('admin', 'admin@example.com', '$2b$10$mxcoBSQtSQ9Uo3U3V1a3Hu0FHtANKUN46eRXdRbP4C00HMYWglnjG', 'admin'),
-('max', 'max@example.com', '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
-('sabine', 'sabine@example.com', '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
-('daniel', 'daniel@example.com', '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
-('user', 'user@example.com', '$2b$10$sFY2aG9/Uno19hIDbu7FWuhr.JiS/K5PwbkpZM.nFGzLzjyWnGQbu', 'user');
+INSERT INTO users (username, email, address, password_hash, user_role) VALUES
+('admin', 'admin@example.com', "Baumstraße2", '$2b$10$mxcoBSQtSQ9Uo3U3V1a3Hu0FHtANKUN46eRXdRbP4C00HMYWglnjG', 'admin'),
+('max', 'max@example.com', "Vogelstraße5", '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
+('sabine', 'sabine@example.com', "Vogelstraße5", '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
+('daniel', 'daniel@example.com', "Vogelstraße5", '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
+('user', 'user@example.com', "Vogelstraße5", '$2b$10$sFY2aG9/Uno19hIDbu7FWuhr.JiS/K5PwbkpZM.nFGzLzjyWnGQbu', 'user');
 
 INSERT INTO bus_companies (company_name, contact_info, company_email) VALUES
 ('BestBus GmbH', 'Musterstraße 1, 12345 Musterstadt', 'best@bus.de'),

@@ -1,7 +1,7 @@
 const doc = {
   info: {
-    title: 'Busreservierungssystem API',
-    description: 'Documentation for Busreservierungssystem API'
+    title: 'Busreservierungssystem für Vereinfahrten',
+    description: 'Dokumentation für Busreservierungssystem API'
   },
   host: 'localhost:3000',
   schemes: ['http'],

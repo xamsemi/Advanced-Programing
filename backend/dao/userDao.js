@@ -11,8 +11,14 @@ class UserDao {
         this._conn = dbConnection;
     }
 
-    getUserById(userId, callback) {
-        var sql = 'SELECT user_id, username, email, user_role, password_hash FROM users WHERE user_id = ?';
+    async getAllUsers() {
+        const sql = 'SELECT user_id, username, email, user_role, password_hash, address, created_at FROM users';
+        const [rows] = await this._conn.promise().query(sql);
+        return rows;
+    }
+
+    getUserByID(userId, callback) {
+        var sql = 'SELECT user_id, username, email, user_role, password_hash, created_at, address FROM users WHERE user_id = ?';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, [userId], (error, results) => {
                 if (error) {
@@ -75,6 +81,19 @@ class UserDao {
         });
         return require('../helper.js').maybeCallback(promise, callback);
     }
+
+
+    async createUser_form({ username, address, email, user_role, password_hash, created_at }) {
+    const sql = "INSERT INTO users (username, address, email, user_role, password_hash, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+    try {
+        const [result] = await this._conn.promise().query(sql, [username, address, email, user_role, password_hash, created_at]);
+        return result.insertId; // ID des neuen Users
+    } catch (error) {
+        throw new Error("Database error: " + error.message);
+    }
+    }
+
+
 
     comparePassword(inputPassword, hashedPassword, callback) {
         const promise = new Promise((resolve, reject) => {
@@ -146,6 +165,30 @@ class UserDao {
         return require('../helper.js').maybeCallback(promise, callback);
     }
 
+    //bestehenden benutzer ändern via id
+        updateUserByID(userId, userData, callback) {
+        // Dynamically build SET clause based on provided userData
+        const setClauses = [];
+        const params = [];
+        for (const [key, value] of Object.entries(userData)) {
+            setClauses.push(`${key} = ?`);
+            params.push(value);
+        }
+        const sql = `UPDATE users SET ${setClauses.join(', ')} WHERE user_id = ?`;
+        console.log('Update User SQL:', sql, 'Params:', params.concat([userId]));
+        params.push(userId);
+        const promise = new Promise((resolve, reject) => {
+            this._conn.query(sql, params, (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                console.log('Update User Results:', results);
+                resolve(results.affectedRows > 0);
+            });
+        });
+        return require('../helper.js').maybeCallback(promise, callback);
+    }
+
     deleteUserByID(userId, callback) {
         const sql = 'DELETE FROM users WHERE user_id = ?';
         const promise = new Promise((resolve, reject) => {
@@ -158,5 +201,7 @@ class UserDao {
         });
         return require('../helper.js').maybeCallback(promise, callback);
     }
+
 }
+
 module.exports = UserDao;

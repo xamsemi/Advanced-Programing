@@ -1,8 +1,8 @@
-import { loadNavbar } from './loadNavbar.js';
+import * as navbar from './loadNavbar.js';
 import { checkLogin, setupLogout } from './checkLogin.js';
 
-loadNavbar();
-
+navbar.loadNavbar();
+navbar.zeigeAdminBereich();
 window.addEventListener('DOMContentLoaded', async () => {
     const loginForm = document.getElementById('loginContainer');
     const status = document.getElementById('responseLogin');

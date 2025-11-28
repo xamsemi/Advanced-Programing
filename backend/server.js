@@ -79,12 +79,11 @@ connectWithRetry(db)
     app.locals.dbConnection = db;
 
     // --- Services ---
-    app.use('/api/user', require('./services/user'));
+    app.use('/api/user', require('./services/user.js'));
     app.use('/api/tour', require('./services/tour'));
     app.use('/api/buses', require('./services/buses'));
     app.use('/api/buscompanies', require('./services/buscompanies'));
     app.use('/api/mailer', require('./services/mailer'));
-
 
     app.listen(port, () => {
       console.log(`Backend läuft auf http://localhost:${port}`);
@@ -92,7 +91,8 @@ connectWithRetry(db)
     });
   })
   .catch((err) => {
-    console.error('- MySQL connect error:', err.code || err.message || err);
+    console.error('## Error starting server:', err.code || err.message || err);
+    console.error(err.stack)
+    console.error('Could not start server. Exiting.');
     app.locals.dbConnection = null;
-    console.error('Datenbankverbindung nicht verfügbar. Server wird nicht gestartet.');
   });

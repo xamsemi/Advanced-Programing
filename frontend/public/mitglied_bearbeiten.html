@@ -39,28 +39,29 @@
       <div class="card-body p-4">
         <form>
           <div class="mb-3">
-            <label for="vorname" class="form-label text-light">Vorname</label>
-            <input type="text" class="form-control bg-dark text-light border-secondary" id="vorname" value="Max">
+            <label for="vorname" class="form-label text-light">Name</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary" id="vorname" >
           </div>
 
-          <div class="mb-3">
+       <!--   <div class="mb-3">
             <label for="nachname" class="form-label text-light">Nachname</label>
             <input type="text" class="form-control bg-dark text-light border-secondary" id="nachname" value="Mustermann">
+          </div> -->
+
+           <div class="mb-3">
+            <label for="adresse" class="form-label text-light">Adresse</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary" id="adresse" >
           </div>
 
           <div class="mb-3">
             <label for="email" class="form-label text-light">E-Mail</label>
-            <input type="email" class="form-control bg-dark text-light border-secondary" id="email" value="max.mustermann@example.com">
+            <input type="email" class="form-control bg-dark text-light border-secondary" id="email" >
           </div>
 
-          <div class="mb-3">
-            <label for="adresse" class="form-label text-light">Adresse</label>
-            <input type="text" class="form-control bg-dark text-light border-secondary" id="adresse" value="Musterstraße 5, 72379 Hechingen">
-          </div>
-
+         
           <div class="mb-4">
             <label for="mitgliedSeit" class="form-label text-light">Mitglied seit</label>
-            <input type="date" class="form-control bg-dark text-light border-secondary" id="mitgliedSeit" value="2023-01-01" min="1900">
+            <input type="date" class="form-control bg-dark text-light border-secondary" id="mitgliedSeit"  min="1900">
           </div>
 
           <div class="d-flex justify-content-between">
@@ -73,5 +74,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/user_bearbeiten.js"></script>
 </body>
 </html>

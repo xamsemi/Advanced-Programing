@@ -1,9 +1,8 @@
-
-import { loadNavbar } from './loadNavbar.js';
+import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
 
-loadNavbar();
-
+navbar.loadNavbar();
+navbar.zeigeAdminBereich();
 window.addEventListener('DOMContentLoaded', async () => {
     // Prüfe Login-Status – leite weiter falls ausgeloggt
     const user = await checkLogin(false, true);
@@ -13,7 +12,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         setupLogout();
         ladeTouren();
         if(user.role === 'admin') {
-          zeigeAdminBereich();
+          navbar.zeigeAdminBereich();
         }
     }
 });
@@ -46,45 +45,10 @@ async function ladeTouren() {
       `;
       container.appendChild(col);
     });
-  } catch (err) {
-    console.error(err);
+} catch (err) {
+  console.error(err);
     document.getElementById('fahrten-container').innerHTML =
-      `<p class="text-danger">Fehler beim Laden der Touren.</p>`;
-    }
+    `<p class="text-danger">Fehler beim Laden der Touren.</p>`;
   }
-
-function zeigeAdminBereich() {
-    const navbar = document.querySelector('.navbar');
-    if (!navbar) return;
-
-    // Admin-Bar Container
-    const adminBar = document.createElement('button');
-    adminBar.textContent = 'Fahrten bearbeiten';
-    adminBar.classList.add('btn', 'btn-success', 'btn-sm'); 
-    adminBar.style.margin = '5px 0'; 
-    adminBar.style.transition = 'background-color 0.3s ease';
-
-    // Hover-Farbe anpassen
-    adminBar.addEventListener('mouseover', () => {
-        adminBar.style.backgroundColor = '#218838'; // dunkleres grün
-    });
-    adminBar.addEventListener('mouseout', () => {
-        adminBar.style.backgroundColor = '#28a745';
-    });
-
-    // Klick auf Admin-Seite
-    adminBar.addEventListener('click', () => {
-        window.location.href = 'admin_fahrten.html';
-    });
-
-    // Wrapper unter der Navbar für Rechtsbündigkeit
-    const adminWrapper = document.createElement('div');
-    adminWrapper.className = 'container';
-    adminWrapper.style.display = 'flex';
-    adminWrapper.style.justifyContent = 'flex-end'; // Rechtsbündig
-    adminWrapper.style.padding = '0 20px'; // gleiche Abstände wie Navbar
-    adminWrapper.appendChild(adminBar);
-
-    // Unterhalb der Navbar einfügen
-    navbar.insertAdjacentElement('afterend', adminWrapper);
 }
+
