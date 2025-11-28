@@ -11,7 +11,7 @@ class UserDao {
         this._conn = dbConnection;
     }
 
-    getUserByID(userId, callback) {
+    getUserById(userId, callback) {
         var sql = 'SELECT user_id, username, email, user_role, password_hash FROM users WHERE user_id = ?';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, [userId], (error, results) => {

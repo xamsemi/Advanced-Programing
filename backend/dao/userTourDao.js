@@ -71,7 +71,7 @@ class UserTourDao {
                 const userDao = new UserDao(this._conn);
                 const promiseAll = Promise.all(results.map(r => {
                     return new Promise((res, rej) => {
-                        userDao.getUserByID(r.user_id, (err2, user) => {
+                        userDao.getUserById(r.user_id, (err2, user) => {
                             if (err2) {
                                 return rej(new Error('Could not fetch user with id ' + r.user_id + ': ' + err2.message));
                             }

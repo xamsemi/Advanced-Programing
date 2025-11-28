@@ -3,6 +3,9 @@ const express = require('express');
 const serviceRouter = express.Router();
 const nodemailer = require("nodemailer");
 const TourDao = require('../dao/tourDao.js');
+const UserDao = require('../dao/userDao.js');
+
+// create reusable transporter object using the default SMTP transport
 
 const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
@@ -32,7 +35,6 @@ const sessionChecker = (req, res, next) => {
 // --- Alle Touren abrufen ---
 serviceRouter.post('/tour', sessionChecker, async (req, res) => {
 
-
     const { tourId, emailSubject, emailBody } = req.body;
     const tourDao = new TourDao(req.app.locals.dbConnection);
 
@@ -47,7 +49,7 @@ serviceRouter.post('/tour', sessionChecker, async (req, res) => {
     console.log('Mailer: tourId, emailSubject, emailBody', tourId, emailSubject, emailBody);
     try {
         const info = await transporter.sendMail({
-            from: "Fasnetsverein Reutlingen <narinaro@reutlingen.to>",
+            from: '"Fasnetsverein Reutlingen" <narinaro@reutlingen.to>',
             to: emailAdress,
             subject: emailSubject,
             text: emailBody, // plain‑text body
@@ -64,13 +66,26 @@ serviceRouter.post('/tour', sessionChecker, async (req, res) => {
 // --- Alle Touren abrufen ---
 serviceRouter.post('/member', sessionChecker, async (req, res) => {
     console.log('Mailer: Member booked a tour, sending confirmation email.');
+
+    const { userId, emailSubject, emailBody } = req.body;
+    const userDao = new UserDao(req.app.locals.dbConnection);
+
+    const emailAdress = '';
+    userDao.getTourById(userId).then(async () => {
+        const userData = await userDao.getUserById(tourId);
+        console.log('Mailer: Tour data fetched', userData);
+        console.log('Mailer: Email data fetched', userData.user_email);
+        emailAdress = userData.user_email;
+    });
+
+
     try {
         const info = await transporter.sendMail({
-            from: '"Maddison Foo Koch" <bette.thompson@ethereal.email>',
-            to: "bar@example.com, baz@example.com",
-            subject: "Hello ✔",
-            text: "Hello world?", // plain‑text body
-            html: "<b>Hello world?</b>", // HTML body
+            from: '"Fasnetsverein Reutlingen" <narinaro@reutlingen.to>',
+            to: emailAdress,
+            subject: emailSubject,
+            text: emailBody, // plain‑text body
+            html: "<p>${emailBody}</p>", // HTML body
         });
 
         // return url for previewing the email
