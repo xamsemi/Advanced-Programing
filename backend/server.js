@@ -7,8 +7,10 @@ const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-//Pfad zur public Mappe
-//const path = require('path'); 
+
+//Enviroment Variables laden
+const { loadEnvFile } = require('node:process');
+loadEnvFile();
 
 const port = 3000;
 const app = express();

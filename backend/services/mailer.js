@@ -1,8 +1,7 @@
+const helper = require('../helper.js');
 const express = require('express');
 const serviceRouter = express.Router();
-const helper = require('../helper.js');
 const nodemailer = require("nodemailer");
-const session = require('express-session');
 const TourDao = require('../dao/tourDao.js');
 
 const transporter = nodemailer.createTransport({
@@ -37,16 +36,19 @@ serviceRouter.post('/tour', sessionChecker, async (req, res) => {
     const { tourId, emailSubject, emailBody } = req.body;
     const tourDao = new TourDao(req.app.locals.dbConnection);
 
+    const emailAdress = '';
     tourDao.getTourById(tourId).then(async () => {
-        const data = tourDao.getTourById(tourId);
-        console.log('Mailer: Tour data fetched', data);
+        const tourData = await tourDao.getTourById(tourId);
+        console.log('Mailer: Tour data fetched', tourData);
+        console.log('Mailer: Email data fetched', tourData.bus.company.company_email);
+        emailAdress = tourData.bus.company.company_email;
     });
 
     console.log('Mailer: tourId, emailSubject, emailBody', tourId, emailSubject, emailBody);
     try {
         const info = await transporter.sendMail({
             from: "Fasnetsverein Reutlingen <narinaro@reutlingen.to>",
-            to: "test",
+            to: emailAdress,
             subject: emailSubject,
             text: emailBody, // plain‑text body
             html: `<p>${emailBody}</p>`, // HTML body

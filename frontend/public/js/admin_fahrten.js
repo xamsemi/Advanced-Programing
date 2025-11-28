@@ -134,8 +134,8 @@ async function ladeTourenAdmin() {
             //Create DataObject to pass Mail to Endpoint
             const mailData = {
               tourId: tour.tour_id,
-              subject: emailSubject,
-              body: emailBody
+              emailSubject: emailSubject,
+              emailBody: emailBody
             };
 
             //fetch api/mailer/ with mailData when sendMailBtn is clicked
