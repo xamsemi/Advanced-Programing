@@ -21,7 +21,7 @@ function loadMailerForm() {
   mailerModal.show();
 }
 
-function ladeAdminButtons() {
+export function ladeAdminButtons() {
     const mainContainer = document.querySelector('main.container');
 
     const buttonWrapper = document.createElement('div');

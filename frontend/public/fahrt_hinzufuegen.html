@@ -17,7 +17,7 @@
   <div id="navbar-placeholder"></div>
 
   <!-- Hauptinhalt -->
-  <main class="container py-5">
+   <main class="container py-5">
     <div class="text-center mb-5">
       <h1 class="fw-bold text-light mb-3">Neue Fahrt hinzufügen</h1>
       <p class="text-secondary">Erstellen Sie eine neue Fahrt für die Mitglieder.</p>
@@ -25,34 +25,49 @@
 
     <div class="card shadow-lg admin-card mx-auto" style="max-width: 600px;">
       <div class="card-body p-4">
-        <form>
+        <form id="neue-fahrt-form" enctype="multipart/form-data">
+          <!-- Ziel -->
           <div class="mb-3">
-            <label for="zielort" class="form-label text-light">Zielort</label>
-            <input type="text" class="form-control bg-dark text-light border-secondary" id="zielort" placeholder="Ravensburg">
+            <label for="ziel" class="form-label text-light">Ziel</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary" id="ziel" maxlength="20" placeholder="Zielort">
           </div>
 
+           <!-- Datum -->
           <div class="mb-3">
             <label for="datum" class="form-label text-light">Datum</label>
             <input type="date" class="form-control bg-dark text-light border-secondary" id="datum">
           </div>
 
+          <!-- Beschreibung -->
           <div class="mb-3">
-            <label for="abfahrt" class="form-label text-light">Abfahrtszeit</label>
-            <input type="time" class="form-control bg-dark text-light border-secondary" id="abfahrt">
+            <label for="beschreibung" class="form-label text-light">Beschreibung</label>
+            <textarea 
+              class="form-control bg-dark text-light border-secondary" 
+              id="beschreibung" 
+              maxlength="200" 
+              rows="4" 
+              placeholder="Beschreibung der Fahrt"></textarea>
           </div>
 
-          <div class="mb-3">
-            <label for="teilnehmer" class="form-label text-light">Maximale Teilnehmerzahl</label>
-            <input type="number" class="form-control bg-dark text-light border-secondary" id="teilnehmer" placeholder="50">
-          </div>
-
+          <!-- Bild -->
           <div class="mb-4">
-            <label for="unternehmen" class="form-label text-light">Busunternehmen</label>
-            <select id="unternehmen" class="form-select bg-dark text-light border-secondary">
+            <label for="bild" class="form-label text-light">Bild</label>
+            <input type="file" class="form-control bg-dark text-light border-secondary" id="bild">
+          </div>
+
+          <!-- Busunternehmen -->
+          <div class="mb-4">
+            <label for="busUnternehmen" class="form-label text-light">busUnternehmen</label>
+            <select id="busUnternehmen" class="form-select bg-dark text-light border-secondary">
               <option selected disabled>Bitte wählen...</option>
-              <option>Busreisen Müller GmbH</option>
-              <option>Reiseverkehr Schmid</option>
-              <option>Touristik Zollerland</option>
+            </select>
+          </div>
+
+          <!-- Bus Dropdown -->
+          <div class="mb-4">
+            <label for="plaetze" class="form-label text-light">Sitz-Plätze</label>
+            <select id="plaetze" class="form-select bg-dark text-light border-secondary">
+              <option selected disabled>Bitte wählen...</option>
             </select>
           </div>
 
