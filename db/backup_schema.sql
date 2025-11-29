@@ -15,6 +15,7 @@ USE busfahrt_app;
 CREATE TABLE IF NOT EXISTS users (
   user_id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
+  address VARCHAR(255) DEFAULT NULL,
   email VARCHAR(100) NOT NULL UNIQUE,
   user_role ENUM('admin', 'user') DEFAULT 'user',
   password_hash VARCHAR(255) NOT NULL,
@@ -55,7 +56,7 @@ CREATE TABLE IF NOT EXISTS tours (
   tour_date DATETIME NOT NULL,
   destination VARCHAR(100) NOT NULL,
   bus_id INT NOT NULL,
-  pictures JSON,
+  picture_path VARCHAR(255),
   FOREIGN KEY (bus_id) REFERENCES buses(bus_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
@@ -66,9 +67,9 @@ CREATE TABLE IF NOT EXISTS tours (
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS user_tours (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   user_id INT NOT NULL,
   tour_id INT NOT NULL,
-  PRIMARY KEY (user_id, tour_id),
   FOREIGN KEY (user_id) REFERENCES users(user_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
@@ -78,27 +79,44 @@ CREATE TABLE IF NOT EXISTS user_tours (
 );
 
 -- -----------------------------------------------------
--- Beispiel-Einträge
+-- Default-Values
 -- -----------------------------------------------------
-
-INSERT INTO users (username, email, password_hash) VALUES
-('admin', 'admin@example.com', 'HASHEDPASSWORD1'),
-('max', 'max@example.com', 'HASHEDPASSWORD2'),
-('lisa', 'lisa@example.com', 'HASHEDPASSWORD3');
+-- Defaults for users
+INSERT INTO users (username, email, address, password_hash, user_role) VALUES
+('admin', 'admin@example.com', "Baumstraße2", '$2b$10$mxcoBSQtSQ9Uo3U3V1a3Hu0FHtANKUN46eRXdRbP4C00HMYWglnjG', 'admin'),
+('max', 'max@example.com', "Vogelstraße5", '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
+('sabine', 'sabine@example.com', "Vogelstraße5", '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
+('daniel', 'daniel@example.com', "Vogelstraße5", '$2b$10$R.GpW78rdJs9Oq2WA.h0/ewa.1DFMJ/H1ASb.HsHvGDxUQEKHwp1W', 'user'),
+('user', 'user@example.com', "Vogelstraße5", '$2b$10$sFY2aG9/Uno19hIDbu7FWuhr.JiS/K5PwbkpZM.nFGzLzjyWnGQbu', 'user');
 
 INSERT INTO bus_companies (company_name, contact_info, company_email) VALUES
 ('BestBus GmbH', 'Musterstraße 1, 12345 Musterstadt', 'best@bus.de'),
 ('TravelExpress', 'Reiseweg 5, 54321 Reisestadt', 'travel@express.de');
 
+-- -----------------------------------------------------
+-- Defaults for buses
 INSERT INTO buses (bus_seats, company_id) VALUES
 (50, 1),
-(30, 2);
+(30, 2),
+(200, 1),
+(40, 2);
 
-INSERT INTO tours (tour_description, tour_date, destination, bus_id) VALUES
-('Tagesfahrt nach Hamburg', '2025-11-10 08:00:00', 'Hamburg', 1),
-('Weihnachtsmarkt München', '2025-12-15 09:30:00', 'München', 2);
+-- -----------------------------------------------------
+-- Defaults for tours und user_tours
+INSERT INTO tours (tour_description, tour_date, destination, bus_id, picture_path) VALUES
+('Faschingsfahrt nach Köln - Karnevalsumzug', '2026-02-15 10:00:00', 'Köln', 1, '/images/tours/koeln_fasching.jpg'),
+('Faschingsausflug Mainz - Straßenkarneval', '2026-02-16 09:00:00', 'Mainz', 2, '/images/tours/mainz_fasching.jpg'),
+('Rosenmontag in Düsseldorf - Umzug & Party', '2026-02-17 08:30:00', 'Düsseldorf', 3, '/images/tours/duesseldorf_rosenmontag.jpg'),
+('Faschingsparty München - traditionelle Feier', '2026-02-13 11:00:00', 'München', 4, '/images/tours/muenchen_fasching.jpg'),
+('Karneval in Nürnberg - Festumzug', '2026-02-14 10:30:00', 'Nürnberg', 1, '/images/tours/nuernberg_karneval.jpg'),
+('Faschingsfahrt Berlin - Kostümparade', '2026-02-18 09:45:00', 'Berlin', 2, '/images/tours/berlin_kostuemparde.jpg');
 
+-- -----------------------------------------------------
+-- Defaults for tours und user_tours
 INSERT INTO user_tours (user_id, tour_id) VALUES
-(2, 1),
+(1, 3),
+(1, 2),
+(1, 1),
+(2, 2),
 (3, 1),
-(3, 2);
+(3, 3);
