@@ -84,7 +84,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         const body = {
             tour_description: document.getElementById("beschreibung").value,
-            tour_date: tour_date,                      // korrektes Format
+            tour_date: tour_date,                
             destination: document.getElementById("ziel").value,
             bus_id: parseInt(busSelect.value, 10),       // als Zahl
             picture_path: "test.jpg"                     // optional, hier Dummy
