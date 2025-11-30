@@ -2,7 +2,7 @@ import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
 
 navbar.loadNavbar();
-navbar.zeigeAdminBereich();
+
 window.addEventListener('DOMContentLoaded', async () => {
     // Prüfe Login-Status – leite weiter falls ausgeloggt
     const user = await checkLogin(false, true);

@@ -1,4 +1,21 @@
-// Datei: /public/js/busunternehmen.js
+import * as navbar from './loadNavbar.js';
+import { setupLogout,checkLogin } from './checkLogin.js';
+
+
+navbar.loadNavbar();
+
+window.addEventListener('DOMContentLoaded', async () => {
+    // Prüfe Login-Status – leite weiter falls ausgeloggt
+    const user = await checkLogin(false, true);
+
+    // Nur laden, wenn Benutzer eingeloggt ist
+    if (user) {
+        setupLogout();
+        if(user.role === 'admin') {
+          navbar.zeigeAdminBereich();
+        }
+    }
+});
 
 async function loadBuses() {
   try {
