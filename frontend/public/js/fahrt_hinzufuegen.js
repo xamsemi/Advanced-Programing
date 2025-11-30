@@ -74,12 +74,20 @@ window.addEventListener('DOMContentLoaded', async () => {
     // Save Button Event
     saveButton.addEventListener('click', async e => {
         e.preventDefault();
+
+        // Datum + Uhrzeit zusammenbauen
+        const datum = document.getElementById("datum").value;          // "YYYY-MM-DD"
+        const abfahrtszeit = document.getElementById("abfahrtszeit").value; // z.B. "13:28"
+       
+        const tour_date = `${datum} ${abfahrtszeit}`;
+
+
         const body = {
             tour_description: document.getElementById("beschreibung").value,
-            tour_date: document.getElementById("datum").value,
+            tour_date: tour_date,                      // korrektes Format
             destination: document.getElementById("ziel").value,
-            bus_id: busSelect.value,
-            picture_path: "test.jpg"
+            bus_id: parseInt(busSelect.value, 10),       // als Zahl
+            picture_path: "test.jpg"                     // optional, hier Dummy
         };
         console.log("Formulardaten:", body);
 

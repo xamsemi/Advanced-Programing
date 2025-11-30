@@ -92,9 +92,10 @@ async function ladeTourenAdmin() {
     const tbody = document.createElement('tbody');
 
     for (let tour of tours) {
-      const dateObj = new Date(tour.tour_date);
-      const datum = dateObj.toLocaleDateString('de-DE');
-      const abfahrtszeit = dateObj.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+      const [datumTeil, zeitTeil] = tour.tour_date.split("T"); // ["2026-02-15", "10:00:00.000Z"]
+      const datum = datumTeil;
+      const abfahrtszeit = zeitTeil.slice(0, 5); // "10:00"
+      
 
       // Teilnehmer / freie Plätze
       const teilnehmer = tour.participants || 0;
