@@ -28,37 +28,35 @@
                 <input type="hidden" name="_method" value="put" />
                 <div class="mb-3">
                 <label for="zielort" class="form-label text-light">Zielort</label>
-                <input type="text" class="form-control bg-dark text-light border-secondary" id="zielort" name="destination" value="Ravensburg">
+                <input type="text" class="form-control bg-dark text-light border-secondary" id="zielort" name="destination" value="">
                 </div>
                 <div class="mb-3">
                 <label for="beschreibung" class="form-label text-light">Beschreibung</label>
-                <textarea class="form-control bg-dark text-light border-secondary" id="beschreibung" name="tour_description" rows="4">Erleben Sie die charmante Stadt Ravensburg mit ihren historischen Gebäuden und lebendigen Märkten. Genießen Sie eine unvergessliche Reise voller Kultur und Genuss.</textarea>
+                <textarea class="form-control bg-dark text-light border-secondary" id="beschreibung" name="tour_description" rows="4"></textarea>
                 </div>
 
                 <div class="mb-3 row">
                 <div class="col-6">
                     <label for="datum" class="form-label text-light">Datum</label>
-                    <input type="date" class="form-control bg-dark text-light border-secondary" id="datum" name="tour_date" value="2025-11-30">
+                    <input type="date" class="form-control bg-dark text-light border-secondary" id="datum" name="tour_date" value="">
                 </div>
                 <div class="col-6">
                     <label for="abfahrt" class="form-label text-light">Abfahrtszeit</label>
-                    <input type="time" class="form-control bg-dark text-light border-secondary" id="abfahrt" name="abfahrt" value="08:30">
+                    <input type="time" class="form-control bg-dark text-light border-secondary" id="abfahrt" name="abfahrt" value="">
                 </div>
                 </div>
                 
                 <div class="row">
                     <div class="mb-3 col-3">
-                    <label for="teilnehmer" class="form-label text-light">Plätze</label>
-                    <input type="number" class="form-control bg-dark text-light border-secondary" id="teilnehmer" name="sitzplätze" value="50" min="0">
+                        <label for="plaetze" class="form-label text-light">Plätze</label>
+                        <select id="plaetze" name="sitzplätze" class="form-select bg-dark text-light border-secondary">
+                            <option value="">Bitte wählen...</option>
+                        </select>
                     </div>
-
                     <div class="mb-4 col-9">
                         <label for="unternehmen" class="form-label text-light">Busunternehmen</label>
                         <select id="unternehmen" name="company" class="form-select bg-dark text-light border-secondary">
-                        <option disabled>Bitte wählen...</option>
-                        <option selected>Busreisen Müller GmbH</option>
-                        <option>Reiseverkehr Schmid</option>
-                        <option>Touristik Zollerland</option>
+                            <option disabled>Bitte wählen...</option>
                         </select>
                     </div>
                 </div>
