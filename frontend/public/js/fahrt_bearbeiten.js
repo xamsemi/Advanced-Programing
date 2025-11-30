@@ -1,23 +1,22 @@
 import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
 
-navbar.loadNavbar();
+
 
 window.addEventListener('DOMContentLoaded', async () => {
+    await navbar.loadNavbar();
+    navbar.zeigeAdminBereich();
     // Prüfe Login-Status – leite weiter falls ausgeloggt
     const user = await checkLogin(false, true);
 
     // Nur laden, wenn Benutzer eingeloggt ist
     if (user) {
         setupLogout();
-        //ladeTouren();
-        if(user.role === 'admin') {
-          navbar.zeigeAdminBereich();
-        }
+        ladeTour();
     }
 });
-// --- Fahrten dynamisch laden ---
-async function ladeTouren() {
+// --- Fahrten dynamisch laden --- ACHTUNG muss noch angepasst werden
+async function ladeToure() {
   try {
     const res = await fetch('/api/tour/', { credentials: 'include' });
     if (!res.ok) throw new Error('Fehler beim Laden der Touren.');

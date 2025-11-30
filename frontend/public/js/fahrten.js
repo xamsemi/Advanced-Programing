@@ -1,9 +1,12 @@
 import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
 
-navbar.loadNavbar();
+
 
 window.addEventListener('DOMContentLoaded', async () => {
+
+    await navbar.loadNavbar();
+    navbar.zeigeAdminBereich();
     // Prüfe Login-Status – leite weiter falls ausgeloggt
     const user = await checkLogin(false, true);
 
@@ -11,9 +14,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (user) {
         setupLogout();
         ladeTouren();
-        if(user.role === 'admin') {
-          navbar.zeigeAdminBereich();
-        }
+
     }
 });
 // --- Fahrten dynamisch laden ---

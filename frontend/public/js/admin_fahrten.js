@@ -1,12 +1,21 @@
 import * as navbar from './loadNavbar.js';
+
 import { setupLogout,checkLogin } from './checkLogin.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
 
   await navbar.loadNavbar();
   navbar.zeigeAdminBereich();
+
+
+const res = await fetch('/api/tour/', { credentials: 'include' });
+const data = await res.json();
+console.log("Touren aus Backend:", data);
+
+
   // Prüfe Login-Status – leite weiter falls ausgeloggt
   const user = await checkLogin(false, true);
+
 
   // Nur laden, wenn Benutzer eingeloggt ist
   if (user) {
@@ -51,25 +60,22 @@ export function ladeAdminButtons() {
 async function ladeTourenAdmin() {
   try {
     const res = await fetch('/api/tour/', { credentials: 'include' });
-    if (!res.ok) throw new Error('Fehler beim Laden der Touren.');
-
     const data = await res.json();
     const tours = data.data || [];
+    
+    const resBuse = await fetch('/api/buses/', { credentials: 'include' });
+    const dataBuse = await resBuse.json();
+    const allBuses = dataBuse.data || [];
 
-    // Container: Tabelle
     const table = document.getElementById('fahrten-tabelle');
     if (!table) {
       console.error('fahrten-tabelle existiert nicht!');
       return;
     }
 
-    // Tabelle leeren
     table.innerHTML = '';
-
-    // Bootstrap-Klassen wie im statischen HTML
     table.className = 'table table-dark table-hover align-middle mb-0 rounded';
 
-    // Kopfzeile erstellen
     const thead = document.createElement('thead');
     thead.innerHTML = `
       <tr class="text-primary">
@@ -83,111 +89,100 @@ async function ladeTourenAdmin() {
       </tr>
     `;
 
-    // Body erstellen
     const tbody = document.createElement('tbody');
 
-    tours.forEach(tour => {
+    for (let tour of tours) {
+      const dateObj = new Date(tour.tour_date);
+      const datum = dateObj.toLocaleDateString('de-DE');
+      const abfahrtszeit = dateObj.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+      // Teilnehmer / freie Plätze
+      const teilnehmer = tour.participants || 0;
+      const freiePlaetze = tour.max_participants ? (tour.max_participants - teilnehmer) : 'Dummy';
+
+      // Busunternehmen anhand von bus_id finden
+      const bus = allBuses.find(b => b.bus_id === tour.bus.bus_id);
+      const companyName = bus.company.company_name;
+      // Zeile erstellen
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${tour.destination}</td>
-        <td>${new Date(tour.tour_date).toLocaleDateString('de-DE')}</td>
-        <td>${tour.departure_time || '-'}</td>
-        <td>${tour.participants || 0}</td>
-        <td>${(tour.max_participants || 0) - (tour.participants || 0)}</td>
-        <td>${tour.bus_company || '-'}</td>
+        <td>${datum}</td>
+        <td>${abfahrtszeit}</td>
+        <td>${teilnehmer}</td>
+        <td>${freiePlaetze}</td>
+        <td>${companyName}</td>
         <td class="text-center">
           <a href="fahrt_bearbeiten.html?tour_id=${tour.tour_id}" class="btn btn-sm btn-outline-warning mx-2">Bearbeiten</a>
-          <button class="btn btn-sm btn-outline-danger btn-delete mx-2"">Löschen</button>
+          <button class="btn btn-sm btn-outline-danger btn-delete mx-2">Löschen</button>
           <button class="btn btn-sm btn-outline-info btn-mail mx-2">Mail</button>
         </td>
       `;
       tbody.appendChild(tr);
 
-      // Löschen-Button Event
+      // === Event Listener für Löschen ===
       tr.querySelector('.btn-delete').addEventListener('click', async () => {
-
         try {
           const res = await fetch(`/api/tour/${tour.tour_id}`, {
             method: 'DELETE',
             credentials: 'include'
           });
-          if (!res.ok) throw new Error('admin_fahrten.js: Fehler beim Löschen der Fahrt');
-
-          // Tabelle nach erfolgreichem Löschen neu laden
+          if (!res.ok) throw new Error('Fehler beim Löschen der Fahrt');
+          // Tabelle neu laden
           await ladeTourenAdmin();
         } catch (err) {
           console.error(err);
           alert('Fehler beim Löschen der Fahrt.');
         }
       });
+      // Mail-Button
+      tr.querySelector('.btn-mail').addEventListener('click', () => {
+        try {
+          loadMailerForm();
+          document.getElementById('mailerModalLabel').textContent = `Email an Busunternehmen für Fahrt ID: ${tour.tour_id}`;
+          document.getElementById('emailSubject').value = `Anfrage zur Vereinsausfahrt am ${datum}`;
+          document.getElementById('emailBody').value =
+            `Sehr geehrte Damen und Herren,\nich möchte Sie über die folgende Fahrt informieren:\n` +
+            `Zielort: ${tour.destination}\nDatum: ${datum}\nAbfahrtszeit: ${abfahrtszeit}\n` +
+            `Freie Plätze: ${freiePlaetze}\nMit freundlichen Grüßen,\n[Ihr Name]`;
 
-      // Mail-Button Event: ruft importierte formMailer-Funktion auf
-      const mailBtn = tr.querySelector('.btn-mail');
-      if (mailBtn) {
-        mailBtn.addEventListener('click', () => {
-          try {
-            loadMailerForm();
-            document.getElementById('mailerModalLabel').textContent = `Email an Busunternehmen für Fahrt ID: ${tour.tour_id}`;
-            let emailSubject = `Anfrage zur Vereinsausfahrt am ${new Date(tour.tour_date).toLocaleDateString('de-DE')}`;
-            document.getElementById('emailSubject').value = emailSubject;
-            let emailBody = `Sehr geehrte Damen und Herren, \nich möchte Sie über die folgende Fahrt informieren:\nZielort: ${tour.destination}\nDatum: ${new Date(tour.tour_date).toLocaleDateString('de-DE')}\nAbfahrtszeit: ${tour.departure_time || '-'}\nFreie Plätze: ${(tour.max_participants || 0) - (tour.participants || 0)} \nMit freundlichen Grüßen,\n[Ihr Name]`;
-            document.getElementById('emailBody').value = emailBody;
+          const sendBtn = document.getElementById('sendMailBtn');
 
-            //Create DataObject to pass Mail to Endpoint
+          // Listener vorher entfernen, sonst gibt es mehrfaches Senden
+          sendBtn.replaceWith(sendBtn.cloneNode(true));
+          const newSendBtn = document.getElementById('sendMailBtn');
+
+          newSendBtn.addEventListener('click', async () => {
             const mailData = {
               tourId: tour.tour_id,
-              emailSubject: emailSubject,
-              emailBody: emailBody
+              emailSubject: document.getElementById('emailSubject').value,
+              emailBody: document.getElementById('emailBody').value
             };
 
-            //fetch api/mailer/ with mailData when sendMailBtn is clicked
-            const sendBtn = document.getElementById('sendMailBtn');
-            sendBtn.addEventListener('click', async () => {
-
-              const res = await fetch('/api/mailer/tour', {
-                method: 'POST',
-                body: JSON.stringify(mailData),
-                headers: { 'Content-Type': 'application/json' }
-              });
-
-              if (!res.ok) throw new Error('Fehler beim Senden der Email.');
-              console.log('Email erfolgreich an Busunternehmen gesendet.');
-              //close modal
-              const mailerModal = bootstrap.Modal.getInstance(document.getElementById('mailerModal'));
-              mailerModal.hide();
-              alert('Email erfolgreich an Busunternehmen gesendet.');
+            const res = await fetch('/api/mailer/tour', {
+              method: 'POST',
+              body: JSON.stringify(mailData),
+              headers: { 'Content-Type': 'application/json' }
             });
 
-          } catch (err) {
-            console.error(err.message);
-          }
-        });
-      }
-    });
-
-    const mailtoBtn = document.getElementById('mailto-fahrten-btn');
-    mailtoBtn.addEventListener('click', async () => {
-
-    try {
-      const res = await fetch('/api/mailer/tour', { method: 'POST' });
-      if (!res.ok) throw new Error('Fehler beim Senden der Email.');
-
-      alert('Email erfolgreich gesendet an alle Busunternehmen.');
-
-    } catch (err) {
-      console.error(err.message);
-    }
+            if (!res.ok) throw new Error('Fehler beim Senden der Email.');
+            console.log('Email erfolgreich an Busunternehmen gesendet.');
+            bootstrap.Modal.getInstance(document.getElementById('mailerModal')).hide();
+            alert('Email erfolgreich an Busunternehmen gesendet.');
+          });
+        } catch (err) {
+          console.error(err.message);
+        }
 });
 
-    // An die Tabelle anhängen
+
+
+    }
+
     table.appendChild(thead);
     table.appendChild(tbody);
 
   } catch (err) {
     console.error(err);
-    const container = document.getElementById('fahrten-tabelle');
-    if (container) {
-      container.innerHTML = `<p class="text-danger">Fehler beim Laden der Touren.</p>`;
-    }
   }
 }
