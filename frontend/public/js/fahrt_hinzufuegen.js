@@ -78,24 +78,24 @@ window.addEventListener('DOMContentLoaded', async () => {
         // Datum + Uhrzeit zusammenbauen
         const datum = document.getElementById("datum").value;          // "YYYY-MM-DD"
         const abfahrtszeit = document.getElementById("abfahrtszeit").value; // z.B. "13:28"
-       
         const tour_date = `${datum} ${abfahrtszeit}`;
+        const busSelect = document.getElementById('plaetze');
+        const companySelect = document.getElementById('busUnternehmen');
+        const fileInput = document.getElementById('fileInput');
 
-
-        const body = {
-            tour_description: document.getElementById("beschreibung").value,
-            tour_date: tour_date,                
-            destination: document.getElementById("ziel").value,
-            bus_id: parseInt(busSelect.value, 10),       // als Zahl
-            picture_path: "test.jpg"                     // optional, hier Dummy
-        };
-        console.log("Formulardaten:", body);
+        const fd = new FormData();
+        fd.append('tour_description', document.getElementById("beschreibung").value);
+        fd.append('tour_date', tour_date);
+        fd.append('destination', document.getElementById("ziel").value);
+        fd.append('bus_id', parseInt(busSelect.value, 10));
+        fd.append('company_id', parseInt(companySelect.value, 10)); // falls Backend erwartet
+        if (fileInput.files.length > 0) fd.append('coverimage', fileInput.files[0]);
 
         try {
             const res = await fetch('/api/tour/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
+                body: fd,
+                credentials: 'include'
             });
             const data = await res.json();
             console.log(res.ok ? 'Fahrt erfolgreich gespeichert' : 'Fehler beim Speichern', data);

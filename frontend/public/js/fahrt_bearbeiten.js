@@ -156,24 +156,51 @@ async function fuelleUnternehmenDropdown(tour) {
 }
 
 window.submitTourData = async () => {
-    const form = document.getElementById('editTourForm');
-    const formData = new FormData(form);
+    const fileInput = document.getElementById('fileInput');
+    const tourId = document.getElementById('tour_id').value;
+
+    // Datum + Zeit kombinieren
+    const datum = document.getElementById("datum").value;
+    const abfahrt = document.getElementById("abfahrt").value;
+    const tour_date = `${datum} ${abfahrt}`;
+
+    // Bus + Unternehmen
+    const busSelect = document.getElementById('plaetze');
+    const companySelect = document.getElementById('unternehmen');
+
+    // FormData erstellen
+    const fd = new FormData();
+    fd.append('tour_description', document.getElementById("beschreibung").value);
+    fd.append('tour_date', tour_date);
+    fd.append('destination', document.getElementById("zielort").value);
+    fd.append('bus_id', parseInt(busSelect.value, 10));
+    fd.append('company_id', parseInt(companySelect.value, 10));
+
+    // Bild nur anhängen, wenn eins ausgewählt wurde
+    if (fileInput.files.length > 0) {
+        fd.append('coverimage', fileInput.files[0]);
+    }
 
     try {
-        const response = await fetch(`/api/tour/${tourId}`, {
+        const res = await fetch(`/api/tour/${tourId}`, {   // PUT direkt auf tour_id
             method: 'PUT',
-            body: formData
+            body: fd,
+            credentials: 'include'
         });
 
-        if (response.ok) {
+        const data = await res.json();
+        if (res.ok) {
             alert('Fahrt erfolgreich bearbeitet!');
             window.location.href = 'admin_fahrten.html';
         } else {
+            console.error('Fehler beim Bearbeiten:', data);
             alert('Fehler beim Bearbeiten der Fahrt.');
         }
 
-    } catch (error) {
-        console.error('Fehler beim Speichern der Tour:', error);
+    } catch (err) {
+        console.error('Fehler beim Speichern:', err);
         alert('Fehler beim Bearbeiten der Fahrt.');
     }
+
+    return false; // Default-Form verhindern
 };

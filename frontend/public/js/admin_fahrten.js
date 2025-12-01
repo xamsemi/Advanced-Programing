@@ -83,7 +83,7 @@ async function ladeTourenAdmin() {
         <th scope="col">Datum</th>
         <th scope="col">Abfahrtszeit</th>
         <th scope="col">Teilnehmer</th>
-        <th scope="col">Freie Plätze</th>
+        
         <th scope="col">Busunternehmen</th>
         <th scope="col" class="text-center">Aktionen</th>
       </tr>
@@ -111,7 +111,6 @@ async function ladeTourenAdmin() {
         <td>${datum}</td>
         <td>${abfahrtszeit}</td>
         <td>${teilnehmer}</td>
-        <td>${freiePlaetze}</td>
         <td>${companyName}</td>
         <td class="text-center">
           <a href="fahrt_bearbeiten.html?tour_id=${tour.tour_id}" class="btn btn-sm btn-outline-warning mx-2">Bearbeiten</a>
