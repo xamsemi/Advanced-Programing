@@ -95,8 +95,10 @@ function setupBusAddForm(form) {
         }
 
         const result = await response.json();
-        alert("Bus erfolgreich gespeichert!");
-        form.reset(); // Formular zurücksetzen
+        //alert("Bus erfolgreich gespeichert!");
+        //form.reset(); // Formular zurücksetzen
+        window.location.href = "busunternehmen.html"; // Zurück zur Busunternehmen-Übersicht
+
 
     } catch (error) {
         console.error("Fehler beim Speichern des Busses:", error);
@@ -148,8 +150,9 @@ function setupCompanyAddForm(form) {
         }
 
         const result = await response.json();
-        alert("Busunternehmen erfolgreich gespeichert!");
-        form.reset(); // Formular zurücksetzen
+        //alert("Busunternehmen erfolgreich gespeichert!");
+       // form.reset(); // Formular zurücksetzen
+        window.location.href = "busunternehmen.html"; // Zurück zur Busunternehmen-Übersicht
 
     } catch (error) {
         console.error("Fehler beim Speichern des Busunternehmens:", error);

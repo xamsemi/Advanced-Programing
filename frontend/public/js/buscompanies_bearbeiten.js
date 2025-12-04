@@ -144,9 +144,9 @@ const form = document.querySelector("form");
             const bus = json.data;
 
             // company mit company_id updaten
-
-
-            const response = await fetch(`/api/buscompanies/${bus.company_id}`, {
+            console.log("Bus hat Sitz:", bus.bus_seats);
+            console.log("Company ID geladen für Update:", bus.company.company_id);
+            const response = await fetch(`/api/buscompanies/${bus.company.company_id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -158,4 +158,5 @@ const form = document.querySelector("form");
         } catch (error) {
             console.error("Fehler beim  Speichern des Unternehmens:", error);
         }
+        window.location.href = "busunternehmen.html"; // Zurück zur Busunternehmen-Übersicht
     });

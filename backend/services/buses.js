@@ -21,6 +21,7 @@ serviceRouter.get('/', async (req, res) => {
 
 // --- Einzelnen Bus abrufen ---
 serviceRouter.get('/:bus_id', async (req, res) => {
+
     const { bus_id } = req.params;
     console.log('Service Buses: Client requested bus id=' + bus_id);
     const busesDao = new BusesDao(req.app.locals.dbConnection);
