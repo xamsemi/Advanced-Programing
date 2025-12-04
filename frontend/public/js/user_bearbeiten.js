@@ -108,7 +108,7 @@ const form = document.querySelector("form");
         // Objekt für API
         //wenn admin, dann soll user_role admin sein
         
-        // Nutzerrolle laden
+        // Nutzerrolle laden für nutzer mit der ID: user_id
         
     
             const response = await fetch(`/api/user/${user_id}`, { credentials: "include" });
@@ -137,13 +137,15 @@ const form = document.querySelector("form");
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(newUser)
+
             }); 
+
             if (!response.ok) {
                 const errorText = await response.text(); // Inhalt der Antwort lesen
                 console.error("Antwort vom Server:", errorText);
                 throw new Error(`API Fehler beim Speichern des Users: ${response.status}`);
             }
-
+            window.location.href = "mitgliederverwaltung.html"; // Zurück zur Mitgliederübersicht
         } catch (error) {
             console.error("Fehler beim Aktualisieren des Users:", error);
         }

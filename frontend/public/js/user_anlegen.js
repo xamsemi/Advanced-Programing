@@ -61,9 +61,10 @@ function setupUserAddForm(form) {
         }
 
         const result = await response.json();
-        alert("Mitglied erfolgreich gespeichert!");
+        //alert("Mitglied erfolgreich gespeichert!");
         form.reset(); // Formular zurücksetzen
-
+        window.location.href = "mitgliederverwaltung.html"; // Zurück zur Mitgliederübersicht
+        
     } catch (error) {
         console.error("Fehler beim Speichern des Mitglieds:", error);
         alert("Fehler beim Speichern des Mitglieds.");
