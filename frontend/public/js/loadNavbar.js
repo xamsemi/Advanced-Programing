@@ -12,7 +12,12 @@ export async function loadNavbar() {
     }
 }
 
-export async function zeigeAdminBereich() {
+export async function zeigeAdminBereich(user) {
+    if (!user || user.role !== 'admin') {
+        return; // Kein Admin → nichts anzeigen
+    }
+
+
     const navbar = document.querySelector('.navbar');
     if (!navbar) return;
 

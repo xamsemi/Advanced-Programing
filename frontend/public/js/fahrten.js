@@ -6,9 +6,10 @@ import { setupLogout,checkLogin } from './checkLogin.js';
 window.addEventListener('DOMContentLoaded', async () => {
 
     await navbar.loadNavbar();
-    navbar.zeigeAdminBereich();
     // Prüfe Login-Status – leite weiter falls ausgeloggt
     const user = await checkLogin(false, true);
+    navbar.zeigeAdminBereich();
+    
 
     // Nur laden, wenn Benutzer eingeloggt ist
     if (user) {
