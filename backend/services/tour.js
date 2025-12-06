@@ -57,11 +57,12 @@ serviceRouter.get('/:id', async (req, res) => {
     const tourDao = new TourDao(req.app.locals.dbConnection);
     try {
         var tour = await tourDao.getTourById(id);
-        tour.forEach(tour => {
-            var picture_name = tour.picture_path
-            delete tour.picture_path;
-            tour.picture_url = imageServerPath + picture_name;
-        });
+        // tour.forEach(tour => {
+        //     var picture_name = tour.picture_path
+        //     delete tour.picture_path;
+        //     tour.picture_url = imageServerPath + picture_name;
+        // });
+        console.log('Service Tour: Retrieved tour:', tour);
         res.status(200).json({ message: 'success', data: tour });
     } catch (err) {
         console.error('Service Tour: Error loading tour:', err.message);

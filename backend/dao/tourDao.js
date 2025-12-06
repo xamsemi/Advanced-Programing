@@ -86,6 +86,7 @@ class TourDao {
                     tour.bus = await busDao.getBusById(tour.bus_id);
                     delete tour.bus_id;
                 }
+                console.log('TourDao: Retrieved tour results:', results);
                 resolve(results);
             });
         });
