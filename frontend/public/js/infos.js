@@ -34,14 +34,20 @@ async function ladeTourDetails() {
         // -----------------------------
         // Felder dynamisch füllen
         // -----------------------------
-        document.getElementById("tourTitle").textContent = tour.destination;
-        document.getElementById("tourDate").textContent = new Date(tour.tour_date).toLocaleDateString("de-DE");
-        document.getElementById("tourDeparture").textContent = tour.departure_time || "Keine Angabe";
-        document.getElementById("tourSeats").textContent = `${tour.free_seats} von ${tour.total_seats}`;
-        document.getElementById("tourDescription").textContent = tour.tour_description;
+        const isoString = tour.tour_date; // z.B. "2026-02-15T00:00:00.000Z"
 
-        // Bild, falls vorhanden
-        document.getElementById("tourImage").src = tour.image_url || "img/placeholder.jpg";
+        // Datum
+        const [datePart, timePart] = isoString.split('T'); // ["2026-02-15", "00:00:00.000Z"]
+        const [year, month, day] = datePart.split('-');
+        document.getElementById("tourTitle").textContent = tour.destination;
+        document.getElementById("tourDate").textContent = `${day}.${month}.${year}`;
+        const time = timePart.substring(0,5); // "00:00"
+        document.getElementById("tourDeparture").textContent = time;
+        document.getElementById("tourSeats").textContent = `${tour.bus.bus_seats} Plätze`;
+        document.getElementById("tourDescription").textContent = tour.tour_description;
+        document.getElementById("tourImage").src = tour.picture_url;
+
+        
 
         // Reservierungsknopf
         document.getElementById("reserveBtn").addEventListener("click", () => {
