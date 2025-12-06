@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     await navbar.loadNavbar();
     // Prüfe Login-Status – leite weiter falls ausgeloggt
     const user = await checkLogin(false, true);
-    navbar.zeigeAdminBereich();
+    navbar.zeigeAdminBereich(user);
     
 
     // Nur laden, wenn Benutzer eingeloggt ist
