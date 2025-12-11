@@ -84,6 +84,7 @@ connectWithRetry(db)
     app.use('/api/buses', require('./services/buses'));
     app.use('/api/buscompanies', require('./services/buscompanies'));
     app.use('/api/mailer', require('./services/mailer'));
+    app.use('/api/user_tour', require('./services/user_tour'));
 
     app.listen(port, () => {
       console.log(`Backend läuft auf http://localhost:${port}`);

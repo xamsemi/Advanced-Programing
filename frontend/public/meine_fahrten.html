@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meine Fahrten</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Eigenes CSS -->
+  <link rel="stylesheet" href="css/styles1.css">
+</head>
+
+
+<body>
+
+  <!-- Navbar oben -->
+ <div id="navbar-placeholder"></div>
+
+  <!-- Hauptinhalt -->
+  <main class="container py-5">
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-light mb-3">Übersicht meiner Fahrten</h1>
+      <p class="text-secondary">Teilnahme an Fahrten einsehen.</p>
+
+      
+    </div>
+
+    <!-- Tabelle für meine Fahrten -->
+    <div class="card shadow-lg admin-card">
+      <div class="card-body">
+        <table class="table table-dark table-hover align-middle mb-0 rounded">
+          <thead>
+            <tr class="text-primary">
+              <!--<th scope="col">Name/bus_id</th>-->
+              <th scope="col">Beschreibung</th> 
+              <th scope="col">Datum</th>
+              <th scope="col">Ziel</th>
+              
+
+              
+            </tr>
+          </thead>
+
+          <tbody id="meine-fahrten-table-body">
+            <!-- Wird jetzt dynamisch mit busunternehmen.js gefüllt -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-secondary py-4">
+    <small>© 2025 Fasnets-Busreisen </small>
+  </footer>
+
+  <!-- Verweis auf ausgelagerte JavaScript-Datei -->
+  <script type="module" src="js/meine_fahrten.js"></script>
+</body>
+</html>
