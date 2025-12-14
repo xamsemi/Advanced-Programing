@@ -86,7 +86,7 @@ serviceRouter.post('/login', loginLimiter, function(req, res) {
             // Generate token
             const token = userDao.generateToken(username);
             console.log('Service User: Login successful');
-            req.session.user = { username: user.username, role: user.user_role };
+            req.session.user = { id: user.user_id, username: user.username, role: user.user_role };
             return res.status(200).json({ 'token': token });
         });
     });
@@ -127,7 +127,7 @@ serviceRouter.post('/logout', (req, res) => {
     }
 });
 
-serviceRouter.get('/profile', (req, res) => {
+serviceRouter.get('/profile', async (req, res) => {
     /*
     #swagger.tags = ['Users']
     #swagger.description = 'Endpoint zum Abrufen des Profils des eingeloggten Benutzers.'
@@ -141,8 +141,27 @@ serviceRouter.get('/profile', (req, res) => {
         schema: { message: 'Kein Benutzer eingeloggt' }
     }
     */
+
+    const usersDao = new UserDao(req.app.locals.dbConnection);
+    const userTourDao = new UserTourDao(req.app.locals.dbConnection);
+    console.log('Service User: Get User Profile');
     if (req.session && req.session.user) {
-        return res.json({ username: req.session.user.username, role: req.session.user.role });
+
+        try {
+            const id = req.session.user.id; // user_id aus der Session
+            const user = await usersDao.getUserByID(id);
+            if (!user) return res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
+            delete user.password_hash; // Passwort-Hash entfernen
+            // Zugeordnete Touren laden
+            const userTours = await userTourDao.getToursByUser(id);
+            delete userTours.user_id; // user_id entfernen, da bereits im user-Objekt vorhanden
+            user.tours = userTours.tours; // Touren dem user-Objekt hinzufügen
+
+            return res.status(200).json({ message: 'success', data: user});
+        } catch (err) {
+            console.error('Service Users: Error loading user details:', err);
+            return res.status(500).json({ fehler: true, nachricht: err.message });
+        }
     } else {
         return res.status(401).json({ message: 'Kein Benutzer eingeloggt' });
     }
@@ -195,26 +214,23 @@ serviceRouter.get('/:id', async (req, res) => {
     }
 });
 
+// --- Einzelnen Benutzer abrufen über username--- -> Wird über /profile geholt
+// serviceRouter.get('/by-username/:username', async (req, res) => {
+//     const usersDao = new UserDao(req.app.locals.dbConnection);
+//     //const userTourDao = new UserTourDao(req.app.locals.dbConnection);
+//     const { username } = req.params;
+//     console.log('Service User: Client requested user username=' + username);
 
-// --- Einzelnen Benutzer abrufen über username---
-serviceRouter.get('/by-username/:username', async (req, res) => {
-    const usersDao = new UserDao(req.app.locals.dbConnection);
-    //const userTourDao = new UserTourDao(req.app.locals.dbConnection);
-    const { username } = req.params;
-    console.log('Service User: Client requested user username=' + username);
+//     try {
+//         const user = await usersDao.getUserByUserName(username);
+//         if (!user) return res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
 
-    try {
-        const user = await usersDao.getUserByUserName(username);
-        if (!user) return res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
-
-        return res.status(200).json({ message: 'success', data: user});
-    } catch (err) {
-        console.error('Service Users: Error loading user details:', err);
-        return res.status(500).json({ fehler: true, nachricht: err.message });
-    }
-});
-
-
+//         return res.status(200).json({ message: 'success', data: user});
+//     } catch (err) {
+//         console.error('Service Users: Error loading user details:', err);
+//         return res.status(500).json({ fehler: true, nachricht: err.message });
+//     }
+// });
 
 // neuen Nutzer erstellen
 serviceRouter.post("/", async (req, res) => {

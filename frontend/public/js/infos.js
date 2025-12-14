@@ -9,9 +9,9 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     if (user) setupLogout();
 
-    const user2 = await determineUserId(user);
-    console.log("User-ID für Tour-Details:", user2.user_id);
-    ladeTourDetails(user2);
+    // const user2 = await determineUserId(user);
+    // console.log("User-ID für Tour-Details:", user2.user_id);
+    ladeTourDetails(user);
 
 });
 
@@ -176,14 +176,14 @@ async function cancelTour(tour, user) {const bookingResponse = await fetch(`/api
         }
 
 
-async function determineUserId(user) {
-const response = await fetch(`/api/user/by-username/${user.username}`, { credentials: "include" });
-        if (!response.ok) throw new Error(`Fehler beim Laden des Mitglieds ueber name: ${response.status}`);
+// async function determineUserId(user) {
+// const response = await fetch(`/api/user/by-username/${user.username}`, { credentials: "include" });
+//         if (!response.ok) throw new Error(`Fehler beim Laden des Mitglieds ueber name: ${response.status}`);
 
-        const json  = await response.json();
-        const user2 = json.data;
-        return user2;
-}
+//         const json  = await response.json();
+//         const user2 = json.data;
+//         return user2;
+// }
 
 // Überprüft, ob der eingeloggte Nutzer die Tour bereits gebucht hat
 const userHasBooked = async (user, tour) => {

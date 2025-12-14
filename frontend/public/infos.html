@@ -12,7 +12,7 @@
     <div id="navbar-placeholder"></div>
 
     <main class="container py-5">
-      <div class="info-card card mx-auto shadow-lg">
+      <div class="info-card card mx-auto">
 
         <img id="tourImage" src="" class="card-img-top" alt="Reiseziel">
 
@@ -22,13 +22,17 @@
           <p class="card-text"><strong>Datum:</strong> <span id="tourDate"></span></p>
           <p class="card-text"><strong>Plätze:</strong> <span id="tourSeats"></span></p>
           <p class="card-text"><strong>Abfahrt:</strong> <span id="tourDeparture">nicht angegeben</span></p>
-          <p class="card-text"><strong>Beschreibung:</strong> <span id="tourDescription">nicht angegeben</span></p>
+          <label class="card-text" for="tourDescription"><strong>Beschreibung:</strong></label>
+          <p id="tourDescription">nicht angegeben</p>
 
           <hr class="text-secondary">
 
-          <p id="tourDescription" class="card-text"></p>
+          <!-- <p id="tourDescription" class="card-text"></p> -->
 
-          <button id="reserve_or_cancel_Btn" class="btn btn-outline-primary mt-3">Platz reservieren</button>
+          <div class="d-flex justify-content-between gap-2">
+            <a href="fahrten.html" class="btn btn-secondary mt-3">Zurück zur Übersicht</a>
+            <button id="reserve_or_cancel_Btn" class="btn btn-outline-primary mt-3">Platz reservieren</button>
+          </div>
         </div>
       </div>
     </main>
