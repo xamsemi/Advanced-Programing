@@ -34,7 +34,7 @@ class UserDao {
     }
 
     getUserByUserName(username, callback) {
-        const sql = 'SELECT username, email, user_role, password_hash FROM users WHERE username = ?';
+        const sql = 'SELECT user_id, username, email, user_role, password_hash FROM users WHERE username = ?';
         const promise = new Promise((resolve, reject) => {
             this._conn.query(sql, [username], (err, results) => {
                 if (err) {

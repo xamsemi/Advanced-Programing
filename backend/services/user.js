@@ -172,7 +172,7 @@ serviceRouter.get('/', async (req, res) => {
     }
 });
 
-// --- Einzelnen Benutzer abrufen ---
+// --- Einzelnen Benutzer abrufen über ID---
 serviceRouter.get('/:id', async (req, res) => {
     const usersDao = new UserDao(req.app.locals.dbConnection);
     const userTourDao = new UserTourDao(req.app.locals.dbConnection);
@@ -194,6 +194,27 @@ serviceRouter.get('/:id', async (req, res) => {
         return res.status(500).json({ fehler: true, nachricht: err.message });
     }
 });
+
+
+// --- Einzelnen Benutzer abrufen über username---
+serviceRouter.get('/by-username/:username', async (req, res) => {
+    const usersDao = new UserDao(req.app.locals.dbConnection);
+    //const userTourDao = new UserTourDao(req.app.locals.dbConnection);
+    const { username } = req.params;
+    console.log('Service User: Client requested user username=' + username);
+
+    try {
+        const user = await usersDao.getUserByUserName(username);
+        if (!user) return res.status(404).json({ fehler: true, nachricht: 'Benutzer nicht gefunden' });
+
+        return res.status(200).json({ message: 'success', data: user});
+    } catch (err) {
+        console.error('Service Users: Error loading user details:', err);
+        return res.status(500).json({ fehler: true, nachricht: err.message });
+    }
+});
+
+
 
 // neuen Nutzer erstellen
 serviceRouter.post("/", async (req, res) => {
