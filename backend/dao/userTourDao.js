@@ -55,6 +55,31 @@ class UserTourDao {
         return require('../helper.js').maybeCallback(promise, callback);
     }
 
+    // Alle Touren eines Users laden (einfache Version ohne Details)
+    getToursByUserSimple(userId, callback) {
+        const tourDao = new TourDao(this._conn);        
+        const promise = new Promise((resolve, reject) => {
+            const sql = `SELECT user_id, tour_id FROM user_tours WHERE user_id = ?`;
+            this._conn.query(sql, [userId], (err, results) => {
+                if (err) {
+                    return reject(new Error('Could not fetch tours for user: ' + err.message));
+                }
+                if (helper.isArrayEmpty(results)) {
+                    return resolve({ user_id: userId, tours: [] });
+                }
+
+                //einfache Tour-Daten laden
+                return resolve({ user_id: userId, tours: results });
+                });
+            });
+    
+        return require('../helper.js').maybeCallback(promise, callback);
+    }
+
+
+
+
+
     // Alle User einer Tour laden
     // Supports either (tourId, callback) or returns a Promise when no callback provided
     getUsersByTour(tourId, callback) {
