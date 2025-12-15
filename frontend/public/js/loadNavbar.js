@@ -13,7 +13,7 @@ export async function loadNavbar() {
 }
 
 export async function zeigeAdminBereich(user) {
-    if (!user || user.role !== 'admin') {
+    if (!user || user.user_role !== 'admin') {
         return; // Kein Admin → nichts anzeigen
     }
 

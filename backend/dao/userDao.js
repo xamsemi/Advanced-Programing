@@ -82,7 +82,7 @@ class UserDao {
         return require('../helper.js').maybeCallback(promise, callback);
     }
 
-
+//DEBUG - User bekommt kein Passwort
     async createUser_form({ username, address, email, user_role, password_hash, created_at }) {
     const sql = "INSERT INTO users (username, address, email, user_role, password_hash, created_at) VALUES (?, ?, ?, ?, ?, ?)";
     try {

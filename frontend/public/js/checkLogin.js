@@ -4,16 +4,21 @@ export async function checkLogin(redirectIfLoggedIn = false, redirectIfLoggedOut
     
     try{
         const res = await fetch('/api/user/profile', { credentials: 'include' });
+        
         if (res.ok) userData = await res.json();
     } catch (err){
         console.error("Fehler bei Profilabfrage:",err);
+    }
+    
+    if(userData && userData.data){
+        userData = userData.data;
     }
 
     const userInfo = document.getElementById('userInfo');
     const logoutBtn = document.getElementById('logoutBtn');
 
     if (userData) {
-        if(userInfo) userInfo.textContent = `Eingeloggt als: ${userData.username} (${userData.role})`;
+        if(userInfo) userInfo.textContent = `Eingeloggt als: ${userData.username} (${userData.user_role})`;
         if(logoutBtn) logoutBtn.style.display = 'inline-block';
         if(redirectIfLoggedIn && (window.location.pathname === '/' || window.location.pathname.includes('index.html'))){
             window.location.href = 'fahrten.html';

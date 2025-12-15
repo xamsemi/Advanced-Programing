@@ -1,8 +1,6 @@
 import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
 
-
-
 window.addEventListener('DOMContentLoaded', async () => {
 
     await navbar.loadNavbar();
@@ -17,6 +15,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     }
 });
+
 // --- Fahrten dynamisch laden ---
 async function ladeTouren() {
   try {
@@ -27,19 +26,29 @@ async function ladeTouren() {
     const tours = data.data || []; // wegen { message, data }
 
     const container = document.getElementById('fahrten-container');
-    container.innerHTML = ''; // alte Karten löschen
+
+    let classes = "card h-100 text-center shadowed-box";
 
     tours.forEach(tour => {
+
+      let formattedDate = "—";
+      if (tour.tour_date) {
+        const tourDate = new Date(tour.tour_date);
+        if (!isNaN(tourDate.getTime())) {
+          formattedDate = tourDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        } else {
+          formattedDate = "Ungültiges Datum";
+        }
+      }
+
       const col = document.createElement('div');
       col.className = 'col';
       col.innerHTML = `
-        <div class="card h-100 text-center shadow-sm">
-          <div class="card-body">
+        <div class="card h-100 text-center">
+          <div class="card-body px-3">
             <h4 class="card-title">${tour.destination}</h4>
-            <p class="card-text">
-              ${new Date(tour.tour_date).toLocaleDateString('de-DE')}
-              ${tour.tour_description}
-            </p>
+            <div class="card-subtitle mb">${formattedDate}</div>
+            <p class="card-text">${tour.tour_description}</p>
             <a href="infos.html?id=${tour.tour_id}" class="btn btn-outline-primary">Mehr Infos</a>
           </div>
         </div>
