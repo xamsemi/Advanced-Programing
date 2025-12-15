@@ -3,6 +3,8 @@ import { checkLogin, setupLogout } from './checkLogin.js';
 
 window.addEventListener("DOMContentLoaded", async () => {
 
+    document.getElementById("mitgliedSeit").valueAsDate = new Date();
+
     await navbar.loadNavbar();
     const user = await checkLogin(false, true);
     navbar.zeigeAdminBereich(user);
@@ -18,12 +20,14 @@ window.addEventListener("DOMContentLoaded", async () => {
     form.addEventListener("submit", async (event) => {
         event.preventDefault(); //  WICHTIG
 
-        const name = document.getElementById("vorname").value;
+        const name = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
         const address = document.getElementById("adresse").value;
         const email = document.getElementById("email").value;
+        const userrole = document.getElementById("userrole").value;
         const mitgliedSeit = document.getElementById("mitgliedSeit").value;
 
-        if (!name || !address || !email || !mitgliedSeit) {
+        if (!name || !address || !email || !mitgliedSeit || !password || !userrole) {
             alert("Bitte alle Felder ausfüllen.");
             return;
         }
@@ -32,15 +36,15 @@ window.addEventListener("DOMContentLoaded", async () => {
             username: name,
             address: address,
             email: email,
-            user_role: "user",
-            password_hash: "defaultpassword",
+            user_role: userrole,
+            password: password,
             created_at: mitgliedSeit
         };
 
         console.log("📤 Sende User:", newUser); // DEBUG
 
         try {
-            const response = await fetch("/api/user", {
+            const response = await fetch("/api/user/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

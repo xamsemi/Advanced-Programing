@@ -233,18 +233,18 @@ serviceRouter.get('/:id', async (req, res) => {
 // });
 
 // neuen Nutzer erstellen
-serviceRouter.post("/", async (req, res) => {
-  const { username, address, email, user_role, password_hash, created_at } = req.body;
-  const usersDao = new UserDao(req.app.locals.dbConnection);
+// serviceRouter.post("/", async (req, res) => {
+//   const { username, address, email, user_role, password_hash, created_at } = req.body;
+//   const usersDao = new UserDao(req.app.locals.dbConnection);
 
-  try {
-    const newUserId = await usersDao.createUser_form({ username, address, email, user_role, password_hash, created_at });
-    return res.status(201).json({ message: "Benutzer erfolgreich erstellt", user_id: newUserId });
-  } catch (err) {
-    console.error("Fehler beim Erstellen des Users:", err.message);
-    return res.status(500).json({ fehler: true, nachricht: err.message });
-  }
-});
+//   try {
+//     const newUserId = await usersDao.createUser_form({ username, address, email, user_role, password_hash, created_at });
+//     return res.status(201).json({ message: "Benutzer erfolgreich erstellt", user_id: newUserId });
+//   } catch (err) {
+//     console.error("Fehler beim Erstellen des Users:", err.message);
+//     return res.status(500).json({ fehler: true, nachricht: err.message });
+//   }
+// });
 
 // Bestehenden Benutzer aktualisieren
 serviceRouter.put('/:id', async (req, res) => {
@@ -280,8 +280,8 @@ serviceRouter.delete('/:id', (req, res) => {
 
 serviceRouter.post("/register", async (req, res) => {
 
-    const { username, password, email} = req.body;
-    const user_role = 'user'; // default role
+    console.log('Service Register', req.body);
+    const { username, password, email, address, user_role, created_at} = req.body;
 
     if (!username || !password || !email ) {
         return res.status(400).json({ message: 'Username, Passwort, Email erforderlich' });
@@ -305,7 +305,7 @@ serviceRouter.post("/register", async (req, res) => {
             }
             // Benutzer speichern
             const userDao = new UserDao(req.app.locals.dbConnection);
-            userDao.createUser(username, email, user_role, hashedPassword, (err, userId) => {
+            userDao.createUser(username, email, user_role, hashedPassword, address, created_at, (err, userId) => {
                 if (err) {
                     console.error('Error creating user:', err.message);
                     return res.status(500).json({ message: 'Interner Serverfehler' });

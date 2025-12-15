@@ -1,5 +1,6 @@
 import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
+import * as utils from './utils.js'
 
 window.addEventListener('DOMContentLoaded', async () => {
 
@@ -31,15 +32,7 @@ async function ladeTouren() {
 
     tours.forEach(tour => {
 
-      let formattedDate = "—";
-      if (tour.tour_date) {
-        const tourDate = new Date(tour.tour_date);
-        if (!isNaN(tourDate.getTime())) {
-          formattedDate = tourDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        } else {
-          formattedDate = "Ungültiges Datum";
-        }
-      }
+      let formattedDate = utils.formatDateTimeToDate(tour.tour_date);
 
       const col = document.createElement('div');
       col.className = 'col';

@@ -50,14 +50,25 @@ class UserDao {
         return require('../helper.js').maybeCallback(promise, callback);
     } 
 
-    createUser(username, email, user_role, passwordOrHash, callback) {
+    createUser(username, email, user_role = "User", passwordOrHash, address = "-", created_at, callback) {
         const promise = new Promise((resolve, reject) => {
-            const sql = 'INSERT INTO users (username, email, user_role, password_hash) VALUES (?, ?, ?, ?)';
+            
             // Detect if passwordOrHash already looks like a bcrypt hash (starts with $2)
             const seemsHashed = (typeof passwordOrHash === 'string' && passwordOrHash.startsWith('$2') && passwordOrHash.length >= 50);
 
             const insert = (finalHash) => {
-                this._conn.query(sql, [username, email, user_role, finalHash], (err, results) => {
+                const cols = ["username", "email", "user_role", "password_hash", "address"];
+                const vals = [username, email, user_role, finalHash, address];
+
+                if (created_at) {
+                    cols.push("created_at");
+                    vals.push(created_at);
+                }
+                const placeholders = cols.map(() => "?").join(", ");
+                const sql = `INSERT INTO users (${cols.join(", ")}) VALUES (${placeholders})`;
+                        
+            
+                this._conn.query(sql, vals, (err, results) => {
                     if (err) {
                         return reject(new Error('Error creating user: ' + err.message));
                     }
@@ -83,15 +94,15 @@ class UserDao {
     }
 
 //DEBUG - User bekommt kein Passwort
-    async createUser_form({ username, address, email, user_role, password_hash, created_at }) {
-    const sql = "INSERT INTO users (username, address, email, user_role, password_hash, created_at) VALUES (?, ?, ?, ?, ?, ?)";
-    try {
-        const [result] = await this._conn.promise().query(sql, [username, address, email, user_role, password_hash, created_at]);
-        return result.insertId; // ID des neuen Users
-    } catch (error) {
-        throw new Error("Database error: " + error.message);
-    }
-    }
+    // async createUser_form({ username, address, email, user_role, password_hash, created_at }) {
+    // const sql = "INSERT INTO users (username, address, email, user_role, password_hash, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+    // try {
+    //     const [result] = await this._conn.promise().query(sql, [username, address, email, user_role, password_hash, created_at]);
+    //     return result.insertId; // ID des neuen Users
+    // } catch (error) {
+    //     throw new Error("Database error: " + error.message);
+    // }
+    // }
 
 
 

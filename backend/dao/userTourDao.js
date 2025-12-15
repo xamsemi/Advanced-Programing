@@ -45,7 +45,7 @@ class UserTourDao {
                 //Detaillierte Tour-Daten laden
                 const detailedTourPromises = tours.map(t => tourDao.getTourById(t.tour_id));
                 Promise.all(detailedTourPromises).then(detailedTours => {
-                    console.log('DETAILED TOURS:', detailedTours);
+                    //console.log('DETAILED TOURS:', detailedTours); // DEBUG
                     return resolve({ user_id: userId, tours: detailedTours });
                 }).catch(err => {
                     return reject(new Error('Could not fetch detailed tour data: ' + err.message));

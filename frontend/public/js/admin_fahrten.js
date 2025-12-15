@@ -1,5 +1,6 @@
 import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
+import * as utils from './utils.js'
 
 window.addEventListener('DOMContentLoaded', async () => {
   
@@ -88,10 +89,9 @@ async function ladeTourenAdmin() {
     const tbody = document.createElement('tbody');
 
     for (let tour of tours) {
-      const [datumTeil, zeitTeil] = tour.tour_date.split("T"); // ["2026-02-15", "10:00:00.000Z"]
-      const datum = datumTeil;
-      const abfahrtszeit = zeitTeil.slice(0, 5); // "10:00"
-      
+
+      const formattedDate = utils.formatDateTimeToDate(tour.tour_date);  
+      const abfahrtszeit = utils.formatDateTimeToTime(tour.tour_date);      
 
       // Teilnehmer / freie Plätze
       const teilnehmer = tour.participants || 0;
@@ -104,7 +104,7 @@ async function ladeTourenAdmin() {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${tour.destination}</td>
-        <td>${datum}</td>
+        <td>${formattedDate}</td>
         <td>${abfahrtszeit}</td>
         <td>${companyName}</td>
         <td class="text-center">
@@ -139,7 +139,7 @@ async function ladeTourenAdmin() {
           document.getElementById('emailBody').value =
             `Sehr geehrte Damen und Herren,\nich möchte Sie über die folgende Fahrt informieren:\n` +
             `Zielort: ${tour.destination}\nDatum: ${datum}\nAbfahrtszeit: ${abfahrtszeit}\n` +
-            `Freie Plätze: ${freiePlaetze}\nMit freundlichen Grüßen,\n[Ihr Name]`;
+            `Freie Plätze: ${freiePlaetze}\nMit freundlichen Grüßen,\nIhr Vereinsvorstand`;
 
           const sendBtn = document.getElementById('sendMailBtn');
 
