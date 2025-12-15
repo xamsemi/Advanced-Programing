@@ -6,13 +6,13 @@ let allBuses = [];
 
 window.addEventListener('DOMContentLoaded', async () => {
     await navbar.loadNavbar();
-    navbar.zeigeAdminBereich();
-
     const user = await checkLogin(false, true);
-    if (!user) return;
-
+    navbar.zeigeAdminBereich(user);
+    if (user) {
     setupLogout();
 
+    }
+    
     // tour_id holen
     const params = new URLSearchParams(window.location.search);
     tourId = params.get("tour_id");

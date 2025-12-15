@@ -1,7 +1,21 @@
+import * as navbar from './loadNavbar.js';
+import { setupLogout,checkLogin } from './checkLogin.js';
+
+
+window.addEventListener('DOMContentLoaded', async () => {
+    await navbar.loadNavbar();
+    const user = await checkLogin(false, true);
+    navbar.zeigeAdminBereich(user);
+    if (user) {
+    setupLogout();
+
+    }
+    
+
+});
 
 // Busunternehmen ändern
 // lade Daten der Auflistung der Busse und Unternehmen in Änderungs-Formular
-
 async function loadBusParameters(bus_id) {
     const name = document.getElementById("name");
     const seats = document.getElementById("sitzplaetze");

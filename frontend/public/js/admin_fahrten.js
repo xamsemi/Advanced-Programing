@@ -1,21 +1,17 @@
 import * as navbar from './loadNavbar.js';
-
 import { setupLogout,checkLogin } from './checkLogin.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
+  
 
   await navbar.loadNavbar();
-  navbar.zeigeAdminBereich();
+  const user = await checkLogin(false, true);
+  navbar.zeigeAdminBereich(user);
 
 
 const res = await fetch('/api/tour/', { credentials: 'include' });
 const data = await res.json();
 console.log("Touren aus Backend:", data);
-
-
-  // Prüfe Login-Status – leite weiter falls ausgeloggt
-  const user = await checkLogin(false, true);
-
 
   // Nur laden, wenn Benutzer eingeloggt ist
   if (user) {
@@ -82,7 +78,7 @@ async function ladeTourenAdmin() {
         <th scope="col">Zielort</th>
         <th scope="col">Datum</th>
         <th scope="col">Abfahrtszeit</th>
-        <th scope="col">Teilnehmer</th>
+      
         
         <th scope="col">Busunternehmen</th>
         <th scope="col" class="text-center">Aktionen</th>
@@ -110,7 +106,6 @@ async function ladeTourenAdmin() {
         <td>${tour.destination}</td>
         <td>${datum}</td>
         <td>${abfahrtszeit}</td>
-        <td>${teilnehmer}</td>
         <td>${companyName}</td>
         <td class="text-center">
           <a href="fahrt_bearbeiten.html?tour_id=${tour.tour_id}" class="btn btn-sm btn-outline-warning mx-2">Bearbeiten</a>

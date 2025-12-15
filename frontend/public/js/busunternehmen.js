@@ -2,29 +2,30 @@ import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
 
 
-navbar.loadNavbar();
-
 window.addEventListener('DOMContentLoaded', async () => {
-    // Prüfe Login-Status – leite weiter falls ausgeloggt
-    const user = await checkLogin(false, true);
+  
 
-    // Nur laden, wenn Benutzer eingeloggt ist
-    if (user) {
-        setupLogout();
-        if(user.role === 'admin') {
-          navbar.zeigeAdminBereich();
-        }
-    }
+  await navbar.loadNavbar();
+  const user = await checkLogin(false, true);
+  navbar.zeigeAdminBereich(user);
+
+
+const res = await fetch('/api/tour/', { credentials: 'include' });
+const data = await res.json();
+console.log("Touren aus Backend:", data);
+
+  // Nur laden, wenn Benutzer eingeloggt ist
+  if (user) {
+    setupLogout();
+ 
+    loadBuses();
+  }
 });
 
 async function loadBuses() {
   try {
-    
     const response = await fetch("/api/buses", { credentials: "include" });
-    console.log("Response beim Laden der Busse:", response.status);
-    if (!response.ok) {
-      throw new Error(`Fehler beim Laden: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`Fehler beim Laden: ${response.status}`);
 
     const json = await response.json();
     const buses = json.data;
@@ -36,42 +37,39 @@ async function loadBuses() {
       tbody.innerHTML = `<tr><td colspan="5" class="text-center text-secondary">Keine Busse gefunden.</td></tr>`;
       return;
     }
+
     for (const bus of buses) {
-      
-      //## Kommt bereits mit Bus Objekt mit
-      /*
-      const response = await fetch(`/api/buscompanies/${bus.company_id}`, { credentials: "include" });
-      console.log("Response beim Laden der Busunternehmen:", response.status);
-      
-      if (!response.ok) {
-        throw new Error(`Fehler beim Laden: ${response.status}`);
-      }
-
-      const json_bu = await response.json();
-      */
-
       const company = bus.company;
 
       const row = document.createElement("tr");
 
       row.innerHTML = `
-        
         <td>${company.company_name}</td>
         <td>${bus.bus_seats}</td>
         <td>${company.contact_info}</td>
         <td>${company.company_email}</td>
         <td class="text-center">
           <a href="busunternehmen_bearbeiten.html?id=${bus.bus_id}" class="btn btn-sm btn-outline-warning me-2">Bearbeiten</a>
-          <button class="btn btn-sm btn-outline-danger" onclick="deleteBus(${bus.bus_id})">Löschen</button>
         </td>
       `;
+
+      // Löschen-Button erstellen
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Löschen";
+      deleteBtn.className = "btn btn-sm btn-outline-danger ms-2";
+
+      // EventListener für Löschen
+      deleteBtn.addEventListener("click", () => deleteBus(bus.bus_id));
+
+      // Button in die letzte Zelle anhängen
+      row.querySelector("td.text-center").appendChild(deleteBtn);
+
       tbody.appendChild(row);
-    };
+    }
   } catch (error) {
     console.error("Fehler beim Laden der Busse:", error);
-    console.log("Response:", response?.status);
     const tbody = document.getElementById("bus-table-body");
-    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Fehler beim Laden der Daten von busunternehmen.js</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Fehler beim Laden der Daten</td></tr>`;
   }
 }
 
@@ -82,7 +80,7 @@ async function deleteBus(id) {
     const res = await fetch(`/api/buses/${id}`, { method: "DELETE" });
     if (res.ok) {
       alert("Bus gelöscht!");
-      loadBuses();
+      loadBuses(); // Tabelle neu laden
     } else {
       alert("Fehler beim Löschen.");
     }
@@ -90,5 +88,6 @@ async function deleteBus(id) {
     console.error("Fehler beim Löschen:", err);
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", loadBuses);

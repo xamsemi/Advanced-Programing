@@ -1,6 +1,25 @@
+import * as navbar from './loadNavbar.js';
+import { setupLogout,checkLogin } from './checkLogin.js';
+
+window.addEventListener('DOMContentLoaded', async () => {
+
+    await navbar.loadNavbar();
+    const user = await checkLogin(false, true);
+    navbar.zeigeAdminBereich(user);
+    
+
+    // Nur laden, wenn Benutzer eingeloggt ist
+    if (user) {
+        setupLogout();
+
+
+    }
+});
+
+
+
 //Mitglieder ändern
 // lade Daten der Auflistung der Mitglieder  Änderungs-Formular
-
 async function loadUserParameters(user_id) {
     const name = document.getElementById("name");
     const anschrift = document.getElementById("anschrift");
@@ -65,19 +84,12 @@ async function loadUserParameters(user_id) {
     
     }
 
-
-
 // User-ID aus der URL holen, z. B. mitglied_bearbeiten.html?id=3
 function getUserIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   console.log("Lade ID:", params.get("id"));
   return params.get("id");
 }
-
-
-
-
-
 
 const user_id = getUserIdFromURL();
 
@@ -88,10 +100,6 @@ if (user_id) {
 } else {
     console.warn("Keine User-ID in der URL gefunden!");
 }
-
-
-
-
 
 
 //*********************** Mitglied bearbeiten (submit) ****************** */

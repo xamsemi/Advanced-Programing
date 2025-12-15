@@ -1,21 +1,15 @@
 import * as navbar from './loadNavbar.js';
-import { setupLogout,checkLogin } from './checkLogin.js';
-
-
-navbar.loadNavbar();
+import { setupLogout, checkLogin } from './checkLogin.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
+    await navbar.loadNavbar();
     // Prüfe Login-Status – leite weiter falls ausgeloggt
     const user = await checkLogin(false, true);
-
     console.log("Eingeloggter User:", user);
-
+    navbar.zeigeAdminBereich(user);
     // Nur laden, wenn Benutzer eingeloggt ist
-    if (user) {
+  if (user) {
         setupLogout();
-        if(user.role === 'admin') {
-          navbar.zeigeAdminBereich();
-        }
 
         // user aus checkLogin hat keine user_id und daher kann diese ID auch nicht zum Vergleich der Daten aus user_tour genutzt werden
         // kann hier dem user noch die user_id hinzugefügt werden?
@@ -64,9 +58,9 @@ async function loadMeineFahrten(user) {
       }
 
       row.innerHTML = `
-        <td>${tour.tour_description}</td>
-        <td>${formattedDate}</td>
-        <td>${tour.destination}</td>
+      <td>${formattedDate}</td>
+      <td>${tour.destination}</td>
+      <td>${tour.tour_description}</td>
            `;
       tbody.appendChild(row);
     };
@@ -128,3 +122,4 @@ async function loadMeineFahrten(user) {
 
 
 //document.addEventListener("DOMContentLoaded", loadMeineFahrten);
+

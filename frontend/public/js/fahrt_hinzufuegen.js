@@ -3,9 +3,9 @@ import { checkLogin, setupLogout } from './checkLogin.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
 
-    // Navbar laden & Admin Bereich anzeigen
     await navbar.loadNavbar();
-    navbar.zeigeAdminBereich();
+    const user = await checkLogin(false, true);
+    navbar.zeigeAdminBereich(user);
 
     const saveButton = document.getElementById("saveButton");
     const companySelect = document.getElementById('busUnternehmen');
@@ -19,9 +19,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         return; // Abbruch, wenn irgendwas fehlt
     }
 
-    // Login prüfen
-    const user = await checkLogin(false, true);
-    if (user) setupLogout();
+
 
     // Busunternehmen laden
     async function ladeBusunternehmen() {
