@@ -128,6 +128,16 @@ Achtung Seite muss vertraut werden da das Zertifikat selbst erstellt wurde!
 
 ---
 
+## 🧩 Test Mail-Server
+
+https://ethereal.email/messages
+
+| User | Passwort |
+|------|--------|
+|bette.thompson@ethereal.email | mSVCT2wa67f3HHAfDS |
+
+---
+
 ## 🧠 Wichtige Befehle
 
 ### 🔧 Git-Befehle
