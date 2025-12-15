@@ -17,7 +17,7 @@ console.log("Touren aus Backend:", data);
   // Nur laden, wenn Benutzer eingeloggt ist
   if (user) {
     setupLogout();
-    ladeAdminButtons();
+ 
     loadBuses();
   }
 });
