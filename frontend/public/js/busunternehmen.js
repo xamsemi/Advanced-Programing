@@ -2,19 +2,24 @@ import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
 
 
-navbar.loadNavbar();
-
 window.addEventListener('DOMContentLoaded', async () => {
-    // Prüfe Login-Status – leite weiter falls ausgeloggt
-    const user = await checkLogin(false, true);
+  
 
-    // Nur laden, wenn Benutzer eingeloggt ist
-    if (user) {
-        setupLogout();
-        if(user.role === 'admin') {
-          navbar.zeigeAdminBereich();
-        }
-    }
+  await navbar.loadNavbar();
+  const user = await checkLogin(false, true);
+  navbar.zeigeAdminBereich(user);
+
+
+const res = await fetch('/api/tour/', { credentials: 'include' });
+const data = await res.json();
+console.log("Touren aus Backend:", data);
+
+  // Nur laden, wenn Benutzer eingeloggt ist
+  if (user) {
+    setupLogout();
+    ladeAdminButtons();
+    loadBuses();
+  }
 });
 
 async function loadBuses() {

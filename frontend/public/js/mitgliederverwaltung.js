@@ -2,12 +2,27 @@
 import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
 
+
+window.addEventListener('DOMContentLoaded', async () => {
+
+    await navbar.loadNavbar();
+    const user = await checkLogin(false, true);
+    navbar.zeigeAdminBereich(user);
+    
+
+    // Nur laden, wenn Benutzer eingeloggt ist
+    if (user) {
+        setupLogout();
+
+        loadUsers();
+
+    }
+});
+
+
+
 async function loadUsers() {
   try {
-    await navbar.loadNavbar();
-      navbar.zeigeAdminBereich();
-      setupLogout();
-      checkLogin();
       // Prüfe Login-Status – leite weiter falls ausgeloggt
     const response = await fetch("/api/user", { credentials: "include" });
     console.log("Response beim Laden der Mitglieder:", response.status);
@@ -88,4 +103,4 @@ async function deleteUser(id) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadUsers);
+

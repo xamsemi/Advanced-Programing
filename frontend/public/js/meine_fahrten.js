@@ -2,31 +2,24 @@ import * as navbar from './loadNavbar.js';
 import { setupLogout,checkLogin } from './checkLogin.js';
 
 
-navbar.loadNavbar();
-
 window.addEventListener('DOMContentLoaded', async () => {
-    // Prüfe Login-Status – leite weiter falls ausgeloggt
-    const user = await checkLogin(false, true);
+  
 
-    // Nur laden, wenn Benutzer eingeloggt ist
-    if (user) {
-        setupLogout();
-        if(user.role === 'admin') {
-          navbar.zeigeAdminBereich();
-        }
-        // user aus checkLogin hat keine user_id und daher kann diese ID auch nicht zum Vergleich der Daten aus user_tour genutzt werden
-        // kann hier dem user noch die user_id hinzugefügt werden?
-        console.log("Username:", user.username);
+  await navbar.loadNavbar();
+  const user = await checkLogin(false, true);
+  navbar.zeigeAdminBereich(user);
 
-        const response = await fetch(`/api/user/by-username/${user.username}`, { credentials: "include" });
-        if (!response.ok) throw new Error(`Fehler beim Laden des Mitglieds ueber name: ${response.status}`);
 
-        const json  = await response.json();
-        const user2 = json.data;
+const res = await fetch('/api/tour/', { credentials: 'include' });
+const data = await res.json();
+console.log("Touren aus Backend:", data);
 
-        loadMeineFahrten(user2);
-
-    }
+  // Nur laden, wenn Benutzer eingeloggt ist
+  if (user) {
+    setupLogout();
+    ladeTourenAdmin();
+    loadMeineFahrten();
+  }
 });
 
 
