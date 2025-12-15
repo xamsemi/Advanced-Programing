@@ -135,10 +135,10 @@ async function ladeTourenAdmin() {
         try {
           loadMailerForm();
           document.getElementById('mailerModalLabel').textContent = `Email an Busunternehmen für Fahrt ID: ${tour.tour_id}`;
-          document.getElementById('emailSubject').value = `Anfrage zur Vereinsausfahrt am ${datum}`;
+          document.getElementById('emailSubject').value = `Anfrage zur Vereinsausfahrt am ${formattedDate}`;
           document.getElementById('emailBody').value =
             `Sehr geehrte Damen und Herren,\nich möchte Sie über die folgende Fahrt informieren:\n` +
-            `Zielort: ${tour.destination}\nDatum: ${datum}\nAbfahrtszeit: ${abfahrtszeit}\n` +
+            `Zielort: ${tour.destination}\nDatum: ${formattedDate}\nAbfahrtszeit: ${abfahrtszeit}\n` +
             `Freie Plätze: ${freiePlaetze}\nMit freundlichen Grüßen,\nIhr Vereinsvorstand`;
 
           const sendBtn = document.getElementById('sendMailBtn');
