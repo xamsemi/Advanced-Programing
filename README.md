@@ -132,9 +132,11 @@ Achtung Seite muss vertraut werden da das Zertifikat selbst erstellt wurde!
 
 https://ethereal.email/messages
 
-| User | Passwort |
-|------|--------|
-|bette.thompson@ethereal.email | mSVCT2wa67f3HHAfDS |
+| Key | Value |
+|--------|------|
+|Host | smtp.ethereal.email |
+|User |bette.thompson@ethereal.email|
+|Passwort|mSVCT2wa67f3HHAfDS|
 
 ---
 
