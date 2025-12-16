@@ -36,6 +36,20 @@ body {
   position: relative;
 }
 
+
+/* neu neu neu === Bildbereich unter dem Login (Goldener Schnitt) === */
+.auth-image {
+  margin-top: calc(38vh * 0.15); /* harmonischer Abstand (Goldener Schnitt) */
+  width: 100%;
+  height: 260px;
+  background-image: url('../img/Bus.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+
 /* === Karte (leicht über dem Bild schwebend) === */
 .auth-card {
   background-color: rgba(30, 30, 30, 0.92); /* leicht durchsichtig */
@@ -305,4 +319,12 @@ footer {
 }
 .modal-header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+/*neu neu neu === Bildbereich unter dem Login (Goldener Schnitt) === */
+@media (max-width: 768px) {
+  .auth-image {
+    height: 180px;
+    margin-top: 2rem;
+    border-radius: 0.75rem;
+  }
 }
