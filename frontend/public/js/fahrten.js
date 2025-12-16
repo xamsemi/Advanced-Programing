@@ -38,6 +38,11 @@ async function ladeTouren() {
       col.className = 'col';
       col.innerHTML = `
         <div class="card h-100 text-center">
+        <img
+          src="${tour.picture_url || 'images/default.jpg'}"
+          class="card-img-top"
+          alt="${tour.destination}"
+        >
           <div class="card-body px-3">
             <h4 class="card-title">${tour.destination}</h4>
             <div class="card-subtitle mb">${formattedDate}</div>

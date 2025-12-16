@@ -114,6 +114,11 @@ body {
   color: #ccc;
 }
 
+.card-img-top {
+  height: 220px;
+  object-fit: cover;
+}
+
 /* === Info-Karte (Infos.html) === */
 .info-card {
   max-width: 700px;

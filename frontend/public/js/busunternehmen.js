@@ -30,6 +30,11 @@ async function loadBuses() {
     const json = await response.json();
     const buses = json.data;
 
+    // Nach Busunternehmen gruppieren
+    buses.sort((a, b) =>
+      a.company.company_name.localeCompare(b.company.company_name, 'de')
+    );
+
     const tbody = document.getElementById("bus-table-body");
     tbody.innerHTML = "";
 
