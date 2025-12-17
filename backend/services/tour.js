@@ -12,25 +12,63 @@ const imageServerPath = './img/tours/';
 
 // helper: gemeinsame Update-Logik
 async function performUpdate(req, res, id, fileNameCoverImage) {
-    console.log("REQUEST BODY in performUpdate:", req.body);
-    const { tour_description, tour_date, destination} = req.body;
+    const { tour_description, tour_date, destination, bus_id, company_id } = req.body;
+
+    const busIdNum = bus_id ? parseInt(bus_id, 10) : null;
+    const companyIdNum = company_id ? parseInt(company_id, 10) : null;
+
+    if (!busIdNum || !companyIdNum) {
+        return res.status(400).json({ fehler: true, nachricht: 'Bitte Bus und Unternehmen auswählen' });
+    }
+
     const tourDao = new TourDao(req.app.locals.dbConnection);
-    var bus_id = 1; // temporarily set bus_id to 1 if not provided
+    const busesDao = new BusesDao(req.app.locals.dbConnection);
+
     try {
-        const updated = await tourDao.updateTour(id,{
-            picture_path: fileNameCoverImage,
-            tour_description: tour_description,
-            tour_date: tour_date,
-            destination: destination,
-            bus_id: bus_id //darf nicht null sein, muss validiert werden
+        // Prüfen, ob Tour existiert
+        const tourExists = await tourDao.getTourById(id);
+        if (!tourExists) {
+            return res.status(404).json({ fehler: true, nachricht: 'Die Tour existiert nicht.' });
+        }
+
+        // Prüfen, ob Bus existiert
+        const bus = await busesDao.getBusById(busIdNum);
+        if (!bus) {
+            return res.status(400).json({ fehler: true, nachricht: 'Der ausgewählte Bus existiert nicht.' });
+        }
+
+        // Prüfen, ob Bus zur Firma gehört
+        if (!bus.company || bus.company.company_id !== companyIdNum) {
+            return res.status(400).json({ fehler: true, nachricht: 'Der Bus gehört nicht zur gewählten Firma.' });
+        }
+
+        // Logging
+        console.log('Updating tour with:', {
+            tour_id: id,
+            tour_description,
+            tour_date,
+            destination,
+            bus_id: busIdNum,
+            picture_path: fileNameCoverImage
         });
+
+        // Update ohne company_id
+        const updated = await tourDao.updateTour(id, {
+            picture_path: fileNameCoverImage,
+            tour_description,
+            tour_date,
+            destination,
+            bus_id: busIdNum
+        });
+
         if (updated) {
             return res.status(200).json({ message: 'Tour erfolgreich aktualisiert' });
         } else {
-            return res.status(404).json({ fehler: true, nachricht: 'Tour nicht gefunden' });
+            return res.status(500).json({ fehler: true, nachricht: 'Fehler beim Aktualisieren der Tour' });
         }
+
     } catch (err) {
-        console.error('Service Tour: Error updating tour:', err.message);
+        console.error('Service Tour: Error updating tour:', err);
         return res.status(500).json({ fehler: true, nachricht: 'Fehler beim Aktualisieren der Tour' });
     }
 }
