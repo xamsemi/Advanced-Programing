@@ -11,6 +11,9 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     if (user) setupLogout();
 
+    //konfetti
+    startFallingConfetti();
+
     // Formular holen
     const form = document.getElementById("busunternehmen_hinzufuegen_form");
     if (!form) {
@@ -64,3 +67,28 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     });
 });
+
+/*konfetti Funktion*/
+function startFallingConfetti() {
+  const canvas = document.getElementById("confetti-canvas");
+  const myConfetti = confetti.create(canvas, {
+    resize: true,
+    useWorker: true
+  });
+
+  const duration = 3000; // 3 Sekunden
+  const end = Date.now() + duration;
+
+  (function frame() {
+    myConfetti({
+      particleCount: 4,
+      angle: 90,
+      spread: 55,
+      origin: { x: Math.random(), y: 0 }
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+}

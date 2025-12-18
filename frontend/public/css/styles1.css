@@ -164,7 +164,7 @@ body {
   background-color: #2a2a2a;
 }
 
-/* neu /* === Admin Dashboard Styling === */
+/* neu  === Admin Dashboard Styling === */
 .dashboard-body {
   background: linear-gradient(180deg, #252525 0%, #1a1a1a 100%);
   color: #f5f5f5;
@@ -333,3 +333,20 @@ footer {
     border-radius: 0.75rem;
   }
 }
+
+/* konfetti canvas */
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+form {
+  position: relative;
+  z-index: 2;
+}
+

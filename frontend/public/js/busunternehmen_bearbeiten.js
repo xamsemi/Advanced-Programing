@@ -6,12 +6,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     await navbar.loadNavbar();
     const user = await checkLogin(false, true);
     navbar.zeigeAdminBereich(user);
-    if (user) {
+    /*if (user) {
     setupLogout();
 
-    }
+    }*/
+   if (user) setupLogout();
     
-
+    //konfetti
+    startFallingConfetti();
 });
 
 // Busunternehmen ändern
@@ -174,3 +176,28 @@ const form = document.querySelector("form");
         }
         window.location.href = "busunternehmen.html"; // Zurück zur Busunternehmen-Übersicht
     });
+
+    /*konfetti Funktion*/
+function startFallingConfetti() {
+  const canvas = document.getElementById("confetti-canvas");
+  const myConfetti = confetti.create(canvas, {
+    resize: true,
+    useWorker: true
+  });
+
+  const duration = 4000; // 4 Sekunden
+  const end = Date.now() + duration;
+
+  (function frame() {
+    myConfetti({
+      particleCount: 4,
+      angle: 90,
+      spread: 55,
+      origin: { x: Math.random(), y: 0 }
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+}

@@ -11,6 +11,9 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     if (user) setupLogout();
 
+    //konfetti
+    waitForConfettiAndStart();
+
     const form = document.getElementById("mitglied_hinzufuegen_form");
     if (!form) {
         console.error("Formular nicht gefunden");
@@ -64,3 +67,41 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     });
 });
+
+/*Funktion die wartet bis confetti geladen ist und startet dann konfetti*/
+function waitForConfettiAndStart() {
+    const canvas = document.getElementById("confetti-canvas");
+    if (typeof window.confetti !== "undefined" &&canvas) {       
+        startFallingConfetti();
+    } else {
+        console.log("Warte auf confetti oder canvas...");
+        setTimeout(waitForConfettiAndStart, 50); // Überprüfe alle 100ms
+    }
+}
+/*konfetti Funktion*/
+function startFallingConfetti() {
+    console.log("Starte Konfetti");
+    const canvas = document.getElementById("confetti-canvas");
+    console.log("Canvas gefunden:", canvas);
+    console.log("Konfetti Objekt:", typeof window.confetti);
+    const myConfetti = window.confetti.create(canvas, {
+        resize: true,
+        useWorker: true
+  });
+
+    const duration = 4000; // 4 Sekunden
+    const end = Date.now() + duration;
+
+    (function frame() {
+        myConfetti({
+        particleCount: 4,
+        angle: 90,
+        spread: 55,
+        origin: { x: Math.random(), y: 0 }
+        });
+
+        if (Date.now() < end) {
+        requestAnimationFrame(frame);
+        }
+    })();
+}

@@ -8,6 +8,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     navbar.zeigeAdminBereich(user);
 
     if (user) setupLogout();
+    console.log("DOM geladen");
+    //konfetti
+    startFallingConfetti();
+
 
     // Dropdown für Busunternehmen füllen
     const select = document.getElementById('busunternehmen');
@@ -70,4 +74,33 @@ window.addEventListener('DOMContentLoaded', async () => {
             alert('Fehler beim Speichern des Busses.');
         }
     });
+
+    
 });
+/*konfetti Funktion*/
+function startFallingConfetti() {
+    console.log("Starte Konfetti");
+    const canvas = document.getElementById("confetti-canvas");
+    console.log("Canvas gefunden:", canvas);
+    console.log("Konfetti Objekt:", typeof confetti);
+    const myConfetti = confetti.create(canvas, {
+        resize: true,
+        useWorker: true
+  });
+
+    const duration = 4000; // 4 Sekunden
+    const end = Date.now() + duration;
+
+    (function frame() {
+        myConfetti({
+        particleCount: 4,
+        angle: 90,
+        spread: 55,
+        origin: { x: Math.random(), y: 0 }
+        });
+
+        if (Date.now() < end) {
+        requestAnimationFrame(frame);
+        }
+    })();
+}
